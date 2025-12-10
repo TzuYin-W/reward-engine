@@ -1,48 +1,19 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Check, Calendar, ArrowUpRight, Clock, Sun, Moon, Gift, Plus, ChevronDown, ChevronUp, Star, Zap, ShoppingBag, Plane, Coffee, ExternalLink, Filter, X, AlertTriangle, ChevronRight, Globe, Utensils, Music, Gamepad, GraduationCap, Cat, Home, CreditCard, RefreshCw } from 'lucide-react';
+import { Check, Calendar, ArrowUpRight, Clock, Sun, Moon, Gift, Plus, ChevronDown, ChevronUp, Star, Zap, ShoppingBag, Plane, Coffee, ExternalLink, Filter, X, AlertTriangle, ChevronRight, Globe, Utensils, Music, Gamepad, GraduationCap, Cat, Home, CreditCard, RefreshCw, Search, Palette, Heart } from 'lucide-react';
 
 // --- 銀行與卡別層級資料庫 ---
 const BANK_HIERARCHY = [
-  {
-    name: 'CTBC 中國信託',
-    code: 'CTBC',
-    cards: ['All Me 卡', 'LINE Pay 卡']
-  },
-  {
-    name: 'CATHAY 國泰世華',
-    code: 'CATHAY',
-    cards: ['CUBE 卡']
-  },
-  {
-    name: 'FUBON 台北富邦',
-    code: 'FUBON',
-    cards: ['J 卡', 'Open Possible 卡']
-  },
-  {
-    name: 'TAISHIN 台新銀行',
-    code: 'TAISHIN',
-    cards: ['@GoGo 卡', '玫瑰卡', 'Richart 卡']
-  },
-  {
-    name: 'E.SUN 玉山銀行',
-    code: 'ESUN',
-    cards: ['U Bear 卡']
-  },
-  {
-    name: 'SINOPAC 永豐銀行',
-    code: 'SINOPAC',
-    cards: ['Sport 卡', '大戶 DAWHO 現金回饋卡', '現金回饋 JCB 卡']
-  },
-  {
-    name: 'FEDERAL 聯邦銀行',
-    code: 'FEDERAL',
-    cards: ['吉鶴卡']
-  }
+  { name: 'CTBC 中國信託', code: 'CTBC', cards: ['All Me 卡', 'LINE Pay 卡'] },
+  { name: 'CATHAY 國泰世華', code: 'CATHAY', cards: ['CUBE 卡'] },
+  { name: 'FUBON 台北富邦', code: 'FUBON', cards: ['J 卡', 'Open Possible 卡'] },
+  { name: 'TAISHIN 台新銀行', code: 'TAISHIN', cards: ['@GoGo 卡', '玫瑰卡', 'Richart 卡'] },
+  { name: 'E.SUN 玉山銀行', code: 'ESUN', cards: ['U Bear 卡'] },
+  { name: 'SINOPAC 永豐銀行', code: 'SINOPAC', cards: ['Sport 卡', '大戶 DAWHO 現金回饋卡', '現金回饋 JCB 卡'] },
+  { name: 'FEDERAL 聯邦銀行', code: 'FEDERAL', cards: ['吉鶴卡'] }
 ];
 
-// --- 模擬數據資料庫 ---
+// --- 模擬數據資料庫 (配色優化) ---
 const INITIAL_CAMPAIGNS = [
-  // 1. 富邦 J 卡 (已補上國內一般回饋)
   { 
     id: 'fubon_j', 
     bank: 'FUBON 台北富邦', 
@@ -56,7 +27,7 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31', 
     mainTag: '日韓旅遊',
     image: 'https://www.fubon.com/banking/images/credit_card/J_Card_omiyage_card_1.png', 
-    gradient: 'from-rose-100 via-white to-teal-50', 
+    gradient: 'from-rose-50 via-white to-rose-100', // 櫻花白
     textColor: 'text-rose-900',
     link: 'https://www.fubon.com/banking/Personal/credit_card/all_card/omiyage/omiyage.htm',
     details: [
@@ -94,21 +65,20 @@ const INITIAL_CAMPAIGNS = [
       { title: '🏪 當地指定便利店 (10%)', content: '日本三大超商: 7-Eleven, Lawson, FamilyMart | 韓國便利商店: CU, GS25, Emart24 (需登錄)', rate: '10%' }
     ]
   },
-  // 2. 富邦 Open Possible 聯名卡 (新增)
   {
     id: 'fubon_op',
     bank: 'FUBON 台北富邦',
     card: 'Open Possible 卡',
     name: '電信/餐飲生活',
     category: '生活',
-    totalRate: 10, // 最高 10% (餐飲)
+    totalRate: 10, 
     baseRate: 2,
     bonusRate: 8,
     startDate: '2025-07-01',
     endDate: '2025-12-31',
     mainTag: '電信 3.5%',
     image: 'https://www.fubon.com/banking/images/credit_card/OpenPossible_card_1.png',
-    gradient: 'from-purple-600 to-indigo-700', // 台灣大哥大配色
+    gradient: 'from-violet-900 to-black', // 台灣大哥大黑紫
     textColor: 'text-white',
     link: 'https://www.fubon.com/banking/Personal/credit_card/all_card/OpenPossible/OpenPossible.htm',
     details: [
@@ -132,7 +102,6 @@ const INITIAL_CAMPAIGNS = [
         { title: '🍔 指定餐飲 (10%)', content: '使用 icash 2.0 功能支付：麥當勞、漢堡王、達美樂、必勝客、肯德基、星巴克 (需 icash Pay 帳戶)。', rate: '10%' }
     ]
   },
-  // 3. 台新 玫瑰卡 (新增 - 切換刷)
   {
     id: 'taishin_rose',
     bank: 'TAISHIN 台新銀行',
@@ -146,8 +115,8 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31',
     mainTag: '切換 3.8%',
     image: 'https://www.taishinbank.com.tw/TS/TS02/TS0201/TS020101/TS02010101/TS0201010102/TS020101010202/images/card_02.png',
-    gradient: 'from-rose-400 to-pink-600',
-    textColor: 'text-white',
+    gradient: 'from-rose-400 via-rose-300 to-pink-200', // 玫瑰金漸層
+    textColor: 'text-rose-900',
     link: 'https://www.taishinbank.com.tw/TSB/personal/credit/intro/overview/cg013/card0001/',
     details: [
         { label: '一般消費', value: '0.3% 台新 Point' },
@@ -161,7 +130,6 @@ const INITIAL_CAMPAIGNS = [
         { title: '🍽️ 好饗刷 (3.8%)', content: '全台餐廳, 外送平台 (UberEats/Foodpanda), 星巴克, 路易莎, 錢櫃, 好樂迪。', rate: '3.8%' }
     ]
   },
-  // 4. 台新 Richart 卡 (新增 - 數位整合)
   {
     id: 'taishin_richart',
     bank: 'TAISHIN 台新銀行',
@@ -174,8 +142,8 @@ const INITIAL_CAMPAIGNS = [
     startDate: '2025-09-01',
     endDate: '2025-12-31',
     mainTag: '數位 3.8%',
-    image: 'https://www.taishinbank.com.tw/TS/TS02/TS0201/TS020101/TS02010101/TS0201010104/TS020101010409/images/card_01.png', // 使用 Richart 風格圖片
-    gradient: 'from-gray-100 to-white', // Richart 白
+    image: 'https://www.taishinbank.com.tw/TS/TS02/TS0201/TS020101/TS02010101/TS0201010104/TS020101010409/images/card_01.png', 
+    gradient: 'from-gray-50 to-white', // 純白
     textColor: 'text-gray-800',
     link: 'https://mkp.taishinbank.com.tw/s/2025/RichartCard_2025/index.html',
     details: [
@@ -199,7 +167,6 @@ const INITIAL_CAMPAIGNS = [
         { title: '📄 保費回饋 (1.3%)', content: '繳納保費享 1.3% 回饋無上限，且可分期 0 利率 (需登錄)。', rate: '1.3%' }
     ]
   },
-  // 5. 中信 LINE Pay 卡
   {
     id: 'ctbc_linepay',
     bank: 'CTBC 中國信託',
@@ -213,8 +180,8 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31',
     mainTag: '點數回饋',
     image: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/LINEPay/images/card_01.png',
-    gradient: 'from-green-400 to-green-600', 
-    textColor: 'text-white',
+    gradient: 'from-black to-zinc-800', // 酷黑
+    textColor: 'text-green-400',
     link: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/LINEPay/index.html',
     details: [
         { label: '國內一般消費', value: '1% LINE POINTS (無上限)' },
@@ -238,7 +205,6 @@ const INITIAL_CAMPAIGNS = [
         { title: '🎬 影音娛樂 (10%)', content: 'Netflix, Disney+, Spotify 等指定影音平台消費享 10% 回饋 (需登錄)。', rate: '10%' }
     ]
   },
-  // 6. 中信 All Me 卡
   {
     id: 'ctbc_allme',
     bank: 'CTBC 中國信託',
@@ -252,7 +218,7 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31',
     mainTag: '電信/電商',
     image: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/ALLME/images/card_01.png',
-    gradient: 'from-blue-500 to-cyan-400',
+    gradient: 'from-blue-600 to-cyan-500', 
     textColor: 'text-white',
     link: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/ALLME/index.html',
     details: [
@@ -265,7 +231,6 @@ const INITIAL_CAMPAIGNS = [
         { title: '🏪 超商/超市 (8%)', content: '7-ELEVEN, 全家, 萊爾富, OK, 美廉社 (需使用 Hami Pay 感應支付)。', rate: '8%' }
     ]
   },
-  // 7. 玉山 U Bear 卡
   {
     id: 'esun_ubear',
     bank: 'E.SUN 玉山銀行',
@@ -279,8 +244,8 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2026-02-28',
     mainTag: '網購 3%',
     image: 'https://www.esunbank.com.tw/bank/images/esunbank/credit_card/ubear_card.png',
-    gradient: 'from-yellow-300 to-amber-500', 
-    textColor: 'text-black',
+    gradient: 'from-zinc-900 via-black to-zinc-900', // 經典黑
+    textColor: 'text-yellow-400', // 黃字
     link: 'https://event.esunbank.com.tw/credit/ubear/index.html',
     details: [
         { label: '國內外一般消費', value: '1% 現金回饋' },
@@ -292,7 +257,6 @@ const INITIAL_CAMPAIGNS = [
         { title: '🎬 指定影音 (13%)', content: 'Disney+, Netflix, Spotify, Nintendo, PlayStation。', rate: '13%' }
     ]
   },
-  // 8. 聯邦 吉鶴卡
   {
     id: 'federal_jihe',
     bank: 'FEDERAL 聯邦銀行',
@@ -306,7 +270,7 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31',
     mainTag: '日本 4%',
     image: 'https://card.ubot.com.tw/eCard/assets/images/creditcard/JIHO/card_01.png',
-    gradient: 'from-red-500 to-rose-600', 
+    gradient: 'from-red-600 to-rose-700', // 吉鶴紅
     textColor: 'text-white',
     link: 'https://card.ubot.com.tw/eCard/activity/2025JIHO/index.htm',
     details: [
@@ -320,7 +284,6 @@ const INITIAL_CAMPAIGNS = [
         { title: '🍽️ 日系美饌 (10%)', content: '國內指定日系餐廳 (勝博殿, 一風堂, 欣葉日本料理...) 現折 10%。', rate: '10%' }
     ]
   },
-  // 9. 永豐大戶
   { 
     id: 'sinopac_dawho', 
     bank: 'SINOPAC 永豐銀行', 
@@ -334,8 +297,8 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31', 
     mainTag: '國內外 7%',
     image: 'https://dawho.tw/assets/images/card/credit-card-black.png',
-    gradient: 'from-neutral-900 via-black to-neutral-800', 
-    textColor: 'text-yellow-500', 
+    gradient: 'from-black to-zinc-900', // 大戶黑
+    textColor: 'text-yellow-500', // 金字
     link: 'https://bank.sinopac.com/sinopacBT/personal/credit-card/introduction/bankcard/DAWHO.html',
     details: [
       { label: '國內一般消費', value: '1% 現金回饋' },
@@ -353,7 +316,6 @@ const INITIAL_CAMPAIGNS = [
       { title: '🏠 【家】居家生活', content: 'IKEA, 誠品生活, 特力屋, Pinkoi', rate: '7%' }
     ]
   },
-  // 10. 永豐 JCB
   { 
     id: 'sinopac_jcb', 
     bank: 'SINOPAC 永豐銀行', 
@@ -367,7 +329,7 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31', 
     mainTag: '網購/百貨/餐飲',
     image: 'https://bank.sinopac.com/upload/sinopac/creditcard/JCB_Card.png', 
-    gradient: 'from-purple-900 to-indigo-900', 
+    gradient: 'from-violet-800 to-purple-900', // JCB 紫
     textColor: 'text-white',
     link: 'https://bank.sinopac.com/sinopacBT/personal/credit-card/introduction/bankcard/cashcardJCB.html',
     details: [
@@ -381,7 +343,6 @@ const INITIAL_CAMPAIGNS = [
       { title: '🍽️ 餐廳/外送 (5%)', content: '國內所有實體餐廳(含連鎖速食/咖啡廳/火鍋/燒肉)、Uber Eats、Foodpanda', rate: '5%' }
     ]
   },
-  // 11. 國泰 CUBE
   { 
     id: 'cathay_cube', 
     bank: 'CATHAY 國泰世華', 
@@ -395,8 +356,8 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31', 
     mainTag: '多重權益',
     image: 'https://www.cathaybk.com.tw/cathaybk/-/media/C1ce1986-7786-4f24-862a-350734057863.png', 
-    gradient: 'from-gray-100 to-gray-300', 
-    textColor: 'text-gray-600',
+    gradient: 'from-gray-200 to-gray-400', // CUBE 灰
+    textColor: 'text-gray-800',
     link: 'https://www.cathaybk.com.tw/cathaybk/personal/product/credit-card/cards/cube/',
     details: [
       { label: '一般消費', value: '0.3% 小樹點' },
@@ -411,7 +372,6 @@ const INITIAL_CAMPAIGNS = [
       { title: '🛒 集精選 (2%)', content: '全聯福利中心、家樂福、7-ELEVEN、全家便利商店、麥當勞、肯德基、中油直營(加油)、IKEA、宜得利家居', rate: '2%' }
     ]
   },
-  // 12. 台新 GoGo
   { 
     id: 'taishin_gogo', 
     bank: 'TAISHIN 台新銀行', 
@@ -425,7 +385,7 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31', 
     mainTag: '行動支付',
     image: 'https://www.taishinbank.com.tw/TS/TS02/TS0201/TS020101/TS02010101/TS0201010104/TS020101010409/images/card_01.png', 
-    gradient: 'from-zinc-900 to-emerald-900', 
+    gradient: 'from-zinc-900 to-emerald-900', // 黑綠
     textColor: 'text-white',
     link: 'https://www.taishinbank.com.tw/TS/TS02/TS0201/TS020101/TS02010101/TS0201010104/TS020101010409/index.htm',
     details: [
@@ -437,7 +397,6 @@ const INITIAL_CAMPAIGNS = [
       { title: '🛒 精選網購 (3.8%)', content: '蝦皮購物, momo購物網, PChome, Yahoo奇摩, Amazon, Coupang(酷澎), 博客來, Pinkoi, 露天拍賣, 淘寶, 東森購物, PayEasy', rate: '3.8%' }
     ]
   },
-  // 13. 永豐 Sport
   { 
     id: 'sinopac_sport', 
     bank: 'SINOPAC 永豐銀行', 
@@ -451,7 +410,7 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-20', 
     mainTag: 'Apple Watch',
     image: 'https://bank.sinopac.com/upload/sinopac/creditcard/Sport_Card.png', 
-    gradient: 'from-orange-600 to-red-600', 
+    gradient: 'from-orange-600 to-red-600', // 橘紅
     textColor: 'text-white',
     link: 'https://bank.sinopac.com/sinopacBT/personal/credit-card/introduction/bankcard/sport-card.html',
     details: [
@@ -469,45 +428,43 @@ const INITIAL_CAMPAIGNS = [
 
 const ALL_CATEGORIES = [...new Set(INITIAL_CAMPAIGNS.map(c => c.category))];
 
-// --- 獨立元件：卡片視覺呈現 ---
+// --- 獨立元件：卡片視覺呈現 (核心修改) ---
 const CardVisual = ({ image, gradient, textColor, cardName, bankName }) => {
   const [imageError, setImageError] = useState(false);
 
+  // 統一風格：無論如何都保持傾斜、陰影、圓角
+  // 卡片背景：如果圖片載入失敗，使用漸層色與斜體文字模擬
   return (
-    // 調整：在手機上使用 w-32 h-20 (約128x80px) 且保有旋轉效果
-    <div className="relative w-32 h-20 md:w-40 md:h-24 perspective-1000 z-0 flex-shrink-0 group-hover:z-20 mt-2 md:mt-0 self-end md:self-auto">
-      {/* 嘗試載入真實圖片 */}
+    <div className="relative w-36 h-22 md:w-44 md:h-28 flex-shrink-0 z-0 group-hover:z-20 mt-1 md:mt-0 perspective-1000">
       {!imageError && image ? (
         <img 
             src={image} 
             alt={cardName} 
-            className={`
-                w-full h-full object-cover rounded-xl shadow-[0_10px_30px_-5px_rgba(0,0,0,0.3)] md:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] 
-                transition-all duration-700 ease-out
-                transform rotate-6 md:rotate-6 md:-translate-y-2 md:translate-x-4
-                group-hover:rotate-0 md:group-hover:rotate-12 group-hover:scale-105 md:group-hover:scale-110
-            `}
+            className="w-full h-full object-cover rounded-xl shadow-lg transform rotate-6 md:-translate-y-2 group-hover:rotate-0 group-hover:scale-105 transition-all duration-500 ease-out"
             onError={() => setImageError(true)}
         />
       ) : (
-        /* 圖片載入失敗時的 Fallback：數位擬態卡面 */
         <div className={`
-            w-full h-full rounded-xl shadow-md
-            transition-all duration-700 ease-out
-            transform rotate-6 md:rotate-6 md:-translate-y-2 md:translate-x-4
-            group-hover:scale-105 md:group-hover:rotate-12 md:group-hover:scale-110
-            bg-gradient-to-br ${gradient} p-3 flex flex-col justify-between border border-white/10
+            w-full h-full rounded-xl shadow-lg
+            transform rotate-6 md:-translate-y-2
+            group-hover:rotate-0 group-hover:scale-105 transition-all duration-500 ease-out
+            bg-gradient-to-br ${gradient} p-3 flex flex-col justify-between border border-white/10 relative overflow-hidden
         `}>
-             <div className={`text-[10px] uppercase tracking-widest opacity-80 ${textColor}`}>{bankName.split(' ')[0]}</div>
-             <div className="flex justify-between items-end">
-                <div className={`text-xs font-bold leading-tight ${textColor}`}>{cardName}</div>
-                <CreditCard size={16} className={`opacity-50 ${textColor}`} />
+             {/* 模擬晶片 */}
+             <div className="w-8 h-5 bg-gradient-to-tr from-yellow-200 to-yellow-500 rounded-md opacity-80 mb-1"></div>
+             
+             <div className="flex flex-col items-end">
+                <div className={`text-[8px] uppercase tracking-widest opacity-80 italic ${textColor} font-serif`}>{bankName.split(' ')[0]}</div>
+                <div className={`text-xs font-bold leading-tight italic ${textColor} font-serif mt-0.5`}>{cardName}</div>
              </div>
+             
+             {/* 裝飾性Logo */}
+             <CreditCard size={40} className={`absolute -bottom-4 -left-4 opacity-10 ${textColor} transform -rotate-12`} />
         </div>
       )}
       
-      {/* Reflection/Glow Effect */}
-      <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/30 to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-500 pointer-events-none mix-blend-overlay"></div>
+      {/* 統一的光澤效果 */}
+      <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/30 to-transparent opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none mix-blend-overlay"></div>
     </div>
   );
 };
@@ -517,6 +474,8 @@ const App = () => {
   const [expandedId, setExpandedId] = useState(null); 
   const [viewMode, setViewMode] = useState('list'); 
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [uiStyle, setUiStyle] = useState('nyc'); 
+  const [searchQuery, setSearchQuery] = useState('');
   
   const ALL_CARDS = BANK_HIERARCHY.flatMap(b => b.cards);
   const [selectedCards, setSelectedCards] = useState(ALL_CARDS); 
@@ -535,6 +494,20 @@ const App = () => {
         setLastUpdated(`${now.getFullYear()}/${now.getMonth()+1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`);
     }, 1500);
   };
+
+  useEffect(() => {
+    let themeColor = '#ffffff'; 
+    if (isDarkMode) {
+        themeColor = uiStyle === 'nyc' ? '#09090b' : '#2D2D3A'; 
+    } else {
+        themeColor = uiStyle === 'nyc' ? '#f0f0f0' : '#FDFBF7'; 
+    }
+    let metaThemeColor = document.querySelector("meta[name=theme-color]");
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute("content", themeColor);
+    }
+    document.body.style.backgroundColor = themeColor;
+  }, [isDarkMode, uiStyle]);
 
   useEffect(() => {
     const saved = localStorage.getItem('registeredCampaigns_v4');
@@ -601,40 +574,72 @@ const App = () => {
   };
 
   const filteredCampaigns = useMemo(() => {
-    return INITIAL_CAMPAIGNS.filter(c => 
-      selectedCards.includes(c.card) && 
-      selectedCategories.includes(c.category)
-    );
-  }, [selectedCards, selectedCategories]);
+    return INITIAL_CAMPAIGNS.filter(c => {
+      const matchesFilter = selectedCards.includes(c.card) && selectedCategories.includes(c.category);
+      if (!matchesFilter) return false;
+      if (searchQuery.trim() !== '') {
+        const query = searchQuery.toLowerCase();
+        const inCardName = c.card.toLowerCase().includes(query);
+        const inBankName = c.bank.toLowerCase().includes(query);
+        const inChannels = c.channels.some(ch => 
+            ch.title.toLowerCase().includes(query) || 
+            ch.content.toLowerCase().includes(query)
+        );
+        return inCardName || inBankName || inChannels;
+      }
+      return true;
+    });
+  }, [selectedCards, selectedCategories, searchQuery]);
 
-  const theme = {
-    bg: isDarkMode ? 'bg-[#0a0a0a]' : 'bg-[#f0f0f0]',
-    text: isDarkMode ? 'text-white' : 'text-black',
-    subText: isDarkMode ? 'text-neutral-400' : 'text-neutral-500',
-    cardBg: isDarkMode ? 'bg-[#141414]' : 'bg-white',
-    cardBorder: isDarkMode ? 'border-neutral-800' : 'border-neutral-300',
-    accent: 'text-[#D4AF37]', 
-    accentBg: 'bg-[#D4AF37]',
-    accentBorder: 'border-[#D4AF37]',
-    fontDisplay: 'font-serif', 
-    fontBody: 'font-sans',     
+  const getTheme = () => {
+    if (uiStyle === 'nyc') {
+        return {
+            bg: isDarkMode ? 'bg-[#09090b]' : 'bg-[#f0f0f0]',
+            text: isDarkMode ? 'text-white' : 'text-black',
+            subText: isDarkMode ? 'text-neutral-400' : 'text-neutral-500',
+            cardBg: isDarkMode ? 'bg-[#141414]' : 'bg-white',
+            cardBorder: isDarkMode ? 'border-neutral-800' : 'border-neutral-300',
+            accent: 'text-[#D4AF37]', 
+            accentBg: 'bg-[#D4AF37]',
+            accentBorder: 'border-[#D4AF37]',
+            fontDisplay: "font-['Playfair_Display']", 
+            fontBody: 'font-sans',
+            rounded: 'rounded-none',
+            buttonShape: 'rounded-full',
+            shadow: 'shadow-none'
+        };
+    } else {
+        return {
+            bg: isDarkMode ? 'bg-[#2D2D3A]' : 'bg-[#FDFBF7]', 
+            text: isDarkMode ? 'text-slate-100' : 'text-slate-700',
+            subText: isDarkMode ? 'text-slate-400' : 'text-slate-400',
+            cardBg: isDarkMode ? 'bg-[#3A3A4A]' : 'bg-white',
+            cardBorder: 'border-transparent', 
+            accent: isDarkMode ? 'text-violet-400' : 'text-rose-400', 
+            accentBg: isDarkMode ? 'bg-violet-400' : 'bg-rose-300',
+            accentBorder: isDarkMode ? 'border-violet-400' : 'border-rose-300',
+            fontDisplay: "font-['DynaPuff']", 
+            fontBody: 'font-sans',
+            rounded: 'rounded-3xl', 
+            buttonShape: 'rounded-2xl',
+            shadow: isDarkMode ? 'shadow-lg shadow-black/20' : 'shadow-[0_8px_30px_rgb(0,0,0,0.04)]'
+        };
+    }
   };
 
+  const theme = getTheme();
+
   return (
-    <div className={`min-h-screen w-full transition-colors duration-500 selection:bg-[#D4AF37] selection:text-black ${theme.bg} ${theme.text} ${theme.fontBody}`}>
+    <div className={`min-h-screen w-full transition-colors duration-500 selection:bg-rose-200 selection:text-rose-900 ${theme.bg} ${theme.text} ${theme.fontBody}`}>
       
-      {/* --- FILTER MODAL --- */}
+      {/* FILTER MODAL */}
       {isFilterOpen && (
-        <div className="fixed inset-0 z-[60] bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
-          <div className={`w-full max-w-2xl max-h-[85vh] flex flex-col rounded-2xl shadow-2xl relative ${theme.cardBg} ${theme.cardBorder} border`}>
-            
+        <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
+          <div className={`w-full max-w-2xl max-h-[85vh] flex flex-col ${theme.rounded === 'rounded-none' ? 'rounded-2xl' : 'rounded-[2rem]'} shadow-2xl relative ${theme.cardBg} ${theme.cardBorder} border`}>
             <div className={`p-6 border-b ${theme.cardBorder} flex justify-between items-center shrink-0`}>
-                <h3 className={`text-2xl font-serif italic ${theme.text}`}>Filter Selections</h3>
-                <button 
-                onClick={() => setIsFilterOpen(false)}
-                className="p-2 rounded-full hover:bg-neutral-800 transition-colors"
-                >
-                <X size={24} className={theme.subText} />
+                <h3 className={`text-2xl ${theme.fontDisplay} italic ${theme.text}`}>Filter Selections</h3>
+                <button onClick={() => setIsFilterOpen(false)} className="p-2 rounded-full hover:bg-black/5 transition-colors">
+                    <X size={24} className={theme.subText} />
                 </button>
             </div>
             
@@ -648,9 +653,9 @@ const App = () => {
                     <button
                       key={cat}
                       onClick={() => toggleFilterCategory(cat)}
-                      className={`px-3 py-2 text-xs border transition-all duration-200
+                      className={`px-3 py-2 text-xs border transition-all duration-200 ${theme.buttonShape}
                         ${selectedCategories.includes(cat) 
-                          ? `${theme.accentBg} text-black border-[#D4AF37]` 
+                          ? `${theme.accentBg} ${isDarkMode ? 'text-white' : 'text-white'} border-transparent` 
                           : `bg-transparent ${theme.subText} ${theme.cardBorder}`
                         }
                       `}
@@ -673,9 +678,9 @@ const App = () => {
                     const isPartial = selectedCount > 0 && !isFull;
 
                     return (
-                        <div key={bank.code} className={`border ${theme.cardBorder} rounded-lg overflow-hidden transition-all duration-300`}>
+                        <div key={bank.code} className={`border ${theme.cardBorder} ${theme.buttonShape} overflow-hidden transition-all duration-300`}>
                             <div 
-                                className={`flex items-center justify-between p-3 cursor-pointer ${isExpanded ? (isDarkMode ? 'bg-neutral-900' : 'bg-neutral-100') : 'bg-transparent'}`}
+                                className={`flex items-center justify-between p-3 cursor-pointer ${isExpanded ? 'bg-black/5' : 'bg-transparent'}`}
                                 onClick={() => toggleFilterBankExpand(bank.code)}
                             >
                                 <div className="flex items-center gap-3">
@@ -684,14 +689,14 @@ const App = () => {
                                             e.stopPropagation();
                                             toggleBankAllCards(bank);
                                         }}
-                                        className={`w-5 h-5 border flex items-center justify-center transition-colors ${
-                                            isFull ? `${theme.accentBg} border-[#D4AF37]` : 
-                                            isPartial ? `${theme.accentBg} border-[#D4AF37] opacity-60` : 
-                                            `border-neutral-500 bg-transparent`
+                                        className={`w-5 h-5 border flex items-center justify-center transition-colors rounded-md ${
+                                            isFull ? `${theme.accentBg} border-transparent` : 
+                                            isPartial ? `${theme.accentBg} border-transparent opacity-60` : 
+                                            `border-neutral-400 bg-transparent`
                                         }`}
                                     >
-                                        {isFull && <Check size={14} className="text-black" strokeWidth={3} />}
-                                        {isPartial && <div className="w-2 h-2 bg-black"></div>}
+                                        {isFull && <Check size={14} className="text-white" strokeWidth={3} />}
+                                        {isPartial && <div className="w-2 h-2 bg-white"></div>}
                                     </button>
                                     <span className={`text-sm font-bold tracking-wide ${theme.text}`}>{bank.name}</span>
                                 </div>
@@ -702,16 +707,16 @@ const App = () => {
                                 overflow-hidden transition-all duration-300 ease-in-out
                                 ${isExpanded ? 'max-h-[500px] opacity-100 border-t ' + theme.cardBorder : 'max-h-0 opacity-0'}
                             `}>
-                                <div className="p-3 grid grid-cols-2 gap-2 bg-opacity-50">
+                                <div className="p-3 grid grid-cols-2 gap-2">
                                     {bank.cards.map(cardName => (
                                         <button
                                             key={cardName}
                                             onClick={() => toggleCardFilter(cardName)}
                                             className={`
-                                                text-left px-3 py-2 text-xs border transition-all flex justify-between items-center
+                                                text-left px-3 py-2 text-xs border transition-all flex justify-between items-center ${theme.buttonShape}
                                                 ${selectedCards.includes(cardName)
-                                                    ? `${theme.text} ${theme.accentBorder} bg-neutral-800/50`
-                                                    : `${theme.subText} border-transparent hover:bg-neutral-800/30`
+                                                    ? `${theme.text} ${theme.accentBorder} bg-black/5`
+                                                    : `${theme.subText} border-transparent hover:bg-black/5`
                                                 }
                                             `}
                                         >
@@ -733,7 +738,7 @@ const App = () => {
                <button onClick={clearAll} className={`text-xs uppercase tracking-widest ${theme.subText} hover:${theme.text}`}>Clear</button>
                <button 
                  onClick={() => setIsFilterOpen(false)}
-                 className={`ml-auto px-8 py-3 ${theme.accentBg} text-black text-sm font-bold uppercase tracking-wider hover:opacity-90 shadow-lg shadow-amber-500/20`}
+                 className={`ml-auto px-8 py-3 ${theme.accentBg} text-white text-sm font-bold uppercase tracking-wider hover:opacity-90 shadow-lg ${theme.buttonShape}`}
                >
                  Apply Filter
                </button>
@@ -742,39 +747,81 @@ const App = () => {
         </div>
       )}
 
-      {/* --- HEADER (Sticky) --- */}
-      <header className={`sticky top-0 z-50 backdrop-blur-xl bg-opacity-90 transition-all border-b border-neutral-800/50 pt-4 pb-4 md:pt-6 md:pb-6 ${theme.bg}`}>
+      {/* HEADER */}
+      <header className={`sticky top-0 z-50 backdrop-blur-xl bg-opacity-90 transition-all border-b border-black/5 pt-4 pb-4 md:pt-6 md:pb-6 ${theme.bg}`}>
         <div className="w-full px-4">
-          <div className="flex justify-between items-start">
-            <div className="flex-1">
-              <h1 className={`text-3xl md:text-5xl lg:text-7xl font-black tracking-tighter uppercase leading-[0.85] ${theme.text}`}>
-                Reward
-                <span className={`block font-serif italic font-light tracking-normal text-2xl md:text-4xl lg:text-5xl mt-1 ${theme.accent}`}>
-                  Engine.
-                </span>
-              </h1>
+          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+            
+            <div className="flex-1 space-y-4">
+                <div className="flex justify-between items-start">
+                    <h1 className={`text-3xl md:text-5xl lg:text-7xl font-black tracking-tighter uppercase leading-[0.85] ${theme.text} ${theme.fontDisplay}`}>
+                        Reward
+                        <span className={`block ${theme.fontDisplay === "font-['Playfair_Display']" ? 'italic font-light' : 'font-sans font-bold'} tracking-normal text-2xl md:text-4xl lg:text-5xl mt-1 ${theme.accent}`}>
+                        Engine.
+                        </span>
+                    </h1>
+
+                    <div className="flex md:hidden gap-2">
+                        <button 
+                            onClick={() => setUiStyle(prev => prev === 'nyc' ? 'korean' : 'nyc')}
+                            className={`w-8 h-8 flex items-center justify-center rounded-full border ${theme.cardBorder} ${theme.bg} shadow-sm`}
+                        >
+                            {uiStyle === 'nyc' ? <Palette size={14} className={theme.subText} /> : <Heart size={14} className={theme.accent} fill="currentColor" />}
+                        </button>
+                        <button 
+                            onClick={() => setIsDarkMode(!isDarkMode)}
+                            className={`w-8 h-8 flex items-center justify-center rounded-full border ${theme.cardBorder} ${theme.bg} shadow-sm`}
+                        >
+                            {isDarkMode ? <Sun size={14} className={theme.text} /> : <Moon size={14} className={theme.text} />}
+                        </button>
+                    </div>
+                </div>
+
+                <div className={`relative max-w-sm group ${theme.rounded === 'rounded-3xl' ? 'ml-1' : ''}`}>
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Search size={16} className={theme.subText} />
+                    </div>
+                    <input 
+                        type="text" 
+                        placeholder="Search stores (e.g. Uber, 全聯...)" 
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className={`
+                            w-full pl-10 pr-4 py-2 text-sm bg-transparent border 
+                            ${theme.cardBorder} ${theme.text} ${theme.buttonShape}
+                            focus:outline-none focus:border-${isDarkMode ? 'white' : 'black'}
+                            placeholder:text-neutral-400/50 transition-all
+                        `}
+                    />
+                </div>
             </div>
             
-            <div className="flex flex-col items-end gap-2 md:gap-3">
-               {/* 模擬更新按鈕 */}
+            <div className="hidden md:flex flex-col items-end gap-2 md:gap-3">
                <div className="flex items-center gap-2 md:gap-3">
                    <div className="hidden md:flex flex-col items-end mr-2">
                        <span className={`text-[10px] uppercase tracking-wider ${theme.subText}`}>Last Updated</span>
                        <span className={`text-[10px] font-mono ${theme.accent}`}>{lastUpdated}</span>
                    </div>
                    <button 
+                    onClick={() => setUiStyle(prev => prev === 'nyc' ? 'korean' : 'nyc')}
+                    className={`w-10 h-10 flex items-center justify-center rounded-full border ${theme.cardBorder} hover:scale-110 transition-transform`}
+                    title="Switch UI Style"
+                   >
+                    {uiStyle === 'nyc' ? <Palette size={18} className={theme.subText} /> : <Heart size={18} className={theme.accent} fill="currentColor" />}
+                   </button>
+                   <button 
                     onClick={handleRefreshData}
                     disabled={isUpdating}
-                    className={`w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-full border ${theme.cardBorder} hover:border-[#D4AF37] transition-all ${isUpdating ? 'animate-spin opacity-50' : ''}`}
+                    className={`w-10 h-10 flex items-center justify-center rounded-full border ${theme.cardBorder} hover:border-[#D4AF37] transition-all ${isUpdating ? 'animate-spin opacity-50' : ''}`}
                     title="Sync Latest Data"
                    >
-                    <RefreshCw size={14} className="md:w-4 md:h-4" />
+                    <RefreshCw size={16} className={theme.subText} />
                    </button>
                    <button 
                     onClick={() => setIsDarkMode(!isDarkMode)}
-                    className={`w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-full border ${theme.cardBorder} hover:scale-110 transition-transform`}
+                    className={`w-10 h-10 flex items-center justify-center rounded-full border ${theme.cardBorder} hover:scale-110 transition-transform`}
                    >
-                    {isDarkMode ? <Sun size={16} strokeWidth={1.5} className="md:w-[18px]" /> : <Moon size={16} strokeWidth={1.5} className="md:w-[18px]" />}
+                    {isDarkMode ? <Sun size={18} className={theme.text} strokeWidth={1.5} /> : <Moon size={18} className={theme.text} strokeWidth={1.5} />}
                    </button>
                </div>
                
@@ -785,7 +832,7 @@ const App = () => {
             </div>
           </div>
 
-          <div className="mt-4 md:mt-6 flex items-center justify-between border-t border-b border-neutral-800 py-3">
+          <div className="mt-4 md:mt-6 flex items-center justify-between border-t border-black/5 py-3">
              <div className="flex gap-4 md:gap-6 text-xs font-bold tracking-widest uppercase">
                 <button 
                     onClick={() => setViewMode('list')}
@@ -803,7 +850,7 @@ const App = () => {
              
              <button 
                 onClick={() => setIsFilterOpen(true)}
-                className={`flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase ${theme.subText} hover:${theme.accent} transition-colors px-2 py-1 border border-transparent hover:border-neutral-700`}
+                className={`flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase ${theme.subText} hover:${theme.accent} transition-colors px-3 py-1 border border-transparent ${theme.buttonShape} hover:bg-black/5`}
              >
                 <Filter size={12} />
                 Filter View
@@ -830,55 +877,68 @@ const App = () => {
                     ${isRegistered ? '' : 'hover:-translate-y-1'}
                   `}
                 >
-                  {/* Number */}
-                  <div className={`absolute -left-2 md:-left-3 -top-5 md:-top-6 text-[60px] md:text-[80px] font-black leading-none opacity-5 select-none font-serif ${theme.text}`}>
-                    {index + 1 < 10 ? `0${index + 1}` : index + 1}
-                  </div>
+                  {/* Number - Only show in NYC style for cleanliness in Korean style */}
+                  {uiStyle === 'nyc' && (
+                    <div className={`absolute -left-2 md:-left-3 -top-5 md:-top-6 text-[60px] md:text-[80px] font-black leading-none opacity-5 select-none font-serif ${theme.text}`}>
+                        {index + 1 < 10 ? `0${index + 1}` : index + 1}
+                    </div>
+                  )}
 
                   {/* Registered Badge */}
                   {isRegistered && (
-                    <div className={`absolute right-0 -top-4 flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest ${theme.accentBg} text-black px-3 py-1 z-10 shadow-lg`}>
+                    <div className={`absolute right-0 -top-4 flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest ${theme.accentBg} text-white px-3 py-1 z-10 shadow-lg ${theme.buttonShape}`}>
                         <Check size={12} strokeWidth={3} />
                         Registered
                     </div>
                   )}
 
                   {/* Card Body */}
-                  <div className={`relative border-t-2 ${isRegistered ? theme.accentBorder : (theme.text === 'text-white' ? 'border-white' : 'border-black')} pt-4 transition-colors duration-500`}>
+                  <div className={`relative ${uiStyle === 'nyc' ? 'border-t-2' : ''} ${isRegistered ? theme.accentBorder : (theme.text === 'text-white' ? 'border-white' : 'border-black')} pt-4 transition-colors duration-500 ${uiStyle === 'korean' ? `p-6 ${theme.cardBg} ${theme.shadow} ${theme.rounded}` : ''}`}>
                     
-                    {/* Header Layout: Mobile Friendly */}
+                    {/* Header Layout: Modified to place CardVisual on the LEFT */}
                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-6 mb-6">
                       
-                      {/* Left: Checkbox & Info */}
-                      <div className="flex gap-4 md:gap-5 z-10">
+                      {/* Left: Checkbox + Card + Info */}
+                      <div className="flex gap-4 md:gap-5 z-10 flex-1 items-start">
                         <button 
                           onClick={(e) => toggleRegistration(e, campaign.id)}
                           className={`
-                            relative w-10 h-10 md:w-11 md:h-11 flex-shrink-0 border transition-all duration-300 flex items-center justify-center
+                            relative w-10 h-10 md:w-11 md:h-11 flex-shrink-0 border transition-all duration-300 flex items-center justify-center ${theme.buttonShape} self-start
                             ${isRegistered 
-                              ? `${theme.accentBg} border-[#D4AF37] text-black shadow-[0_0_15px_rgba(212,175,55,0.4)]` 
-                              : `bg-transparent ${theme.cardBorder} hover:border-[#D4AF37]`}
+                              ? `${theme.accentBg} border-transparent text-white shadow-lg` 
+                              : `bg-transparent ${theme.cardBorder === 'border-transparent' ? 'border-neutral-300' : theme.cardBorder} hover:border-${theme.accent.split('-')[1]}-400`}
                           `}
                         >
                           {isRegistered && <Check size={20} strokeWidth={3} className="md:w-5 md:h-5" />}
-                          <span className="absolute -bottom-5 left-0 text-[8px] md:text-[9px] uppercase tracking-widest w-full text-center opacity-50">
+                          {uiStyle === 'nyc' && <span className="absolute -bottom-5 left-0 text-[8px] md:text-[9px] uppercase tracking-widest w-full text-center opacity-50">
                             {isRegistered ? 'Done' : 'Log'}
-                          </span>
+                          </span>}
                         </button>
 
-                        <div className="flex-1">
-                          <h3 className={`text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase mb-1 md:mb-2 ${theme.accent}`}>
+                        {/* Card Visual (Moved Here - Left Side) */}
+                        <CardVisual 
+                            image={campaign.image} 
+                            gradient={campaign.gradient}
+                            textColor={campaign.textColor}
+                            cardName={campaign.card}
+                            bankName={campaign.bank}
+                            uiStyle={uiStyle}
+                        />
+
+                        {/* Text Info */}
+                        <div className="flex-1 min-w-0">
+                          <h3 className={`text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase mb-1 md:mb-2 ${theme.accent} truncate`}>
                             {campaign.bank}
                           </h3>
                           
-                          <div className="group/link flex items-center gap-2">
+                          <div className="group/link flex items-center gap-2 mb-1">
                             <a 
                                 href={campaign.link} 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()} 
                                 className={`
-                                    text-2xl md:text-3xl lg:text-4xl font-serif italic leading-tight mb-2 hover:underline hover:decoration-2 hover:decoration-[#D4AF37] transition-all
+                                    text-2xl md:text-3xl lg:text-4xl ${theme.fontDisplay} ${theme.fontDisplay === "font-['Playfair_Display']" ? 'italic' : 'font-black'} leading-tight hover:opacity-70 transition-all truncate
                                     ${theme.text}
                                 `}
                             >
@@ -888,22 +948,21 @@ const App = () => {
                           </div>
                           
                           <div className={`flex flex-wrap gap-2 md:gap-3 text-[10px] md:text-xs uppercase tracking-wider font-bold ${theme.subText}`}>
-                            <span className="border border-neutral-700 px-2 py-1">{campaign.mainTag}</span>
+                            <span className={`border ${isDarkMode ? 'border-white/20' : 'border-black/10'} px-2 py-1 ${theme.buttonShape}`}>{campaign.mainTag}</span>
                             <span className="flex items-center gap-1"><Clock size={12}/> {campaign.startDate}</span>
                           </div>
                         </div>
                       </div>
 
-                      {/* Right: Rate Display & Card Image */}
+                      {/* Right: Rate Display */}
                       <div className="flex flex-row-reverse justify-between md:flex-col md:items-end gap-4 md:gap-6 relative">
-                        {/* Rate */}
                         <div className="text-right flex flex-col items-end z-10">
                             <div className="flex items-baseline gap-1 font-mono text-xs md:text-sm md:text-base opacity-70 mb-1">
                                 <span>{campaign.baseRate}%</span>
                                 <span className="text-[10px] md:text-xs mx-1 text-neutral-500">BASE</span>
                                 <Plus size={10} />
                                 <span>{campaign.bonusRate}%</span>
-                                <span className="text-[10px] md:text-xs mx-1 text-[#D4AF37]">BONUS</span>
+                                <span className={`text-[10px] md:text-xs mx-1 ${theme.accent}`}>BONUS</span>
                             </div>
                             <div className={`text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter flex items-start ${theme.text}`}>
                             {campaign.totalRate}
@@ -913,15 +972,6 @@ const App = () => {
                             Total Reward
                             </div>
                         </div>
-
-                        {/* Card Image (Now visible on mobile) */}
-                        <CardVisual 
-                            image={campaign.image} 
-                            gradient={campaign.gradient}
-                            textColor={campaign.textColor}
-                            cardName={campaign.card}
-                            bankName={campaign.bank}
-                        />
                       </div>
                     </div>
 
@@ -930,7 +980,7 @@ const App = () => {
                         onClick={(e) => e.stopPropagation()} 
                         className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded ? 'max-h-[3000px] opacity-100' : 'max-h-0 opacity-0'}`}
                     >
-                        <div className={`pt-4 md:pt-6 pb-4 border-t border-dashed ${theme.cardBorder}`}>
+                        <div className={`pt-4 md:pt-6 pb-4 ${uiStyle === 'nyc' ? 'border-t border-dashed border-neutral-800' : 'mt-4 bg-black/5 rounded-2xl p-4'}`}>
                             
                             {/* --- 重要注意事項區塊 --- */}
                             {campaign.importantNotesList && campaign.importantNotesList.map((note, index) => {
@@ -941,10 +991,11 @@ const App = () => {
                                 <div 
                                     key={index} 
                                     className={`
-                                        mb-6 p-4 md:p-5 border-l-4 transition-all duration-300 relative overflow-hidden group/note
+                                        mb-6 p-4 md:p-5 transition-all duration-300 relative overflow-hidden group/note
+                                        ${uiStyle === 'nyc' ? 'border-l-4' : 'rounded-xl'}
                                         ${isNoteRegistered 
-                                            ? `border-[#D4AF37] ${isDarkMode ? 'bg-amber-900/10' : 'bg-amber-50'} shadow-[inset_0_0_20px_rgba(212,175,55,0.1)]` 
-                                            : `border-neutral-500/30 ${isDarkMode ? 'bg-neutral-900/30' : 'bg-neutral-50'} hover:border-[#D4AF37]/50`
+                                            ? `${uiStyle === 'nyc' ? 'border-[#D4AF37]' : ''} ${theme.accentBg} bg-opacity-10` 
+                                            : `${uiStyle === 'nyc' ? 'border-neutral-500/30' : ''} ${isDarkMode ? 'bg-black/20' : 'bg-white'}`
                                         }
                                     `}
                                 >
@@ -958,10 +1009,10 @@ const App = () => {
                                         <button 
                                             onClick={(e) => toggleRegistration(e, noteId)}
                                             className={`
-                                                w-6 h-6 md:w-7 md:h-7 flex-shrink-0 border flex items-center justify-center transition-all duration-300
+                                                w-6 h-6 md:w-7 md:h-7 flex-shrink-0 border flex items-center justify-center transition-all duration-300 ${theme.buttonShape}
                                                 ${isNoteRegistered 
-                                                    ? `${theme.accentBg} border-[#D4AF37] text-black shadow-md` 
-                                                    : `bg-transparent ${theme.cardBorder} hover:border-[#D4AF37]`
+                                                    ? `${theme.accentBg} border-transparent text-white shadow-md` 
+                                                    : `bg-transparent border-neutral-400 hover:border-${theme.accent.split('-')[1]}-400`
                                                 }
                                             `}
                                         >
@@ -971,21 +1022,21 @@ const App = () => {
                                         <div>
                                             <h4 className={`text-xs md:text-sm font-bold uppercase tracking-widest flex items-center gap-2 ${theme.accent}`}>
                                                 <AlertTriangle size={14} /> Important Notice {index + 1}
-                                                {isNoteRegistered && <span className="ml-2 text-[8px] md:text-[10px] bg-[#D4AF37] text-black px-1.5 py-0.5 rounded-sm">COMPLETED</span>}
+                                                {isNoteRegistered && <span className={`ml-2 text-[8px] md:text-[10px] ${theme.accentBg} text-white px-1.5 py-0.5 rounded-sm`}>COMPLETED</span>}
                                             </h4>
-                                            <h5 className={`text-sm md:text-base font-bold mt-1 ${isNoteRegistered ? 'opacity-50 line-through decoration-2 decoration-[#D4AF37]' : theme.text}`}>
+                                            <h5 className={`text-sm md:text-base font-bold mt-1 ${isNoteRegistered ? `opacity-50 line-through decoration-2 ${uiStyle === 'nyc' ? 'decoration-[#D4AF37]' : 'decoration-rose-400'}` : theme.text}`}>
                                                 {note.title}
                                             </h5>
                                         </div>
                                     </div>
                                     
-                                    <p className={`mb-5 text-xs md:text-sm font-medium leading-relaxed pl-9 md:pl-11 ${isDarkMode ? 'text-white' : 'text-amber-900'} ${isNoteRegistered ? 'opacity-50' : ''}`}>
+                                    <p className={`mb-5 text-xs md:text-sm font-medium leading-relaxed pl-9 md:pl-11 ${isDarkMode ? 'text-white' : 'text-black'} ${isNoteRegistered ? 'opacity-50' : ''}`}>
                                         {note.highlight}
                                     </p>
 
                                     <div className={`grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4 pl-9 md:pl-11 ${isNoteRegistered ? 'opacity-50 grayscale' : ''}`}>
                                         {note.schedule.map((item, i) => (
-                                            <div key={i} className={`p-3 border ${isDarkMode ? 'border-neutral-700 bg-neutral-950' : 'border-amber-200 bg-white'}`}>
+                                            <div key={i} className={`p-3 border ${isDarkMode ? 'border-white/10' : 'border-black/10'} ${uiStyle === 'korean' ? 'rounded-lg bg-white/50' : ''}`}>
                                                 <div className={`text-[10px] md:text-xs font-bold uppercase mb-1 ${theme.subText}`}>{item.month}</div>
                                                 <div className={`text-xs md:text-sm font-mono font-bold mb-1 ${theme.text}`}>{item.time}</div>
                                                 <div className={`text-[10px] md:text-xs ${theme.accent}`}>{item.limit}</div>
@@ -1001,7 +1052,7 @@ const App = () => {
 
                             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
                                 <div className="md:col-span-5 space-y-4">
-                                    <h4 className={`text-xs font-bold uppercase tracking-widest mb-4 border-l-2 pl-3 ${theme.text} border-[#D4AF37]`}>
+                                    <h4 className={`text-xs font-bold uppercase tracking-widest mb-4 border-l-2 pl-3 ${theme.text} ${theme.accentBorder}`}>
                                         Reward Structure
                                     </h4>
                                     <ul className="space-y-3">
@@ -1015,12 +1066,12 @@ const App = () => {
                                 </div>
 
                                 <div className="md:col-span-7">
-                                    <h4 className={`text-xs font-bold uppercase tracking-widest mb-4 border-l-2 pl-3 ${theme.text} border-[#D4AF37]`}>
+                                    <h4 className={`text-xs font-bold uppercase tracking-widest mb-4 border-l-2 pl-3 ${theme.text} ${theme.accentBorder}`}>
                                         Applicable Channels
                                     </h4>
                                     <div className="grid gap-3">
                                         {campaign.channels.map((channel, cIdx) => (
-                                            <div key={cIdx} className={`p-4 ${isDarkMode ? 'bg-neutral-900/50' : 'bg-neutral-100'} border ${theme.cardBorder} hover:border-[#D4AF37] transition-colors`}>
+                                            <div key={cIdx} className={`p-4 ${isDarkMode ? 'bg-black/20' : 'bg-white'} border ${uiStyle === 'nyc' ? theme.cardBorder : 'border-transparent shadow-sm'} ${uiStyle === 'korean' ? 'rounded-xl' : ''} transition-colors`}>
                                                 <div className="flex justify-between items-center mb-2">
                                                     <span className={`font-bold ${theme.text} text-xs md:text-sm flex items-center gap-2`}>
                                                         {channel.title}
@@ -1064,7 +1115,7 @@ const App = () => {
              <div className="space-y-16">
                 <div className="text-center space-y-2 mb-12">
                     <h2 className={`text-3xl font-serif italic ${theme.text}`}>Top Selections</h2>
-                    <div className={`w-12 h-1 bg-[#D4AF37] mx-auto`}></div>
+                    <div className={`w-12 h-1 ${theme.accentBg} mx-auto rounded-full`}></div>
                 </div>
 
                 {['旅遊', '網購', '一般消費', '生活'].map((cat) => {
@@ -1073,7 +1124,7 @@ const App = () => {
                     const winner = topCards[0];
 
                     return (
-                        <div key={cat} className="grid md:grid-cols-2 gap-8 items-center border-b border-neutral-800 pb-12">
+                        <div key={cat} className={`grid md:grid-cols-2 gap-8 items-center border-b ${theme.cardBorder} pb-12`}>
                              <div className="order-2 md:order-1">
                                 <div className={`text-[10px] uppercase tracking-[0.3em] mb-2 ${theme.accent}`}>Category Winner</div>
                                 <h3 className={`text-4xl font-black uppercase mb-1 ${theme.text}`}>{cat}</h3>
@@ -1091,7 +1142,7 @@ const App = () => {
                                         <ExternalLink size={14} className={theme.subText} />
                                     </a>
                                     <div className={`text-sm ${theme.subText}`}>{winner.bank}</div>
-                                    <div className={`mt-4 p-3 border-l-2 border-[#D4AF37] ${isDarkMode ? 'bg-neutral-900/50' : 'bg-neutral-100'}`}>
+                                    <div className={`mt-4 p-3 border-l-2 ${theme.accentBorder} ${isDarkMode ? 'bg-neutral-900/50' : 'bg-neutral-100'}`}>
                                         <div className="text-xs font-bold uppercase mb-1">Winning Factor</div>
                                         <div className={`text-sm ${theme.text}`}>{winner.details[1]?.value || winner.name}</div>
                                     </div>
@@ -1110,6 +1161,7 @@ const App = () => {
                                         textColor={winner.textColor}
                                         cardName={winner.card}
                                         bankName={winner.bank}
+                                        uiStyle={uiStyle}
                                     />
                                  </div>
                              </div>
@@ -1121,7 +1173,7 @@ const App = () => {
 
       </main>
 
-      <footer className={`py-8 md:py-12 border-t border-neutral-800 ${theme.bg}`}>
+      <footer className={`py-8 md:py-12 border-t ${theme.cardBorder} ${theme.bg}`}>
         <div className="w-full px-6 text-center">
              <h2 className={`text-xl md:text-2xl font-black italic tracking-tighter mb-6 opacity-30 ${theme.text}`}>REWARD ENGINE</h2>
              <div className={`flex justify-center gap-8 text-[10px] uppercase tracking-widest ${theme.subText}`}>
