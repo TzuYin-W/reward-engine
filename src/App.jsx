@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Check, Calendar, ArrowUpRight, Clock, Sun, Moon, Gift, Plus, ChevronDown, ChevronUp, Star, Zap, ShoppingBag, Plane, Coffee, ExternalLink, Filter, X, AlertTriangle, ChevronRight, Globe, Utensils, Music, Gamepad, GraduationCap, Cat, Home, CreditCard, RefreshCw } from 'lucide-react';
 
-// --- 銀行與卡別層級資料庫 (用於篩選器) ---
+// --- 銀行與卡別層級資料庫 ---
 const BANK_HIERARCHY = [
   {
     name: 'CTBC 中國信託',
@@ -42,7 +42,6 @@ const BANK_HIERARCHY = [
 
 // --- 模擬數據資料庫 ---
 const INITIAL_CAMPAIGNS = [
-  // 1. 富邦 J 卡
   { 
     id: 'fubon_j', 
     bank: 'FUBON 台北富邦', 
@@ -93,7 +92,6 @@ const INITIAL_CAMPAIGNS = [
       { title: '🏪 當地指定便利店 (10%)', content: '日本三大超商: 7-Eleven, Lawson, FamilyMart | 韓國便利商店: CU, GS25, Emart24 (需登錄)', rate: '10%' }
     ]
   },
-  // 2. 中信 LINE Pay 卡
   {
     id: 'ctbc_linepay',
     bank: 'CTBC 中國信託',
@@ -131,7 +129,6 @@ const INITIAL_CAMPAIGNS = [
         { title: '🎬 影音娛樂 (10%)', content: 'Netflix, Disney+, Spotify 等指定影音平台消費享 10% 回饋 (需登錄)。', rate: '10%' }
     ]
   },
-  // 3. 中信 All Me 卡
   {
     id: 'ctbc_allme',
     bank: 'CTBC 中國信託',
@@ -158,7 +155,6 @@ const INITIAL_CAMPAIGNS = [
         { title: '🏪 超商/超市 (8%)', content: '7-ELEVEN, 全家, 萊爾富, OK, 美廉社 (需使用 Hami Pay 感應支付)。', rate: '8%' }
     ]
   },
-  // 4. 玉山 U Bear 卡
   {
     id: 'esun_ubear',
     bank: 'E.SUN 玉山銀行',
@@ -184,7 +180,6 @@ const INITIAL_CAMPAIGNS = [
         { title: '🎬 指定影音 (13%)', content: 'Disney+, Netflix, Spotify, Nintendo, PlayStation。', rate: '13%' }
     ]
   },
-  // 5. 聯邦 吉鶴卡
   {
     id: 'federal_jihe',
     bank: 'FEDERAL 聯邦銀行',
@@ -212,7 +207,6 @@ const INITIAL_CAMPAIGNS = [
         { title: '🍽️ 日系美饌 (10%)', content: '國內指定日系餐廳 (勝博殿, 一風堂, 欣葉日本料理...) 現折 10%。', rate: '10%' }
     ]
   },
-  // 6. 永豐大戶
   { 
     id: 'sinopac_dawho', 
     bank: 'SINOPAC 永豐銀行', 
@@ -244,7 +238,6 @@ const INITIAL_CAMPAIGNS = [
       { title: '🏠 【家】居家生活', content: 'IKEA, 誠品生活, 特力屋, Pinkoi', rate: '7%' }
     ]
   },
-  // 7. 永豐 JCB
   { 
     id: 'sinopac_jcb', 
     bank: 'SINOPAC 永豐銀行', 
@@ -272,7 +265,6 @@ const INITIAL_CAMPAIGNS = [
       { title: '🍽️ 餐廳/外送 (5%)', content: '國內所有實體餐廳(含連鎖速食/咖啡廳/火鍋/燒肉)、Uber Eats、Foodpanda', rate: '5%' }
     ]
   },
-  // 8. 國泰 CUBE
   { 
     id: 'cathay_cube', 
     bank: 'CATHAY 國泰世華', 
@@ -301,7 +293,6 @@ const INITIAL_CAMPAIGNS = [
       { title: '🛒 集精選 (2%)', content: '全聯福利中心、家樂福、7-ELEVEN、全家便利商店、麥當勞、肯德基、中油直營(加油)、IKEA、宜得利家居', rate: '2%' }
     ]
   },
-  // 9. 台新 GoGo
   { 
     id: 'taishin_gogo', 
     bank: 'TAISHIN 台新銀行', 
@@ -323,11 +314,10 @@ const INITIAL_CAMPAIGNS = [
       { label: '任務加碼', value: '+3.3% (需電子帳單+Richart扣繳)' }
     ],
     channels: [
-      { title: '📱 行動支付 (3.8%)', content: 'LINE Pay, 全支付, 台新Pay, 全盈+PAY。', rate: '3.8%' },
-      { title: '🛒 精選網購 (3.8%)', content: '蝦皮購物, momo, PChome, Yahoo, Amazon, Coupang, 博客來。', rate: '3.8%' }
+      { title: '📱 行動支付 (3.8%)', content: 'LINE Pay, 全支付, 台新Pay, 全盈+PAY (適用於超商、超市、百貨、餐廳、夜市、飲料店、計程車等支援上述支付之所有通路)', rate: '3.8%' },
+      { title: '🛒 精選網購 (3.8%)', content: '蝦皮購物, momo購物網, PChome, Yahoo奇摩, Amazon, Coupang(酷澎), 博客來, Pinkoi, 露天拍賣, 淘寶, 東森購物, PayEasy', rate: '3.8%' }
     ]
   },
-  // 10. 永豐 Sport
   { 
     id: 'sinopac_sport', 
     bank: 'SINOPAC 永豐銀行', 
@@ -350,50 +340,49 @@ const INITIAL_CAMPAIGNS = [
       { label: '支付加碼', value: '+4% (指定支付方式)' }
     ],
     channels: [
-      { title: '🍎 指定行動支付', content: 'Apple Pay, Google Pay (適用全台支援感應支付之實體通路)。', rate: '7%' },
-      { title: '🏋️ 健身/運動用品', content: '健身工廠, World Gym, Nike, Adidas, Puma, Decathlon。', rate: '7%' },
-      { title: '⚕️ 藥妝/有機商店', content: '大樹藥局, 丁丁藥局, 康是美, 屈臣氏, 杏一。', rate: '7%' }
+      { title: '🍎 指定行動支付', content: 'Apple Pay, Google Pay (適用全台支援感應支付之實體通路：百貨/量販/超商/餐廳/加油站/電影院/誠品/Uniqlo/Zara...)', rate: '7%' },
+      { title: '🏋️ 健身/運動用品', content: '健身工廠, World Gym, Curves, Anytime Fitness, 享健身 | 運動用品: Nike, Adidas, Puma, UA, Decathlon, Skechers, 摩曼頓, ABC Mart', rate: '7%' },
+      { title: '⚕️ 藥妝/有機商店', content: '大樹藥局, 丁丁藥局, 啄木鳥藥局, 棉花田, 聖德科斯, 佑全保健藥妝, 杏一醫療用品', rate: '7%' }
     ]
   }
 ];
 
 const ALL_CATEGORIES = [...new Set(INITIAL_CAMPAIGNS.map(c => c.category))];
 
-// --- 獨立元件：卡片視覺呈現 (處理圖片載入失敗的狀況) ---
+// --- 獨立元件：卡片視覺呈現 ---
 const CardVisual = ({ image, gradient, textColor, cardName, bankName }) => {
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className="relative w-36 h-24 perspective-1000 z-0 hidden md:block group-hover:z-20">
+    // 調整：在手機上使用 w-32 h-20 (約128x80px) 且保有旋轉效果
+    <div className="relative w-32 h-20 md:w-40 md:h-24 perspective-1000 z-0 flex-shrink-0 group-hover:z-20 mt-2 md:mt-0 self-end md:self-auto">
       {/* 嘗試載入真實圖片 */}
       {!imageError && image ? (
         <img 
             src={image} 
             alt={cardName} 
             className={`
-                w-full h-full object-cover rounded-xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] 
+                w-full h-full object-cover rounded-xl shadow-[0_10px_30px_-5px_rgba(0,0,0,0.3)] md:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] 
                 transition-all duration-700 ease-out
-                transform rotate-6 -translate-y-2 translate-x-4
-                group-hover:rotate-12 group-hover:-translate-y-6 group-hover:scale-110
+                transform rotate-6 md:rotate-6 md:-translate-y-2 md:translate-x-4
+                group-hover:rotate-0 md:group-hover:rotate-12 group-hover:scale-105 md:group-hover:scale-110
             `}
             onError={() => setImageError(true)}
         />
       ) : (
         /* 圖片載入失敗時的 Fallback：數位擬態卡面 */
         <div className={`
-            w-full h-full rounded-xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)]
+            w-full h-full rounded-xl shadow-md
             transition-all duration-700 ease-out
-            transform rotate-6 -translate-y-2 translate-x-4
-            group-hover:rotate-12 group-hover:-translate-y-6 group-hover:scale-110
+            transform rotate-6 md:rotate-6 md:-translate-y-2 md:translate-x-4
+            group-hover:scale-105 md:group-hover:rotate-12 md:group-hover:scale-110
             bg-gradient-to-br ${gradient} p-3 flex flex-col justify-between border border-white/10
         `}>
              <div className={`text-[10px] uppercase tracking-widest opacity-80 ${textColor}`}>{bankName.split(' ')[0]}</div>
              <div className="flex justify-between items-end">
                 <div className={`text-xs font-bold leading-tight ${textColor}`}>{cardName}</div>
-                <CreditCard size={14} className={`opacity-50 ${textColor}`} />
+                <CreditCard size={16} className={`opacity-50 ${textColor}`} />
              </div>
-             {/* 裝飾性晶片 */}
-             <div className="absolute top-3 right-3 w-5 h-4 bg-yellow-400/80 rounded-sm opacity-50"></div>
         </div>
       )}
       
@@ -416,7 +405,6 @@ const App = () => {
   const [expandedFilterBanks, setExpandedFilterBanks] = useState([]);
   const [lastUpdated, setLastUpdated] = useState("2025/12/10"); 
 
-  // --- 模擬「資料更新」功能 ---
   const [isUpdating, setIsUpdating] = useState(false);
   
   const handleRefreshData = () => {
@@ -634,26 +622,22 @@ const App = () => {
         </div>
       )}
 
-      {/* --- HEADER --- */}
-      <header className="pt-12 pb-8 px-6 md:px-12 border-b border-neutral-800/50 sticky top-0 z-50 backdrop-blur-xl bg-opacity-90 transition-all">
-        <div className="max-w-4xl mx-auto">
+      {/* --- HEADER (Sticky) --- */}
+      <header className={`sticky top-0 z-50 backdrop-blur-xl bg-opacity-90 transition-all border-b border-neutral-800/50 pt-4 pb-4 md:pt-12 md:pb-8 ${theme.bg}`}>
+        <div className="w-full px-4 md:px-12">
           <div className="flex justify-between items-start">
             <div className="flex-1">
-              <div className="flex items-baseline gap-2 mb-[-8px]">
-                <span className={`text-[10px] md:text-xs font-bold tracking-[0.4em] uppercase ${theme.accent}`}>The Collection</span>
-                <span className={`text-[10px] md:text-xs font-bold tracking-widest uppercase ${theme.subText}`}>Vol.2025</span>
-              </div>
-              <h1 className={`text-5xl md:text-7xl font-black tracking-tighter uppercase leading-[0.85] ${theme.text}`}>
+              <h1 className={`text-3xl md:text-7xl font-black tracking-tighter uppercase leading-[0.85] ${theme.text}`}>
                 Reward
-                <span className={`block font-serif italic font-light tracking-normal text-3xl md:text-5xl mt-1 ${theme.accent}`}>
+                <span className={`block font-serif italic font-light tracking-normal text-2xl md:text-5xl mt-1 ${theme.accent}`}>
                   Engine.
                 </span>
               </h1>
             </div>
             
-            <div className="flex flex-col items-end gap-4">
+            <div className="flex flex-col items-end gap-2 md:gap-4">
                {/* 模擬更新按鈕 */}
-               <div className="flex items-center gap-3">
+               <div className="flex items-center gap-2 md:gap-3">
                    <div className="hidden md:flex flex-col items-end mr-2">
                        <span className={`text-[10px] uppercase tracking-wider ${theme.subText}`}>Last Updated</span>
                        <span className={`text-[10px] font-mono ${theme.accent}`}>{lastUpdated}</span>
@@ -661,16 +645,16 @@ const App = () => {
                    <button 
                     onClick={handleRefreshData}
                     disabled={isUpdating}
-                    className={`w-10 h-10 flex items-center justify-center rounded-full border ${theme.cardBorder} hover:border-[#D4AF37] transition-all ${isUpdating ? 'animate-spin opacity-50' : ''}`}
+                    className={`w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full border ${theme.cardBorder} hover:border-[#D4AF37] transition-all ${isUpdating ? 'animate-spin opacity-50' : ''}`}
                     title="Sync Latest Data"
                    >
-                    <RefreshCw size={16} />
+                    <RefreshCw size={14} className="md:w-4 md:h-4" />
                    </button>
                    <button 
                     onClick={() => setIsDarkMode(!isDarkMode)}
-                    className={`w-10 h-10 flex items-center justify-center rounded-full border ${theme.cardBorder} hover:scale-110 transition-transform`}
+                    className={`w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full border ${theme.cardBorder} hover:scale-110 transition-transform`}
                    >
-                    {isDarkMode ? <Sun size={18} strokeWidth={1.5} /> : <Moon size={18} strokeWidth={1.5} />}
+                    {isDarkMode ? <Sun size={16} strokeWidth={1.5} className="md:w-[18px]" /> : <Moon size={16} strokeWidth={1.5} className="md:w-[18px]" />}
                    </button>
                </div>
                
@@ -681,8 +665,8 @@ const App = () => {
             </div>
           </div>
 
-          <div className="mt-8 flex items-center justify-between border-t border-b border-neutral-800 py-3">
-             <div className="flex gap-6 text-xs font-bold tracking-widest uppercase">
+          <div className="mt-4 md:mt-8 flex items-center justify-between border-t border-b border-neutral-800 py-3">
+             <div className="flex gap-4 md:gap-6 text-xs font-bold tracking-widest uppercase">
                 <button 
                     onClick={() => setViewMode('list')}
                     className={`transition-colors ${viewMode === 'list' ? theme.accent : theme.subText}`}
@@ -699,7 +683,7 @@ const App = () => {
              
              <button 
                 onClick={() => setIsFilterOpen(true)}
-                className={`flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase ${theme.subText} hover:${theme.accent} transition-colors px-3 py-1 border border-transparent hover:border-neutral-700`}
+                className={`flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase ${theme.subText} hover:${theme.accent} transition-colors px-2 py-1 md:px-3 md:py-1 border border-transparent hover:border-neutral-700`}
              >
                 <Filter size={12} />
                 Filter View
@@ -709,10 +693,10 @@ const App = () => {
       </header>
 
       {/* --- MAIN CONTENT --- */}
-      <main className="max-w-4xl mx-auto px-4 md:px-12 py-12">
+      <main className="w-full px-4 md:px-12 py-8 md:py-12">
         
         {viewMode === 'list' && (
-          <div className="grid gap-12">
+          <div className="grid gap-8 md:gap-12">
             {filteredCampaigns.map((campaign, index) => {
               const isRegistered = registeredIds.includes(campaign.id);
               const isExpanded = expandedId === campaign.id;
@@ -727,7 +711,7 @@ const App = () => {
                   `}
                 >
                   {/* Number */}
-                  <div className={`absolute -left-4 -top-8 text-[80px] md:text-[120px] font-black leading-none opacity-5 select-none font-serif ${theme.text}`}>
+                  <div className={`absolute -left-2 md:-left-4 -top-6 md:-top-8 text-[60px] md:text-[120px] font-black leading-none opacity-5 select-none font-serif ${theme.text}`}>
                     {index + 1 < 10 ? `0${index + 1}` : index + 1}
                   </div>
 
@@ -742,27 +726,28 @@ const App = () => {
                   {/* Card Body */}
                   <div className={`relative border-t-2 ${isRegistered ? theme.accentBorder : (theme.text === 'text-white' ? 'border-white' : 'border-black')} pt-4 transition-colors duration-500`}>
                     
-                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-6">
+                    {/* Header Layout: Mobile Friendly */}
+                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-6 mb-6">
                       
                       {/* Left: Checkbox & Info */}
-                      <div className="flex gap-6 z-10">
+                      <div className="flex gap-4 md:gap-6 z-10">
                         <button 
                           onClick={(e) => toggleRegistration(e, campaign.id)}
                           className={`
-                            relative w-12 h-12 flex-shrink-0 border transition-all duration-300 flex items-center justify-center
+                            relative w-10 h-10 md:w-12 md:h-12 flex-shrink-0 border transition-all duration-300 flex items-center justify-center
                             ${isRegistered 
                               ? `${theme.accentBg} border-[#D4AF37] text-black shadow-[0_0_15px_rgba(212,175,55,0.4)]` 
                               : `bg-transparent ${theme.cardBorder} hover:border-[#D4AF37]`}
                           `}
                         >
-                          {isRegistered && <Check size={24} strokeWidth={3} />}
-                          <span className="absolute -bottom-6 left-0 text-[9px] uppercase tracking-widest w-full text-center opacity-50">
+                          {isRegistered && <Check size={20} strokeWidth={3} className="md:w-6 md:h-6" />}
+                          <span className="absolute -bottom-5 left-0 text-[8px] md:text-[9px] uppercase tracking-widest w-full text-center opacity-50">
                             {isRegistered ? 'Done' : 'Log'}
                           </span>
                         </button>
 
-                        <div>
-                          <h3 className={`text-xs font-bold tracking-[0.2em] uppercase mb-2 ${theme.accent}`}>
+                        <div className="flex-1">
+                          <h3 className={`text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase mb-1 md:mb-2 ${theme.accent}`}>
                             {campaign.bank}
                           </h3>
                           
@@ -773,16 +758,16 @@ const App = () => {
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()} 
                                 className={`
-                                    text-3xl md:text-4xl font-serif italic leading-tight mb-2 hover:underline hover:decoration-2 hover:decoration-[#D4AF37] transition-all
+                                    text-2xl md:text-4xl font-serif italic leading-tight mb-2 hover:underline hover:decoration-2 hover:decoration-[#D4AF37] transition-all
                                     ${theme.text}
                                 `}
                             >
                                 {campaign.card}
                             </a>
-                            <ExternalLink size={16} className={`opacity-0 group-hover/link:opacity-100 transition-opacity mb-2 ${theme.accent}`} />
+                            <ExternalLink size={14} className={`opacity-0 group-hover/link:opacity-100 transition-opacity mb-2 ${theme.accent}`} />
                           </div>
                           
-                          <div className={`flex flex-wrap gap-3 text-xs uppercase tracking-wider font-bold ${theme.subText}`}>
+                          <div className={`flex flex-wrap gap-2 md:gap-3 text-[10px] md:text-xs uppercase tracking-wider font-bold ${theme.subText}`}>
                             <span className="border border-neutral-700 px-2 py-1">{campaign.mainTag}</span>
                             <span className="flex items-center gap-1"><Clock size={12}/> {campaign.startDate}</span>
                           </div>
@@ -790,8 +775,26 @@ const App = () => {
                       </div>
 
                       {/* Right: Rate Display & Card Image */}
-                      <div className="flex flex-col md:flex-row items-end gap-6 relative">
-                        {/* 3D Floating Card Image (Visual Component) */}
+                      <div className="flex flex-row-reverse justify-between md:flex-col md:items-end gap-4 md:gap-6 relative">
+                        {/* Rate */}
+                        <div className="text-right flex flex-col items-end z-10">
+                            <div className="flex items-baseline gap-1 font-mono text-xs md:text-sm md:text-base opacity-70 mb-1">
+                                <span>{campaign.baseRate}%</span>
+                                <span className="text-[10px] md:text-xs mx-1 text-neutral-500">BASE</span>
+                                <Plus size={10} />
+                                <span>{campaign.bonusRate}%</span>
+                                <span className="text-[10px] md:text-xs mx-1 text-[#D4AF37]">BONUS</span>
+                            </div>
+                            <div className={`text-4xl md:text-6xl font-black tracking-tighter flex items-start ${theme.text}`}>
+                            {campaign.totalRate}
+                            <span className="text-xl md:text-2xl mt-1 ml-1 font-light">%</span>
+                            </div>
+                            <div className={`mt-1 md:mt-2 text-[8px] md:text-[10px] uppercase tracking-[0.3em] ${theme.subText}`}>
+                            Total Reward
+                            </div>
+                        </div>
+
+                        {/* Card Image (Now visible on mobile) */}
                         <CardVisual 
                             image={campaign.image} 
                             gradient={campaign.gradient}
@@ -799,31 +802,17 @@ const App = () => {
                             cardName={campaign.card}
                             bankName={campaign.bank}
                         />
-
-                        <div className="text-right flex flex-col items-end z-10">
-                            <div className="flex items-baseline gap-1 font-mono text-sm md:text-base opacity-70 mb-1">
-                                <span>{campaign.baseRate}%</span>
-                                <span className="text-xs mx-1 text-neutral-500">BASE</span>
-                                <Plus size={10} />
-                                <span>{campaign.bonusRate}%</span>
-                                <span className="text-xs mx-1 text-[#D4AF37]">BONUS</span>
-                            </div>
-                            <div className={`text-5xl md:text-6xl font-black tracking-tighter flex items-start ${theme.text}`}>
-                            {campaign.totalRate}
-                            <span className="text-2xl mt-1 ml-1 font-light">%</span>
-                            </div>
-                            <div className={`mt-2 text-[10px] uppercase tracking-[0.3em] ${theme.subText}`}>
-                            Total Reward
-                            </div>
-                        </div>
                       </div>
                     </div>
 
                     {/* EXPANDABLE DETAILS */}
-                    <div className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded ? 'max-h-[1500px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                        <div className={`pt-8 pb-4 border-t border-dashed ${theme.cardBorder}`}>
+                    <div 
+                        onClick={(e) => e.stopPropagation()} 
+                        className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded ? 'max-h-[3000px] opacity-100' : 'max-h-0 opacity-0'}`}
+                    >
+                        <div className={`pt-4 md:pt-8 pb-4 border-t border-dashed ${theme.cardBorder}`}>
                             
-                            {/* --- 重要注意事項區塊 (支援多筆 + 獨立勾選功能) --- */}
+                            {/* --- 重要注意事項區塊 --- */}
                             {campaign.importantNotesList && campaign.importantNotesList.map((note, index) => {
                                 const noteId = `${campaign.id}_note_${index}`;
                                 const isNoteRegistered = registeredIds.includes(noteId);
@@ -832,7 +821,7 @@ const App = () => {
                                 <div 
                                     key={index} 
                                     className={`
-                                        mb-6 p-5 md:p-6 border-l-4 transition-all duration-300 relative overflow-hidden group/note
+                                        mb-6 p-4 md:p-6 border-l-4 transition-all duration-300 relative overflow-hidden group/note
                                         ${isNoteRegistered 
                                             ? `border-[#D4AF37] ${isDarkMode ? 'bg-amber-900/10' : 'bg-amber-50'} shadow-[inset_0_0_20px_rgba(212,175,55,0.1)]` 
                                             : `border-neutral-500/30 ${isDarkMode ? 'bg-neutral-900/30' : 'bg-neutral-50'} hover:border-[#D4AF37]/50`
@@ -849,42 +838,42 @@ const App = () => {
                                         <button 
                                             onClick={(e) => toggleRegistration(e, noteId)}
                                             className={`
-                                                w-8 h-8 flex-shrink-0 border flex items-center justify-center transition-all duration-300
+                                                w-6 h-6 md:w-8 md:h-8 flex-shrink-0 border flex items-center justify-center transition-all duration-300
                                                 ${isNoteRegistered 
                                                     ? `${theme.accentBg} border-[#D4AF37] text-black shadow-md` 
                                                     : `bg-transparent ${theme.cardBorder} hover:border-[#D4AF37]`
                                                 }
                                             `}
                                         >
-                                            {isNoteRegistered && <Check size={16} strokeWidth={3} />}
+                                            {isNoteRegistered && <Check size={14} strokeWidth={3} className="md:w-4 md:h-4" />}
                                         </button>
 
                                         <div>
-                                            <h4 className={`text-sm font-bold uppercase tracking-widest flex items-center gap-2 ${theme.accent}`}>
+                                            <h4 className={`text-xs md:text-sm font-bold uppercase tracking-widest flex items-center gap-2 ${theme.accent}`}>
                                                 <AlertTriangle size={14} /> Important Notice {index + 1}
-                                                {isNoteRegistered && <span className="ml-2 text-[10px] bg-[#D4AF37] text-black px-1.5 py-0.5 rounded-sm">COMPLETED</span>}
+                                                {isNoteRegistered && <span className="ml-2 text-[8px] md:text-[10px] bg-[#D4AF37] text-black px-1.5 py-0.5 rounded-sm">COMPLETED</span>}
                                             </h4>
-                                            <h5 className={`text-lg font-bold mt-1 ${isNoteRegistered ? 'opacity-50 line-through decoration-2 decoration-[#D4AF37]' : theme.text}`}>
+                                            <h5 className={`text-sm md:text-lg font-bold mt-1 ${isNoteRegistered ? 'opacity-50 line-through decoration-2 decoration-[#D4AF37]' : theme.text}`}>
                                                 {note.title}
                                             </h5>
                                         </div>
                                     </div>
                                     
-                                    <p className={`mb-6 text-sm font-medium leading-relaxed pl-12 ${isDarkMode ? 'text-white' : 'text-amber-900'} ${isNoteRegistered ? 'opacity-50' : ''}`}>
+                                    <p className={`mb-6 text-xs md:text-sm font-medium leading-relaxed pl-10 md:pl-12 ${isDarkMode ? 'text-white' : 'text-amber-900'} ${isNoteRegistered ? 'opacity-50' : ''}`}>
                                         {note.highlight}
                                     </p>
 
-                                    <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 pl-12 ${isNoteRegistered ? 'opacity-50 grayscale' : ''}`}>
+                                    <div className={`grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4 pl-10 md:pl-12 ${isNoteRegistered ? 'opacity-50 grayscale' : ''}`}>
                                         {note.schedule.map((item, i) => (
-                                            <div key={i} className={`p-4 border ${isDarkMode ? 'border-neutral-700 bg-neutral-950' : 'border-amber-200 bg-white'}`}>
-                                                <div className={`text-xs font-bold uppercase mb-2 ${theme.subText}`}>{item.month}</div>
-                                                <div className={`text-sm font-mono font-bold mb-1 ${theme.text}`}>{item.time}</div>
-                                                <div className={`text-xs ${theme.accent}`}>{item.limit}</div>
+                                            <div key={i} className={`p-3 md:p-4 border ${isDarkMode ? 'border-neutral-700 bg-neutral-950' : 'border-amber-200 bg-white'}`}>
+                                                <div className={`text-[10px] md:text-xs font-bold uppercase mb-1 md:mb-2 ${theme.subText}`}>{item.month}</div>
+                                                <div className={`text-xs md:text-sm font-mono font-bold mb-1 ${theme.text}`}>{item.time}</div>
+                                                <div className={`text-[10px] md:text-xs ${theme.accent}`}>{item.limit}</div>
                                             </div>
                                         ))}
                                     </div>
                                     
-                                    <p className={`text-xs mt-2 opacity-70 pl-12 ${theme.subText}`}>
+                                    <p className={`text-[10px] md:text-xs mt-2 opacity-70 pl-10 md:pl-12 ${theme.subText}`}>
                                         {note.footer}
                                     </p>
                                 </div>
@@ -897,7 +886,7 @@ const App = () => {
                                     </h4>
                                     <ul className="space-y-3">
                                         {campaign.details.map((detail, idx) => (
-                                            <li key={idx} className="flex justify-between items-baseline text-sm group">
+                                            <li key={idx} className="flex justify-between items-baseline text-xs md:text-sm group">
                                                 <span className={`${theme.subText} group-hover:${theme.text} transition-colors`}>{detail.label}</span>
                                                 <span className={`font-mono font-bold ${theme.text}`}>{detail.value}</span>
                                             </li>
@@ -911,12 +900,12 @@ const App = () => {
                                     </h4>
                                     <div className="grid gap-3">
                                         {campaign.channels.map((channel, cIdx) => (
-                                            <div key={cIdx} className={`p-5 ${isDarkMode ? 'bg-neutral-900/50' : 'bg-neutral-100'} border ${theme.cardBorder} hover:border-[#D4AF37] transition-colors`}>
+                                            <div key={cIdx} className={`p-4 md:p-5 ${isDarkMode ? 'bg-neutral-900/50' : 'bg-neutral-100'} border ${theme.cardBorder} hover:border-[#D4AF37] transition-colors`}>
                                                 <div className="flex justify-between items-center mb-3">
-                                                    <span className={`font-bold ${theme.text} text-sm flex items-center gap-2`}>
+                                                    <span className={`font-bold ${theme.text} text-xs md:text-sm flex items-center gap-2`}>
                                                         {channel.title}
                                                     </span>
-                                                    <span className={`font-black text-xl italic ${theme.accent}`}>{channel.rate}</span>
+                                                    <span className={`font-black text-lg md:text-xl italic ${theme.accent}`}>{channel.rate}</span>
                                                 </div>
                                                 <p className={`text-xs leading-6 ${theme.subText} text-justify`}>
                                                     {channel.content}
@@ -1030,3 +1019,5 @@ const App = () => {
 };
 
 export default App;
+
+
