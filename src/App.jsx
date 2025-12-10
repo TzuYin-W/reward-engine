@@ -180,8 +180,8 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31',
     mainTag: '點數回饋',
     image: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/LINEPay/images/card_01.png',
-    gradient: 'from-black to-zinc-800', 
-    textColor: 'text-green-400',
+    gradient: 'from-green-400 to-green-600', 
+    textColor: 'text-white',
     link: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/LINEPay/index.html',
     details: [
         { label: '國內一般消費', value: '1% LINE POINTS (無上限)' },
@@ -433,9 +433,8 @@ const CardVisual = ({ image, gradient, textColor, cardName, bankName, uiStyle })
   const [imageError, setImageError] = useState(false);
 
   return (
-    // 調整：手機版尺寸 w-36 h-24 (144px x 96px, 1.5:1 ratio)，恢復傾斜
-    // 使用 group-active 來實作點擊回正，放開彈回
-    <div className={`relative w-36 h-24 md:w-44 md:h-28 perspective-1000 z-0 flex-shrink-0 group-hover:z-20 mt-1 md:mt-0 self-end md:self-auto ${uiStyle === 'korean' ? 'perspective-none' : ''}`}>
+    // 手機版尺寸 w-28 h-20 (約112x80px)，比例更緊湊
+    <div className={`relative w-28 h-20 md:w-44 md:h-28 perspective-1000 z-0 flex-shrink-0 group-hover:z-20 mt-1 md:mt-0 self-start md:self-auto ${uiStyle === 'korean' ? 'perspective-none' : ''}`}>
       {!imageError && image ? (
         <img 
             src={image} 
@@ -454,16 +453,16 @@ const CardVisual = ({ image, gradient, textColor, cardName, bankName, uiStyle })
         <div className={`
             w-full h-full shadow-md
             transition-all duration-300 ease-out
-            bg-gradient-to-br ${gradient} p-3 flex flex-col justify-between border border-white/10
+            bg-gradient-to-br ${gradient} p-2 md:p-3 flex flex-col justify-between border border-white/10
             ${uiStyle === 'korean'
                 ? 'rounded-3xl rotate-0 scale-95 group-hover:scale-105 group-hover:-translate-y-2' 
                 : 'rounded-xl transform rotate-6 md:rotate-6 md:-translate-y-2 md:translate-x-4 group-active:rotate-0 md:group-hover:rotate-12 group-active:scale-105 md:group-hover:scale-110'
             }
         `}>
-             <div className={`text-[10px] uppercase tracking-widest opacity-80 italic ${textColor} font-serif`}>{bankName.split(' ')[0]}</div>
+             <div className={`text-[8px] md:text-[10px] uppercase tracking-widest opacity-80 italic ${textColor} font-serif`}>{bankName.split(' ')[0]}</div>
              <div className="flex justify-between items-end">
-                <div className={`text-xs font-bold leading-tight italic ${textColor} font-serif mt-0.5`}>{cardName}</div>
-                <CreditCard size={16} className={`opacity-50 ${textColor}`} />
+                <div className={`text-[10px] md:text-xs font-bold leading-tight italic ${textColor} font-serif mt-0.5`}>{cardName}</div>
+                <CreditCard size={14} className={`opacity-50 ${textColor}`} />
              </div>
         </div>
       )}
@@ -637,7 +636,7 @@ const App = () => {
   return (
     // 使用 max-w-md 限制寬度，mx-auto 讓它在桌面置中，模仿手機 App 介面
     // overflow-x-hidden 與 overscroll-x-none 鎖定水平捲動
-    <div className={`min-h-screen w-full transition-colors duration-500 selection:bg-rose-200 selection:text-rose-900 ${theme.bg} ${theme.text} ${theme.fontBody} flex justify-center overflow-x-hidden`}>
+    <div className={`min-h-screen w-full transition-colors duration-500 selection:bg-rose-200 selection:text-rose-900 ${theme.bg} ${theme.text} ${theme.fontBody} flex justify-center overflow-x-hidden touch-pan-y`}>
       <div className={`w-full max-w-md ${theme.bg} min-h-screen flex flex-col shadow-2xl relative overscroll-x-none`}>
       
       {/* FILTER MODAL */}
@@ -757,7 +756,7 @@ const App = () => {
 
       {/* HEADER */}
       <header className={`sticky top-0 z-50 backdrop-blur-xl bg-opacity-90 transition-all border-b border-black/5 pt-4 pb-4 md:pt-6 md:pb-6 ${theme.bg}`}>
-        <div className="max-w-3xl mx-auto px-4">
+        <div className="w-full px-4">
           <div className="flex flex-col gap-4">
             
             <div className="flex justify-between items-start">
@@ -900,7 +899,7 @@ const App = () => {
                         {/* Text Info */}
                         <div className="flex-1 min-w-0 flex flex-col justify-between h-24">
                           <div>
-                            <h3 className={`text-[10px] font-bold tracking-[0.2em] uppercase mb-1 ${theme.accent} truncate`}>
+                            <h3 className={`text-[10px] font-bold tracking-[0.2em] uppercase mb-1 ${theme.accent} break-words`}>
                                 {campaign.bank}
                             </h3>
                             
@@ -911,7 +910,7 @@ const App = () => {
                                     rel="noopener noreferrer"
                                     onClick={(e) => e.stopPropagation()} 
                                     className={`
-                                        text-xl ${theme.fontDisplay} ${theme.fontDisplay === "font-['Playfair_Display']" ? 'italic' : 'font-black'} leading-tight hover:opacity-70 transition-all truncate
+                                        text-xl ${theme.fontDisplay} ${theme.fontDisplay === "font-['Playfair_Display']" ? 'italic' : 'font-black'} leading-tight hover:opacity-70 transition-all break-words
                                         ${theme.text}
                                     `}
                                 >
