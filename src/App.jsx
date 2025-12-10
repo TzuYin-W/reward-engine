@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-// 修正：補回漏掉的 Arrow 系列圖示，解決白屏問題
 import { Check, Calendar, ArrowUpRight, Clock, Sun, Moon, Gift, Plus, ChevronDown, ChevronUp, Star, Zap, ShoppingBag, Plane, Coffee, ExternalLink, Filter, X, AlertTriangle, ChevronRight, Globe, Utensils, Music, Gamepad, GraduationCap, Cat, Home, CreditCard, RefreshCw, Search, Palette, Heart, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 
 // --- 銀行與卡別層級資料庫 ---
@@ -15,6 +14,7 @@ const BANK_HIERARCHY = [
 
 // --- 模擬數據資料庫 ---
 const INITIAL_CAMPAIGNS = [
+  // 1. 富邦 J 卡
   { 
     id: 'fubon_j', 
     bank: 'FUBON 台北富邦', 
@@ -68,6 +68,7 @@ const INITIAL_CAMPAIGNS = [
       { title: '🏪 當地指定便利店 (10%)', content: '日本三大超商: 7-Eleven, Lawson, FamilyMart | 韓國便利商店: CU, GS25, Emart24 (需登錄)', rate: '10%' }
     ]
   },
+  // 2. 永豐 DAWAY 卡
   { 
     id: 'sinopac_daway', 
     bank: 'SINOPAC 永豐銀行', 
@@ -107,6 +108,7 @@ const INITIAL_CAMPAIGNS = [
       { title: '🌃 指定夜市 (加碼)', content: '於指定合作夜市攤位使用 LINE Pay 掃碼付款，享額外加碼回饋或優惠券。', rate: '加碼' }
     ]
   },
+  // 3. 中信 LINE Pay 卡
   {
     id: 'ctbc_linepay',
     bank: 'CTBC 中國信託',
@@ -509,7 +511,7 @@ const CardVisual = ({ image, gradient, textColor, cardName, bankName, uiStyle })
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className={`relative w-32 h-20 md:w-44 md:h-28 perspective-1000 z-0 flex-shrink-0 group-hover:z-20 mt-1 md:mt-0 self-end md:self-auto ${uiStyle === 'korean' ? 'perspective-none' : ''}`}>
+    <div className={`relative w-36 h-24 md:w-44 md:h-28 perspective-1000 z-0 flex-shrink-0 group-hover:z-20 mt-1 md:mt-0 self-end md:self-auto ${uiStyle === 'korean' ? 'perspective-none' : ''}`}>
       {!imageError && image ? (
         <img 
             src={image} 
@@ -561,7 +563,6 @@ const App = () => {
   const [expandedFilterBanks, setExpandedFilterBanks] = useState([]);
   const [lastUpdated, setLastUpdated] = useState("2025/12/10"); 
   
-  // 新增：排序狀態
   const [isReorderOpen, setIsReorderOpen] = useState(false);
   const [cardOrder, setCardOrder] = useState([]);
 
@@ -596,11 +597,20 @@ const App = () => {
       setRegisteredIds(JSON.parse(saved));
     }
     
+    // 初始化或讀取排序，並自動修復新卡片缺失問題
     const savedOrder = localStorage.getItem('card_order_v1');
+    const allCurrentIds = INITIAL_CAMPAIGNS.map(c => c.id);
+
     if (savedOrder) {
-        setCardOrder(JSON.parse(savedOrder));
+        const parsedOrder = JSON.parse(savedOrder);
+        // 找出所有「新加入」且「尚未在使用者儲存順序中」的卡片 ID
+        const newIds = allCurrentIds.filter(id => !parsedOrder.includes(id));
+        // 找出所有「已存在儲存順序」但「現在資料庫已移除」的舊 ID (雖然目前沒移除，但做個清理比較好)
+        const validSavedOrder = parsedOrder.filter(id => allCurrentIds.includes(id));
+        // 合併：舊的有效順序 + 新卡片 (排在最後)
+        setCardOrder([...validSavedOrder, ...newIds]);
     } else {
-        setCardOrder(INITIAL_CAMPAIGNS.map(c => c.id));
+        setCardOrder(allCurrentIds);
     }
   }, []);
 
@@ -759,6 +769,7 @@ const App = () => {
                     <button onClick={() => setIsReorderOpen(false)}><X size={20} className={theme.subText} /></button>
                 </div>
                 <div className="overflow-y-auto p-4 space-y-2 custom-scrollbar">
+                    {/* List all items sorted by current order */}
                     {INITIAL_CAMPAIGNS
                         .slice()
                         .sort((a,b) => {
