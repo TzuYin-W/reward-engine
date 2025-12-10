@@ -180,8 +180,8 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31',
     mainTag: '點數回饋',
     image: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/LINEPay/images/card_01.png',
-    gradient: 'from-black to-zinc-800', 
-    textColor: 'text-green-400',
+    gradient: 'from-green-400 to-green-600', 
+    textColor: 'text-white',
     link: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/LINEPay/index.html',
     details: [
         { label: '國內一般消費', value: '1% LINE POINTS (無上限)' },
@@ -433,7 +433,8 @@ const CardVisual = ({ image, gradient, textColor, cardName, bankName, uiStyle })
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className={`relative w-36 h-22 md:w-44 md:h-28 perspective-1000 z-0 flex-shrink-0 group-hover:z-20 mt-1 md:mt-0 self-end md:self-auto ${uiStyle === 'korean' ? 'perspective-none' : ''}`}>
+    // 調整：手機版尺寸 w-36 h-24 (144px x 96px, 1.5:1 ratio) 且保有旋轉效果
+    <div className={`relative w-36 h-24 md:w-44 md:h-28 perspective-1000 z-0 flex-shrink-0 group-hover:z-20 mt-1 md:mt-0 self-end md:self-auto ${uiStyle === 'korean' ? 'perspective-none' : ''}`}>
       {!imageError && image ? (
         <img 
             src={image} 
@@ -443,7 +444,7 @@ const CardVisual = ({ image, gradient, textColor, cardName, bankName, uiStyle })
                 transition-all duration-700 ease-out
                 ${uiStyle === 'korean' 
                   ? 'rounded-3xl rotate-0 scale-95 group-hover:scale-105 group-hover:-translate-y-2' 
-                  : 'rounded-xl transform rotate-6 md:rotate-6 md:-translate-y-2 md:translate-x-4 md:group-hover:rotate-12 group-active:rotate-0 md:group-hover:scale-110'
+                  : 'rounded-xl transform rotate-6 md:rotate-6 md:-translate-y-2 md:translate-x-4 group-active:rotate-0 md:group-hover:rotate-12 group-active:scale-105 md:group-hover:scale-110'
                 }
             `}
             onError={() => setImageError(true)}
@@ -455,7 +456,7 @@ const CardVisual = ({ image, gradient, textColor, cardName, bankName, uiStyle })
             bg-gradient-to-br ${gradient} p-3 flex flex-col justify-between border border-white/10
             ${uiStyle === 'korean'
                 ? 'rounded-3xl rotate-0 scale-95 group-hover:scale-105 group-hover:-translate-y-2' 
-                : 'rounded-xl transform rotate-6 md:rotate-6 md:-translate-y-2 md:translate-x-4 md:group-hover:rotate-12 group-active:rotate-0 md:group-hover:scale-110'
+                : 'rounded-xl transform rotate-6 md:rotate-6 md:-translate-y-2 md:translate-x-4 group-active:rotate-0 md:group-hover:rotate-12 group-active:scale-105 md:group-hover:scale-110'
             }
         `}>
              <div className={`text-[10px] uppercase tracking-widest opacity-80 italic ${textColor} font-serif`}>{bankName.split(' ')[0]}</div>
@@ -633,12 +634,14 @@ const App = () => {
   const theme = getTheme();
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 selection:bg-rose-200 selection:text-rose-900 ${theme.bg} ${theme.text} ${theme.fontBody}`}>
+    // 使用 max-w-md 限制寬度，mx-auto 讓它在桌面置中，模仿手機 App 介面
+    <div className={`min-h-screen w-full transition-colors duration-500 selection:bg-rose-200 selection:text-rose-900 ${theme.bg} ${theme.text} ${theme.fontBody} flex justify-center`}>
+      <div className={`w-full max-w-md ${theme.bg} min-h-screen flex flex-col shadow-2xl relative`}>
       
       {/* FILTER MODAL */}
       {isFilterOpen && (
         <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
-          <div className={`w-full max-w-2xl max-h-[85vh] flex flex-col ${theme.rounded === 'rounded-none' ? 'rounded-2xl' : 'rounded-[2rem]'} shadow-2xl relative ${theme.cardBg} ${theme.cardBorder} border`}>
+          <div className={`w-full max-w-sm max-h-[85vh] flex flex-col ${theme.rounded === 'rounded-none' ? 'rounded-2xl' : 'rounded-[2rem]'} shadow-2xl relative ${theme.cardBg} ${theme.cardBorder} border`}>
             <div className={`p-6 border-b ${theme.cardBorder} flex justify-between items-center shrink-0`}>
                 <h3 className={`text-2xl ${theme.fontDisplay} italic ${theme.text}`}>Filter Selections</h3>
                 <button onClick={() => setIsFilterOpen(false)} className="p-2 rounded-full hover:bg-black/5 transition-colors">
@@ -752,91 +755,58 @@ const App = () => {
 
       {/* HEADER */}
       <header className={`sticky top-0 z-50 backdrop-blur-xl bg-opacity-90 transition-all border-b border-black/5 pt-4 pb-4 md:pt-6 md:pb-6 ${theme.bg}`}>
-        <div className="max-w-3xl mx-auto px-4">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+        <div className="w-full px-4">
+          <div className="flex flex-col gap-4">
             
-            <div className="flex-1 space-y-4">
-                <div className="flex justify-between items-start">
-                    <h1 className={`text-3xl md:text-5xl lg:text-7xl font-black tracking-tighter uppercase leading-[0.85] ${theme.text} ${theme.fontDisplay}`}>
-                        Reward
-                        <span className={`block ${theme.fontDisplay === "font-['Playfair_Display']" ? 'italic font-light' : 'font-sans font-bold'} tracking-normal text-2xl md:text-4xl lg:text-5xl mt-1 ${theme.accent}`}>
-                        Engine.
-                        </span>
-                    </h1>
+            <div className="flex justify-between items-start">
+                <h1 className={`text-3xl font-black tracking-tighter uppercase leading-[0.85] ${theme.text} ${theme.fontDisplay}`}>
+                    Reward
+                    <span className={`block ${theme.fontDisplay === "font-['Playfair_Display']" ? 'italic font-light' : 'font-sans font-bold'} tracking-normal text-2xl mt-1 ${theme.accent}`}>
+                    Engine.
+                    </span>
+                </h1>
 
-                    <div className="flex md:hidden gap-2">
-                        <button 
-                            onClick={() => setUiStyle(prev => prev === 'nyc' ? 'korean' : 'nyc')}
-                            className={`w-8 h-8 flex items-center justify-center rounded-full border ${theme.cardBorder} ${theme.bg} shadow-sm`}
-                        >
-                            {uiStyle === 'nyc' ? <Palette size={14} className={theme.subText} /> : <Heart size={14} className={theme.accent} fill="currentColor" />}
-                        </button>
-                        <button 
-                            onClick={() => setIsDarkMode(!isDarkMode)}
-                            className={`w-8 h-8 flex items-center justify-center rounded-full border ${theme.cardBorder} ${theme.bg} shadow-sm`}
-                        >
-                            {isDarkMode ? <Sun size={14} className={theme.text} /> : <Moon size={14} className={theme.text} />}
-                        </button>
+                <div className="flex gap-2 items-center">
+                    <div className="flex flex-col items-end mr-1">
+                       <span className={`text-[8px] uppercase tracking-wider ${theme.subText}`}>Updated</span>
+                       <span className={`text-[8px] font-mono ${theme.accent}`}>{lastUpdated}</span>
                     </div>
-                </div>
-
-                <div className={`relative max-w-sm group ${theme.rounded === 'rounded-3xl' ? 'ml-1' : ''}`}>
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Search size={16} className={theme.subText} />
-                    </div>
-                    <input 
-                        type="text" 
-                        placeholder="Search stores (e.g. Uber, 全聯...)" 
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className={`
-                            w-full pl-10 pr-4 py-2 text-sm bg-transparent border 
-                            ${theme.cardBorder} ${theme.text} ${theme.buttonShape}
-                            focus:outline-none focus:border-${isDarkMode ? 'white' : 'black'}
-                            placeholder:text-neutral-400/50 transition-all
-                        `}
-                    />
+                    <button 
+                        onClick={() => setUiStyle(prev => prev === 'nyc' ? 'korean' : 'nyc')}
+                        className={`w-8 h-8 flex items-center justify-center rounded-full border ${theme.cardBorder} ${theme.bg} shadow-sm`}
+                    >
+                        {uiStyle === 'nyc' ? <Palette size={14} className={theme.subText} /> : <Heart size={14} className={theme.accent} fill="currentColor" />}
+                    </button>
+                    <button 
+                        onClick={() => setIsDarkMode(!isDarkMode)}
+                        className={`w-8 h-8 flex items-center justify-center rounded-full border ${theme.cardBorder} ${theme.bg} shadow-sm`}
+                    >
+                        {isDarkMode ? <Sun size={14} className={theme.text} /> : <Moon size={14} className={theme.text} />}
+                    </button>
                 </div>
             </div>
-            
-            <div className="hidden md:flex flex-col items-end gap-2 md:gap-3">
-               <div className="flex items-center gap-2 md:gap-3">
-                   <div className="hidden md:flex flex-col items-end mr-2">
-                       <span className={`text-[10px] uppercase tracking-wider ${theme.subText}`}>Last Updated</span>
-                       <span className={`text-[10px] font-mono ${theme.accent}`}>{lastUpdated}</span>
-                   </div>
-                   <button 
-                    onClick={() => setUiStyle(prev => prev === 'nyc' ? 'korean' : 'nyc')}
-                    className={`w-10 h-10 flex items-center justify-center rounded-full border ${theme.cardBorder} hover:scale-110 transition-transform`}
-                    title="Switch UI Style"
-                   >
-                    {uiStyle === 'nyc' ? <Palette size={18} className={theme.subText} /> : <Heart size={18} className={theme.accent} fill="currentColor" />}
-                   </button>
-                   <button 
-                    onClick={handleRefreshData}
-                    disabled={isUpdating}
-                    className={`w-10 h-10 flex items-center justify-center rounded-full border ${theme.cardBorder} hover:border-[#D4AF37] transition-all ${isUpdating ? 'animate-spin opacity-50' : ''}`}
-                    title="Sync Latest Data"
-                   >
-                    <RefreshCw size={16} className={theme.subText} />
-                   </button>
-                   <button 
-                    onClick={() => setIsDarkMode(!isDarkMode)}
-                    className={`w-10 h-10 flex items-center justify-center rounded-full border ${theme.cardBorder} hover:scale-110 transition-transform`}
-                   >
-                    {isDarkMode ? <Sun size={18} className={theme.text} strokeWidth={1.5} /> : <Moon size={18} className={theme.text} strokeWidth={1.5} />}
-                   </button>
-               </div>
-               
-              <div className="hidden md:block text-right">
-                <div className={`text-xs uppercase tracking-widest ${theme.subText}`}>Active</div>
-                <div className={`text-xl font-serif italic ${theme.text}`}>{filteredCampaigns.length < 10 ? `0${filteredCampaigns.length}` : filteredCampaigns.length}</div>
-              </div>
+
+            <div className={`relative w-full group ${theme.rounded === 'rounded-3xl' ? 'ml-0' : ''}`}>
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Search size={16} className={theme.subText} />
+                </div>
+                <input 
+                    type="text" 
+                    placeholder="Search stores (e.g. Uber, 全聯...)" 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className={`
+                        w-full pl-10 pr-4 py-2 text-sm bg-transparent border 
+                        ${theme.cardBorder} ${theme.text} ${theme.buttonShape}
+                        focus:outline-none focus:border-${isDarkMode ? 'white' : 'black'}
+                        placeholder:text-neutral-400/50 transition-all
+                    `}
+                />
             </div>
           </div>
 
-          <div className="mt-4 md:mt-6 flex items-center justify-between border-t border-black/5 py-3">
-             <div className="flex gap-4 md:gap-6 text-xs font-bold tracking-widest uppercase">
+          <div className="mt-4 flex items-center justify-between border-t border-black/5 py-3">
+             <div className="flex gap-4 text-xs font-bold tracking-widest uppercase">
                 <button 
                     onClick={() => setViewMode('list')}
                     className={`transition-colors ${viewMode === 'list' ? theme.accent : theme.subText}`}
@@ -863,10 +833,10 @@ const App = () => {
       </header>
 
       {/* --- MAIN CONTENT --- */}
-      <main className="max-w-3xl mx-auto px-4 py-6 md:py-8">
+      <main className="w-full px-4 py-6 md:py-8">
         
         {viewMode === 'list' && (
-          <div className="grid gap-6 md:gap-10">
+          <div className="grid gap-6">
             {filteredCampaigns.map((campaign, index) => {
               const isRegistered = registeredIds.includes(campaign.id);
               const isExpanded = expandedId === campaign.id;
@@ -882,7 +852,7 @@ const App = () => {
                 >
                   {/* Number - Only show in NYC style for cleanliness in Korean style */}
                   {uiStyle === 'nyc' && (
-                    <div className={`absolute -left-2 md:-left-3 -top-5 md:-top-6 text-[60px] md:text-[80px] font-black leading-none opacity-5 select-none font-serif ${theme.text}`}>
+                    <div className={`absolute -left-2 -top-5 text-[60px] font-black leading-none opacity-5 select-none font-serif ${theme.text}`}>
                         {index + 1 < 10 ? `0${index + 1}` : index + 1}
                     </div>
                   )}
@@ -899,26 +869,23 @@ const App = () => {
                   <div className={`relative ${uiStyle === 'nyc' ? 'border-t-2' : ''} ${isRegistered ? theme.accentBorder : (theme.text === 'text-white' ? 'border-white' : 'border-black')} pt-4 transition-colors duration-500 ${uiStyle === 'korean' ? `p-6 ${theme.cardBg} ${theme.shadow} ${theme.rounded}` : ''}`}>
                     
                     {/* Header Layout: Modified to place CardVisual on the LEFT */}
-                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-6 mb-6">
+                    <div className="flex flex-col gap-4 mb-6">
                       
-                      {/* Left: Checkbox + Card + Info */}
-                      <div className="flex gap-4 md:gap-5 z-10 flex-1 items-start">
+                      {/* Top Row: Checkbox + Card + Info */}
+                      <div className="flex gap-4 z-10 items-start">
                         <button 
                           onClick={(e) => toggleRegistration(e, campaign.id)}
                           className={`
-                            relative w-10 h-10 md:w-11 md:h-11 flex-shrink-0 border transition-all duration-300 flex items-center justify-center ${theme.buttonShape} self-start
+                            relative w-10 h-10 flex-shrink-0 border transition-all duration-300 flex items-center justify-center ${theme.buttonShape} self-start mt-1
                             ${isRegistered 
                               ? `${theme.accentBg} border-transparent text-white shadow-lg` 
                               : `bg-transparent ${theme.cardBorder === 'border-transparent' ? 'border-neutral-300' : theme.cardBorder} hover:border-${theme.accent.split('-')[1]}-400`}
                           `}
                         >
-                          {isRegistered && <Check size={20} strokeWidth={3} className="md:w-5 md:h-5" />}
-                          {uiStyle === 'nyc' && <span className="absolute -bottom-5 left-0 text-[8px] md:text-[9px] uppercase tracking-widest w-full text-center opacity-50">
-                            {isRegistered ? 'Done' : 'Log'}
-                          </span>}
+                          {isRegistered && <Check size={20} strokeWidth={3} />}
                         </button>
 
-                        {/* Card Visual (Moved Here - Left Side) */}
+                        {/* Card Visual (Left Side) */}
                         <CardVisual 
                             image={campaign.image} 
                             gradient={campaign.gradient}
@@ -929,52 +896,41 @@ const App = () => {
                         />
 
                         {/* Text Info */}
-                        <div className="flex-1 min-w-0">
-                          <h3 className={`text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase mb-1 md:mb-2 ${theme.accent} truncate`}>
-                            {campaign.bank}
-                          </h3>
-                          
-                          <div className="group/link flex items-center gap-2 mb-1">
-                            <a 
-                                href={campaign.link} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                onClick={(e) => e.stopPropagation()} 
-                                className={`
-                                    text-2xl md:text-3xl lg:text-4xl ${theme.fontDisplay} ${theme.fontDisplay === "font-['Playfair_Display']" ? 'italic' : 'font-black'} leading-tight hover:opacity-70 transition-all truncate
-                                    ${theme.text}
-                                `}
-                            >
-                                {campaign.card}
-                            </a>
-                            <ExternalLink size={14} className={`opacity-0 group-hover/link:opacity-100 transition-opacity mb-2 ${theme.accent}`} />
+                        <div className="flex-1 min-w-0 flex flex-col justify-between h-24">
+                          <div>
+                            <h3 className={`text-[10px] font-bold tracking-[0.2em] uppercase mb-1 ${theme.accent} truncate`}>
+                                {campaign.bank}
+                            </h3>
+                            
+                            <div className="group/link flex items-center gap-2 mb-1">
+                                <a 
+                                    href={campaign.link} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()} 
+                                    className={`
+                                        text-xl ${theme.fontDisplay} ${theme.fontDisplay === "font-['Playfair_Display']" ? 'italic' : 'font-black'} leading-tight hover:opacity-70 transition-all truncate
+                                        ${theme.text}
+                                    `}
+                                >
+                                    {campaign.card}
+                                </a>
+                            </div>
                           </div>
                           
-                          <div className={`flex flex-wrap gap-2 md:gap-3 text-[10px] md:text-xs uppercase tracking-wider font-bold ${theme.subText}`}>
+                          <div className={`flex flex-wrap gap-2 text-[10px] uppercase tracking-wider font-bold ${theme.subText}`}>
                             <span className={`border ${isDarkMode ? 'border-white/20' : 'border-black/10'} px-2 py-1 ${theme.buttonShape}`}>{campaign.mainTag}</span>
                             <span className="flex items-center gap-1"><Clock size={12}/> {campaign.startDate}</span>
                           </div>
                         </div>
                       </div>
 
-                      {/* Right: Rate Display */}
-                      <div className="flex flex-row-reverse justify-between md:flex-col md:items-end gap-4 md:gap-6 relative">
-                        <div className="text-right flex flex-col items-end z-10">
-                            <div className="flex items-baseline gap-1 font-mono text-xs md:text-sm md:text-base opacity-70 mb-1">
-                                <span>{campaign.baseRate}%</span>
-                                <span className="text-[10px] md:text-xs mx-1 text-neutral-500">BASE</span>
-                                <Plus size={10} />
-                                <span>{campaign.bonusRate}%</span>
-                                <span className={`text-[10px] md:text-xs mx-1 ${theme.accent}`}>BONUS</span>
+                      {/* Bottom Row: Rate Display (Full Width) */}
+                      <div className="flex justify-end items-baseline gap-2 relative border-t border-dashed border-white/10 pt-2">
+                            <span className="text-[10px] text-neutral-500">MAX REWARD</span>
+                            <div className={`text-4xl font-black tracking-tighter ${theme.text}`}>
+                                {campaign.totalRate}<span className="text-xl ml-1 font-light">%</span>
                             </div>
-                            <div className={`text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter flex items-start ${theme.text}`}>
-                            {campaign.totalRate}
-                            <span className="text-xl md:text-2xl mt-1 ml-1 font-light">%</span>
-                            </div>
-                            <div className={`mt-1 md:mt-2 text-[8px] md:text-[10px] uppercase tracking-[0.3em] ${theme.subText}`}>
-                            Total Reward
-                            </div>
-                        </div>
                       </div>
                     </div>
 
@@ -983,7 +939,7 @@ const App = () => {
                         onClick={(e) => e.stopPropagation()} 
                         className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded ? 'max-h-[3000px] opacity-100' : 'max-h-0 opacity-0'}`}
                     >
-                        <div className={`pt-4 md:pt-6 pb-4 ${uiStyle === 'nyc' ? 'border-t border-dashed border-neutral-800' : 'mt-4 bg-black/5 rounded-2xl p-4'}`}>
+                        <div className={`pt-4 pb-4 ${uiStyle === 'nyc' ? 'border-t border-dashed border-neutral-800' : 'mt-4 bg-black/5 rounded-2xl p-4'}`}>
                             
                             {/* --- 重要注意事項區塊 --- */}
                             {campaign.importantNotesList && campaign.importantNotesList.map((note, index) => {
@@ -994,7 +950,7 @@ const App = () => {
                                 <div 
                                     key={index} 
                                     className={`
-                                        mb-6 p-4 md:p-5 transition-all duration-300 relative overflow-hidden group/note
+                                        mb-6 p-4 transition-all duration-300 relative overflow-hidden group/note
                                         ${uiStyle === 'nyc' ? 'border-l-4' : 'rounded-xl'}
                                         ${isNoteRegistered 
                                             ? `${uiStyle === 'nyc' ? 'border-[#D4AF37]' : ''} ${theme.accentBg} bg-opacity-10` 
@@ -1007,60 +963,60 @@ const App = () => {
                                     </div>
 
                                     {/* Header Row with Checkbox */}
-                                    <div className="flex items-start gap-3 md:gap-4 mb-3 relative z-10">
+                                    <div className="flex items-start gap-3 mb-3 relative z-10">
                                         {/* Sub-Checkbox */}
                                         <button 
                                             onClick={(e) => toggleRegistration(e, noteId)}
                                             className={`
-                                                w-6 h-6 md:w-7 md:h-7 flex-shrink-0 border flex items-center justify-center transition-all duration-300 ${theme.buttonShape}
+                                                w-6 h-6 flex-shrink-0 border flex items-center justify-center transition-all duration-300 ${theme.buttonShape}
                                                 ${isNoteRegistered 
                                                     ? `${theme.accentBg} border-transparent text-white shadow-md` 
                                                     : `bg-transparent border-neutral-400 hover:border-${theme.accent.split('-')[1]}-400`
                                                 }
                                             `}
                                         >
-                                            {isNoteRegistered && <Check size={14} strokeWidth={3} className="md:w-3.5 md:h-3.5" />}
+                                            {isNoteRegistered && <Check size={14} strokeWidth={3} />}
                                         </button>
 
                                         <div>
-                                            <h4 className={`text-xs md:text-sm font-bold uppercase tracking-widest flex items-center gap-2 ${theme.accent}`}>
+                                            <h4 className={`text-xs font-bold uppercase tracking-widest flex items-center gap-2 ${theme.accent}`}>
                                                 <AlertTriangle size={14} /> Important Notice {index + 1}
-                                                {isNoteRegistered && <span className={`ml-2 text-[8px] md:text-[10px] ${theme.accentBg} text-white px-1.5 py-0.5 rounded-sm`}>COMPLETED</span>}
+                                                {isNoteRegistered && <span className={`ml-2 text-[8px] ${theme.accentBg} text-white px-1.5 py-0.5 rounded-sm`}>COMPLETED</span>}
                                             </h4>
-                                            <h5 className={`text-sm md:text-base font-bold mt-1 ${isNoteRegistered ? `opacity-50 line-through decoration-2 ${uiStyle === 'nyc' ? 'decoration-[#D4AF37]' : 'decoration-rose-400'}` : theme.text}`}>
+                                            <h5 className={`text-sm font-bold mt-1 ${isNoteRegistered ? `opacity-50 line-through decoration-2 ${uiStyle === 'nyc' ? 'decoration-[#D4AF37]' : 'decoration-rose-400'}` : theme.text}`}>
                                                 {note.title}
                                             </h5>
                                         </div>
                                     </div>
                                     
-                                    <p className={`mb-5 text-xs md:text-sm font-medium leading-relaxed pl-9 md:pl-11 ${isDarkMode ? 'text-white' : 'text-black'} ${isNoteRegistered ? 'opacity-50' : ''}`}>
+                                    <p className={`mb-5 text-xs font-medium leading-relaxed pl-9 ${isDarkMode ? 'text-white' : 'text-black'} ${isNoteRegistered ? 'opacity-50' : ''}`}>
                                         {note.highlight}
                                     </p>
 
-                                    <div className={`grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4 pl-9 md:pl-11 ${isNoteRegistered ? 'opacity-50 grayscale' : ''}`}>
+                                    <div className={`grid grid-cols-1 gap-3 mb-4 pl-9 ${isNoteRegistered ? 'opacity-50 grayscale' : ''}`}>
                                         {note.schedule.map((item, i) => (
                                             <div key={i} className={`p-3 border ${isDarkMode ? 'border-white/10' : 'border-black/10'} ${uiStyle === 'korean' ? 'rounded-lg bg-white/50' : ''}`}>
-                                                <div className={`text-[10px] md:text-xs font-bold uppercase mb-1 ${theme.subText}`}>{item.month}</div>
-                                                <div className={`text-xs md:text-sm font-mono font-bold mb-1 ${theme.text}`}>{item.time}</div>
-                                                <div className={`text-[10px] md:text-xs ${theme.accent}`}>{item.limit}</div>
+                                                <div className={`text-[10px] font-bold uppercase mb-1 ${theme.subText}`}>{item.month}</div>
+                                                <div className={`text-xs font-mono font-bold mb-1 ${theme.text}`}>{item.time}</div>
+                                                <div className={`text-[10px] ${theme.accent}`}>{item.limit}</div>
                                             </div>
                                         ))}
                                     </div>
                                     
-                                    <p className={`text-[10px] md:text-xs mt-2 opacity-70 pl-9 md:pl-11 ${theme.subText}`}>
+                                    <p className={`text-[10px] mt-2 opacity-70 pl-9 ${theme.subText}`}>
                                         {note.footer}
                                     </p>
                                 </div>
                             )})}
 
-                            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
-                                <div className="md:col-span-5 space-y-4">
+                            <div className="grid grid-cols-1 gap-6">
+                                <div className="space-y-4">
                                     <h4 className={`text-xs font-bold uppercase tracking-widest mb-4 border-l-2 pl-3 ${theme.text} ${theme.accentBorder}`}>
                                         Reward Structure
                                     </h4>
                                     <ul className="space-y-3">
                                         {campaign.details.map((detail, idx) => (
-                                            <li key={idx} className="flex justify-between items-baseline text-xs md:text-sm group">
+                                            <li key={idx} className="flex justify-between items-baseline text-xs group">
                                                 <span className={`${theme.subText} group-hover:${theme.text} transition-colors`}>{detail.label}</span>
                                                 <span className={`font-mono font-bold ${theme.text}`}>{detail.value}</span>
                                             </li>
@@ -1068,7 +1024,7 @@ const App = () => {
                                     </ul>
                                 </div>
 
-                                <div className="md:col-span-7">
+                                <div>
                                     <h4 className={`text-xs font-bold uppercase tracking-widest mb-4 border-l-2 pl-3 ${theme.text} ${theme.accentBorder}`}>
                                         Applicable Channels
                                     </h4>
@@ -1076,10 +1032,10 @@ const App = () => {
                                         {campaign.channels.map((channel, cIdx) => (
                                             <div key={cIdx} className={`p-4 ${isDarkMode ? 'bg-black/20' : 'bg-white'} border ${uiStyle === 'nyc' ? theme.cardBorder : 'border-transparent shadow-sm'} ${uiStyle === 'korean' ? 'rounded-xl' : ''} transition-colors`}>
                                                 <div className="flex justify-between items-center mb-2">
-                                                    <span className={`font-bold ${theme.text} text-xs md:text-sm flex items-center gap-2`}>
+                                                    <span className={`font-bold ${theme.text} text-xs flex items-center gap-2`}>
                                                         {channel.title}
                                                     </span>
-                                                    <span className={`font-black text-lg md:text-xl italic ${theme.accent}`}>{channel.rate}</span>
+                                                    <span className={`font-black text-lg italic ${theme.accent}`}>{channel.rate}</span>
                                                 </div>
                                                 <p className={`text-xs leading-5 ${theme.subText} text-justify`}>
                                                     {channel.content}
@@ -1127,8 +1083,8 @@ const App = () => {
                     const winner = topCards[0];
 
                     return (
-                        <div key={cat} className={`grid md:grid-cols-2 gap-8 items-center border-b ${theme.cardBorder} pb-12`}>
-                             <div className="order-2 md:order-1">
+                        <div key={cat} className={`grid gap-8 items-center border-b ${theme.cardBorder} pb-12`}>
+                             <div>
                                 <div className={`text-[10px] uppercase tracking-[0.3em] mb-2 ${theme.accent}`}>Category Winner</div>
                                 <h3 className={`text-4xl font-black uppercase mb-1 ${theme.text}`}>{cat}</h3>
                                 <div className={`text-6xl font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-amber-700 mb-6`}>
@@ -1153,7 +1109,7 @@ const App = () => {
                              </div>
 
                              {/* 如果有圖片則顯示卡片，否則顯示抽象圖 */}
-                             <div className={`order-1 md:order-2 h-64 md:h-full min-h-[250px] relative overflow-hidden flex items-center justify-center border ${theme.cardBorder} p-6`}>
+                             <div className={`h-64 relative overflow-hidden flex items-center justify-center border ${theme.cardBorder} p-6`}>
                                  <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/noise-lines.png')]"></div>
                                  
                                  {/* 使用 CardVisual 來確保這裡也能正確顯示 fallback */}
@@ -1175,20 +1131,7 @@ const App = () => {
         )}
 
       </main>
-
-      <footer className={`py-8 md:py-12 border-t ${theme.cardBorder} ${theme.bg}`}>
-        <div className="max-w-3xl mx-auto px-6 text-center">
-             <h2 className={`text-xl md:text-2xl font-black italic tracking-tighter mb-6 opacity-30 ${theme.text}`}>REWARD ENGINE</h2>
-             <div className={`flex justify-center gap-8 text-[10px] uppercase tracking-widest ${theme.subText}`}>
-                <span>Privacy</span>
-                <span>Terms</span>
-                <a href="https://www.threads.com/@w.tzuyin" target="_blank" rel="noopener noreferrer" className="hover:text-[#D4AF37] transition-colors">Contact</a>
-             </div>
-             <div className={`mt-8 text-[10px] ${theme.subText} opacity-50`}>
-                &copy; 2025 DESIGNED BY SARAH. ALL RIGHTS RESERVED.
-             </div>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 };
