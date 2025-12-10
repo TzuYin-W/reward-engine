@@ -2,11 +2,27 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- 1. 視窗設定：禁止縮放，模擬原生 App 體驗 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    
     <title>REWARD ENGINE</title>
+    
+    <!-- 2. 圖示設定：讀取您上傳的 icon.png -->
+    <!-- 電腦瀏覽器分頁圖示 -->
+    <link rel="icon" type="image/png" href="/icon.png" />
+    <!-- iPhone / iPad 主畫面圖示 -->
+    <link rel="apple-touch-icon" href="/icon.png" />
+    
+    <!-- Android 設定 (選用) -->
+    <link rel="manifest" href="/manifest.json" /> 
+    
+    <!-- 3. 介面顏色設定：黑色系 -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#09090b" />
+
   </head>
-  <body>
+  <body style="background-color: #09090b; margin: 0; padding: 0;">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
