@@ -12,7 +12,7 @@ const BANK_HIERARCHY = [
   { name: 'FEDERAL 聯邦銀行', code: 'FEDERAL', cards: ['吉鶴卡'] }
 ];
 
-// --- 模擬數據資料庫 (配色優化) ---
+// --- 模擬數據資料庫 ---
 const INITIAL_CAMPAIGNS = [
   { 
     id: 'fubon_j', 
@@ -27,7 +27,7 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31', 
     mainTag: '日韓旅遊',
     image: 'https://www.fubon.com/banking/images/credit_card/J_Card_omiyage_card_1.png', 
-    gradient: 'from-rose-50 via-white to-rose-100', // 櫻花白
+    gradient: 'from-rose-50 via-white to-rose-100', 
     textColor: 'text-rose-900',
     link: 'https://www.fubon.com/banking/Personal/credit_card/all_card/omiyage/omiyage.htm',
     details: [
@@ -78,7 +78,7 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31',
     mainTag: '電信 3.5%',
     image: 'https://www.fubon.com/banking/images/credit_card/OpenPossible_card_1.png',
-    gradient: 'from-violet-900 to-black', // 台灣大哥大黑紫
+    gradient: 'from-violet-900 to-black', 
     textColor: 'text-white',
     link: 'https://www.fubon.com/banking/Personal/credit_card/all_card/OpenPossible/OpenPossible.htm',
     details: [
@@ -115,7 +115,7 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31',
     mainTag: '切換 3.8%',
     image: 'https://www.taishinbank.com.tw/TS/TS02/TS0201/TS020101/TS02010101/TS0201010102/TS020101010202/images/card_02.png',
-    gradient: 'from-rose-400 via-rose-300 to-pink-200', // 玫瑰金漸層
+    gradient: 'from-rose-400 via-rose-300 to-pink-200', 
     textColor: 'text-rose-900',
     link: 'https://www.taishinbank.com.tw/TSB/personal/credit/intro/overview/cg013/card0001/',
     details: [
@@ -143,7 +143,7 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31',
     mainTag: '數位 3.8%',
     image: 'https://www.taishinbank.com.tw/TS/TS02/TS0201/TS020101/TS02010101/TS0201010104/TS020101010409/images/card_01.png', 
-    gradient: 'from-gray-50 to-white', // 純白
+    gradient: 'from-gray-50 to-white', 
     textColor: 'text-gray-800',
     link: 'https://mkp.taishinbank.com.tw/s/2025/RichartCard_2025/index.html',
     details: [
@@ -180,7 +180,7 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31',
     mainTag: '點數回饋',
     image: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/LINEPay/images/card_01.png',
-    gradient: 'from-black to-zinc-800', // 酷黑
+    gradient: 'from-black to-zinc-800', 
     textColor: 'text-green-400',
     link: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/LINEPay/index.html',
     details: [
@@ -244,8 +244,8 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2026-02-28',
     mainTag: '網購 3%',
     image: 'https://www.esunbank.com.tw/bank/images/esunbank/credit_card/ubear_card.png',
-    gradient: 'from-zinc-900 via-black to-zinc-900', // 經典黑
-    textColor: 'text-yellow-400', // 黃字
+    gradient: 'from-zinc-900 via-black to-zinc-900', 
+    textColor: 'text-yellow-400', 
     link: 'https://event.esunbank.com.tw/credit/ubear/index.html',
     details: [
         { label: '國內外一般消費', value: '1% 現金回饋' },
@@ -270,7 +270,7 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31',
     mainTag: '日本 4%',
     image: 'https://card.ubot.com.tw/eCard/assets/images/creditcard/JIHO/card_01.png',
-    gradient: 'from-red-600 to-rose-700', // 吉鶴紅
+    gradient: 'from-red-600 to-rose-700', 
     textColor: 'text-white',
     link: 'https://card.ubot.com.tw/eCard/activity/2025JIHO/index.htm',
     details: [
@@ -297,8 +297,8 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31', 
     mainTag: '國內外 7%',
     image: 'https://dawho.tw/assets/images/card/credit-card-black.png',
-    gradient: 'from-black to-zinc-900', // 大戶黑
-    textColor: 'text-yellow-500', // 金字
+    gradient: 'from-black to-zinc-900', 
+    textColor: 'text-yellow-500', 
     link: 'https://bank.sinopac.com/sinopacBT/personal/credit-card/introduction/bankcard/DAWHO.html',
     details: [
       { label: '國內一般消費', value: '1% 現金回饋' },
@@ -329,7 +329,7 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31', 
     mainTag: '網購/百貨/餐飲',
     image: 'https://bank.sinopac.com/upload/sinopac/creditcard/JCB_Card.png', 
-    gradient: 'from-violet-800 to-purple-900', // JCB 紫
+    gradient: 'from-violet-800 to-purple-900', 
     textColor: 'text-white',
     link: 'https://bank.sinopac.com/sinopacBT/personal/credit-card/introduction/bankcard/cashcardJCB.html',
     details: [
@@ -356,7 +356,7 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31', 
     mainTag: '多重權益',
     image: 'https://www.cathaybk.com.tw/cathaybk/-/media/C1ce1986-7786-4f24-862a-350734057863.png', 
-    gradient: 'from-gray-200 to-gray-400', // CUBE 灰
+    gradient: 'from-gray-200 to-gray-400', 
     textColor: 'text-gray-800',
     link: 'https://www.cathaybk.com.tw/cathaybk/personal/product/credit-card/cards/cube/',
     details: [
@@ -385,7 +385,7 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31', 
     mainTag: '行動支付',
     image: 'https://www.taishinbank.com.tw/TS/TS02/TS0201/TS020101/TS02010101/TS0201010104/TS020101010409/images/card_01.png', 
-    gradient: 'from-zinc-900 to-emerald-900', // 黑綠
+    gradient: 'from-zinc-900 to-emerald-900', 
     textColor: 'text-white',
     link: 'https://www.taishinbank.com.tw/TS/TS02/TS0201/TS020101/TS02010101/TS0201010104/TS020101010409/index.htm',
     details: [
@@ -410,7 +410,7 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-20', 
     mainTag: 'Apple Watch',
     image: 'https://bank.sinopac.com/upload/sinopac/creditcard/Sport_Card.png', 
-    gradient: 'from-orange-600 to-red-600', // 橘紅
+    gradient: 'from-orange-600 to-red-600', 
     textColor: 'text-white',
     link: 'https://bank.sinopac.com/sinopacBT/personal/credit-card/introduction/bankcard/sport-card.html',
     details: [
@@ -428,43 +428,46 @@ const INITIAL_CAMPAIGNS = [
 
 const ALL_CATEGORIES = [...new Set(INITIAL_CAMPAIGNS.map(c => c.category))];
 
-// --- 獨立元件：卡片視覺呈現 (核心修改) ---
-const CardVisual = ({ image, gradient, textColor, cardName, bankName }) => {
+// --- 獨立元件：卡片視覺呈現 ---
+const CardVisual = ({ image, gradient, textColor, cardName, bankName, uiStyle }) => {
   const [imageError, setImageError] = useState(false);
 
-  // 統一風格：無論如何都保持傾斜、陰影、圓角
-  // 卡片背景：如果圖片載入失敗，使用漸層色與斜體文字模擬
   return (
-    <div className="relative w-36 h-22 md:w-44 md:h-28 flex-shrink-0 z-0 group-hover:z-20 mt-1 md:mt-0 perspective-1000">
+    <div className={`relative w-36 h-22 md:w-44 md:h-28 perspective-1000 z-0 flex-shrink-0 group-hover:z-20 mt-1 md:mt-0 self-end md:self-auto ${uiStyle === 'korean' ? 'perspective-none' : ''}`}>
       {!imageError && image ? (
         <img 
             src={image} 
             alt={cardName} 
-            className="w-full h-full object-cover rounded-xl shadow-lg transform rotate-6 md:-translate-y-2 group-hover:rotate-0 group-hover:scale-105 transition-all duration-500 ease-out"
+            className={`
+                w-full h-full object-cover shadow-[0_10px_30px_-5px_rgba(0,0,0,0.3)] md:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] 
+                transition-all duration-700 ease-out
+                ${uiStyle === 'korean' 
+                  ? 'rounded-3xl rotate-0 scale-95 group-hover:scale-105 group-hover:-translate-y-2' 
+                  : 'rounded-xl transform rotate-6 md:rotate-6 md:-translate-y-2 md:translate-x-4 md:group-hover:rotate-12 group-active:rotate-0 md:group-hover:scale-110'
+                }
+            `}
             onError={() => setImageError(true)}
         />
       ) : (
         <div className={`
-            w-full h-full rounded-xl shadow-lg
-            transform rotate-6 md:-translate-y-2
-            group-hover:rotate-0 group-hover:scale-105 transition-all duration-500 ease-out
-            bg-gradient-to-br ${gradient} p-3 flex flex-col justify-between border border-white/10 relative overflow-hidden
+            w-full h-full shadow-md
+            transition-all duration-700 ease-out
+            bg-gradient-to-br ${gradient} p-3 flex flex-col justify-between border border-white/10
+            ${uiStyle === 'korean'
+                ? 'rounded-3xl rotate-0 scale-95 group-hover:scale-105 group-hover:-translate-y-2' 
+                : 'rounded-xl transform rotate-6 md:rotate-6 md:-translate-y-2 md:translate-x-4 md:group-hover:rotate-12 group-active:rotate-0 md:group-hover:scale-110'
+            }
         `}>
-             {/* 模擬晶片 */}
-             <div className="w-8 h-5 bg-gradient-to-tr from-yellow-200 to-yellow-500 rounded-md opacity-80 mb-1"></div>
-             
-             <div className="flex flex-col items-end">
-                <div className={`text-[8px] uppercase tracking-widest opacity-80 italic ${textColor} font-serif`}>{bankName.split(' ')[0]}</div>
+             <div className={`text-[10px] uppercase tracking-widest opacity-80 italic ${textColor} font-serif`}>{bankName.split(' ')[0]}</div>
+             <div className="flex justify-between items-end">
                 <div className={`text-xs font-bold leading-tight italic ${textColor} font-serif mt-0.5`}>{cardName}</div>
+                <CreditCard size={16} className={`opacity-50 ${textColor}`} />
              </div>
-             
-             {/* 裝飾性Logo */}
-             <CreditCard size={40} className={`absolute -bottom-4 -left-4 opacity-10 ${textColor} transform -rotate-12`} />
         </div>
       )}
       
-      {/* 統一的光澤效果 */}
-      <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/30 to-transparent opacity-0 group-hover:opacity-30 transition-opacity duration-500 pointer-events-none mix-blend-overlay"></div>
+      {/* Glow Effect */}
+      <div className={`absolute inset-0 bg-gradient-to-tr from-white/30 to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-500 pointer-events-none mix-blend-overlay ${uiStyle === 'korean' ? 'rounded-3xl' : 'rounded-xl'}`}></div>
     </div>
   );
 };
@@ -630,7 +633,7 @@ const App = () => {
   const theme = getTheme();
 
   return (
-    <div className={`min-h-screen w-full transition-colors duration-500 selection:bg-rose-200 selection:text-rose-900 ${theme.bg} ${theme.text} ${theme.fontBody}`}>
+    <div className={`min-h-screen transition-colors duration-500 selection:bg-rose-200 selection:text-rose-900 ${theme.bg} ${theme.text} ${theme.fontBody}`}>
       
       {/* FILTER MODAL */}
       {isFilterOpen && (
@@ -749,7 +752,7 @@ const App = () => {
 
       {/* HEADER */}
       <header className={`sticky top-0 z-50 backdrop-blur-xl bg-opacity-90 transition-all border-b border-black/5 pt-4 pb-4 md:pt-6 md:pb-6 ${theme.bg}`}>
-        <div className="w-full px-4">
+        <div className="max-w-3xl mx-auto px-4">
           <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
             
             <div className="flex-1 space-y-4">
@@ -860,7 +863,7 @@ const App = () => {
       </header>
 
       {/* --- MAIN CONTENT --- */}
-      <main className="w-full px-4 py-6 md:py-8">
+      <main className="max-w-3xl mx-auto px-4 py-6 md:py-8">
         
         {viewMode === 'list' && (
           <div className="grid gap-6 md:gap-10">
@@ -1174,7 +1177,7 @@ const App = () => {
       </main>
 
       <footer className={`py-8 md:py-12 border-t ${theme.cardBorder} ${theme.bg}`}>
-        <div className="w-full px-6 text-center">
+        <div className="max-w-3xl mx-auto px-6 text-center">
              <h2 className={`text-xl md:text-2xl font-black italic tracking-tighter mb-6 opacity-30 ${theme.text}`}>REWARD ENGINE</h2>
              <div className={`flex justify-center gap-8 text-[10px] uppercase tracking-widest ${theme.subText}`}>
                 <span>Privacy</span>
