@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Check, Calendar, ArrowUpRight, Clock, Sun, Moon, Gift, Plus, ChevronDown, ChevronUp, Star, Zap, ShoppingBag, Plane, Coffee, ExternalLink, Filter, X, AlertTriangle, ChevronRight, Globe, Utensils, Music, Gamepad, GraduationCap, Cat, Home, CreditCard, RefreshCw, Search, Palette, Heart } from 'lucide-react';
+import { Check, Calendar, ArrowUpRight, Clock, Sun, Moon, Gift, Plus, ChevronDown, ChevronUp, Star, Zap, ShoppingBag, Plane, Coffee, ExternalLink, Filter, X, AlertTriangle, ChevronRight, Globe, Utensils, Music, Gamepad, GraduationCap, Cat, Home, CreditCard, RefreshCw, Search, Palette, Heart, Trophy, MapPin, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 
 // --- 銀行與卡別層級資料庫 ---
 const BANK_HIERARCHY = [
@@ -23,6 +23,8 @@ const INITIAL_CAMPAIGNS = [
     totalRate: 10, 
     baseRate: 1, 
     bonusRate: 9, 
+    domesticRate: 1,
+    overseasRate: 10,
     startDate: '2025-10-01', 
     endDate: '2025-12-31', 
     mainTag: '日韓旅遊',
@@ -31,10 +33,10 @@ const INITIAL_CAMPAIGNS = [
     textColor: 'text-rose-900',
     link: 'https://www.fubon.com/banking/Personal/credit_card/all_card/omiyage/omiyage.htm',
     details: [
-      { label: '國內一般消費', value: '1% LINE POINTS (無上限)' }, 
-      { label: '日韓原權益', value: '3% LINE POINTS (無上限)' },
-      { label: '實體活動加碼', value: '+3% (需登錄，季上限600元)' },
-      { label: '交通卡加碼', value: '+7% (需登錄，季上限200元)' }
+      { label: '國內一般消費', value: '1% LINE POINTS' }, 
+      { label: '日韓原權益', value: '3% 無上限' },
+      { label: '實體活動加碼', value: '+3% (需登錄)' },
+      { label: '交通卡/超商', value: '最高 10% (需登錄)' }
     ],
     importantNotesList: [
         {
@@ -60,9 +62,59 @@ const INITIAL_CAMPAIGNS = [
     ],
     channels: [
       { title: '🚅 日本交通卡 (10%)', content: '使用 Apple Pay 綁定 J 卡儲值：Suica (西瓜卡)、PASMO、ICOCA。單筆需滿 2,000 日圓，最高回饋 10%。', rate: '10%' },
-      { title: '🇰🇷 韓國指定通路 (10%~)', content: '韓國實體商店使用 LINE Pay 綁定 J 卡支付 (需於指定商店如 Lotte Duty Free, Olive Young 等)，最高享 10-12% 回饋 (含原權益+優惠券)。', rate: '12%' },
-      { title: '🇯🇵 日本實體消費 (6%)', content: '日本地區所有實體店家消費 (含藥妝、百貨、餐廳、BicCamera、遊樂園門票、超市、便利商店、機場免稅店等)。', rate: '6%' },
+      { title: '🇰🇷 韓國指定通路 (10%~)', content: '韓國實體商店使用 LINE Pay 綁定 J 卡支付 (需於指定商店如 Lotte Duty Free, Olive Young 等)，最高享 10-12% 回饋。', rate: '12%' },
+      { title: '🇯🇵 日本實體消費 (6%)', content: '日本地區所有實體店家消費 (含藥妝、百貨、餐廳、BicCamera、遊樂園門票等)。', rate: '6%' },
       { title: '🏪 當地指定便利店 (10%)', content: '日本三大超商: 7-Eleven, Lawson, FamilyMart | 韓國便利商店: CU, GS25, Emart24 (需登錄)', rate: '10%' }
+    ]
+  },
+  {
+    id: 'ctbc_linepay',
+    bank: 'CTBC 中國信託',
+    card: 'LINE Pay 卡',
+    name: 'LINE POINTS 生態圈',
+    category: '一般消費',
+    totalRate: 16, 
+    baseRate: 1,
+    bonusRate: 15,
+    domesticRate: 1,
+    overseasRate: 5,
+    startDate: '2025-07-01',
+    endDate: '2025-12-31',
+    mainTag: '點數回饋',
+    image: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/LINEPay/images/card_01.png',
+    gradient: 'from-green-400 to-green-600', 
+    textColor: 'text-white',
+    link: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/LINEPay/index.html',
+    details: [
+        { label: '國內一般消費', value: '1% LINE POINTS' },
+        { label: '國外實體消費', value: '2.8% (無上限)' },
+        { label: '指定通路加碼', value: '最高 16% (需登錄)' }
+    ],
+    importantNotesList: [
+        {
+            title: 'Hotels.com 16% 訂房優惠',
+            highlight: '※ 需透過專屬連結並輸入優惠碼「CTBCLP16」，且以 LINE Pay 卡全額付款。',
+            schedule: [
+                { month: '每月', time: '名額有限', limit: '每月 400 組' }
+            ],
+            footer: '每筆回饋上限 1,800 點，未輸入代碼或名額已滿享 8%。'
+        },
+        {
+            title: '美日韓泰實體 5% 回饋',
+            highlight: '※ 國外實體商店消費含原 2.8% + 加碼 2.2%。需於活動期間登錄。',
+            schedule: [
+                { month: 'Q3-Q4', time: '需登錄', limit: '每戶上限 450 點' }
+            ],
+            footer: '限實體過卡交易 (含 Apple Pay/Google Pay)，網路交易不適用。'
+        }
+    ],
+    channels: [
+        { title: '🏨 Hotels.com (16%)', content: '透過專屬網頁訂房，並輸入指定優惠碼「CTBCLP16」，享最高 16% LINE POINTS 回饋 (需登錄/代碼)。', rate: '16%' },
+        { title: '🛍️ Uniqlo/GU (10%)', content: '【JCB 卡限定】於實體門市消費，單筆滿額享 10% 回饋。每月 5 號 10:00 開放登錄，名額有限。', rate: '10%' },
+        { title: '🍣 壽司郎/藏壽司 (10%)', content: '【JCB 卡限定】於指定日系餐飲消費，單筆滿額享 10% 回饋。需每月登錄，名額有限。', rate: '10%' },
+        { title: '🌏 美日韓泰實體 (5%)', content: '於美國、日本、韓國、泰國實體商店消費，享 5% 回饋 (含原2.8%+加碼2.2%)。需登錄。', rate: '5%' },
+        { title: '🛵 Uber Eats (5%)', content: '【VISA 卡限定】當月累計消費滿額享 5% 回饋。需每月登錄。', rate: '5%' },
+        { title: '🛒 ShopBack (4%~)', content: '透過 ShopBack 連結至 PChome、樂天、誠品線上等指定通路，享額外加碼回饋。', rate: '4%' }
     ]
   },
   {
@@ -74,6 +126,8 @@ const INITIAL_CAMPAIGNS = [
     totalRate: 10, 
     baseRate: 2,
     bonusRate: 8,
+    domesticRate: 2,
+    overseasRate: 1,
     startDate: '2025-07-01',
     endDate: '2025-12-31',
     mainTag: '電信 3.5%',
@@ -111,6 +165,8 @@ const INITIAL_CAMPAIGNS = [
     totalRate: 3.8,
     baseRate: 0.3,
     bonusRate: 3.5,
+    domesticRate: 3.8,
+    overseasRate: 3.8,
     startDate: '2025-09-01',
     endDate: '2025-12-31',
     mainTag: '切換 3.8%',
@@ -139,6 +195,8 @@ const INITIAL_CAMPAIGNS = [
     totalRate: 3.8,
     baseRate: 0.3,
     bonusRate: 3.5,
+    domesticRate: 3.8,
+    overseasRate: 3.8,
     startDate: '2025-09-01',
     endDate: '2025-12-31',
     mainTag: '數位 3.8%',
@@ -168,44 +226,6 @@ const INITIAL_CAMPAIGNS = [
     ]
   },
   {
-    id: 'ctbc_linepay',
-    bank: 'CTBC 中國信託',
-    card: 'LINE Pay 卡',
-    name: 'LINE POINTS 生態圈',
-    category: '一般消費',
-    totalRate: 15, 
-    baseRate: 1,
-    bonusRate: 14,
-    startDate: '2025-07-01',
-    endDate: '2025-12-31',
-    mainTag: '點數回饋',
-    image: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/LINEPay/images/card_01.png',
-    gradient: 'from-green-400 to-green-600', 
-    textColor: 'text-white',
-    link: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/LINEPay/index.html',
-    details: [
-        { label: '國內一般消費', value: '1% LINE POINTS (無上限)' },
-        { label: '國外實體消費', value: '2.8% LINE POINTS (無上限)' },
-        { label: '指定通路加碼', value: '最高 15% (如 Hotels.com)' }
-    ],
-    importantNotesList: [
-        {
-            title: 'Hotels.com 訂房加碼',
-            highlight: '※ 需使用指定連結並輸入優惠碼「CTBCLP16」享 LINE POINTS 回饋。',
-            schedule: [
-                { month: '每月', time: '需輸入優惠碼', limit: '每月限額 400 組' }
-            ],
-            footer: '每筆回饋上限 1,800 點。'
-        }
-    ],
-    channels: [
-        { title: '🏨 Hotels.com (15%)', content: '透過專屬網頁訂房，並輸入指定優惠碼，享最高 15% LINE POINTS 回饋。', rate: '15%' },
-        { title: '🌏 海外實體消費 (2.8%)', content: '海外實體商店刷卡消費，享 2.8% LINE POINTS 回饋無上限。', rate: '2.8%' },
-        { title: '🛍️ 日韓泰新實體 (5%)', content: '日本、韓國、泰國、新加坡實體門市消費，需登錄，加碼 2.2% (上限450點)。', rate: '5%' },
-        { title: '🎬 影音娛樂 (10%)', content: 'Netflix, Disney+, Spotify 等指定影音平台消費享 10% 回饋 (需登錄)。', rate: '10%' }
-    ]
-  },
-  {
     id: 'ctbc_allme',
     bank: 'CTBC 中國信託',
     card: 'All Me 卡',
@@ -214,6 +234,8 @@ const INITIAL_CAMPAIGNS = [
     totalRate: 8,
     baseRate: 1,
     bonusRate: 7,
+    domesticRate: 8,
+    overseasRate: 1,
     startDate: '2025-07-01',
     endDate: '2025-12-31',
     mainTag: '電信/電商',
@@ -240,6 +262,8 @@ const INITIAL_CAMPAIGNS = [
     totalRate: 13,
     baseRate: 1,
     bonusRate: 12,
+    domesticRate: 3,
+    overseasRate: 3,
     startDate: '2025-09-01',
     endDate: '2026-02-28',
     mainTag: '網購 3%',
@@ -266,6 +290,8 @@ const INITIAL_CAMPAIGNS = [
     totalRate: 4,
     baseRate: 1, 
     bonusRate: 3, 
+    domesticRate: 1,
+    overseasRate: 4,
     startDate: '2025-07-01',
     endDate: '2025-12-31',
     mainTag: '日本 4%',
@@ -293,6 +319,8 @@ const INITIAL_CAMPAIGNS = [
     totalRate: 7, 
     baseRate: 1, 
     bonusRate: 6, 
+    domesticRate: 7,
+    overseasRate: 8,
     startDate: '2025-10-01', 
     endDate: '2025-12-31', 
     mainTag: '國內外 7%',
@@ -311,7 +339,6 @@ const INITIAL_CAMPAIGNS = [
       { title: '🎬 【樂】娛樂影音', content: '全台電影院、Netflix、Spotify、Disney+、KKBOX、两廳院售票。', rate: '7%' },
       { title: '🍽️ 【食】美饌佳餚', content: 'Foodpanda, Uber Eats, 國內全部餐廳實體刷卡消費。', rate: '7%' },
       { title: '🎮 【玩】電玩娛樂', content: 'PlayStation, XBOX, Steam, Nintendo', rate: '7%' },
-      { title: '🎓 【學】學習進修', content: 'Hahow, Udemy, VoiceTube', rate: '7%' },
       { title: '🐱 【寵】寵物愛護', content: '東森寵物雲, 魚中魚, 動物星球', rate: '7%' },
       { title: '🏠 【家】居家生活', content: 'IKEA, 誠品生活, 特力屋, Pinkoi', rate: '7%' }
     ]
@@ -325,6 +352,8 @@ const INITIAL_CAMPAIGNS = [
     totalRate: 5,
     baseRate: 1, 
     bonusRate: 4, 
+    domesticRate: 4,
+    overseasRate: 5,
     startDate: '2025-10-01', 
     endDate: '2025-12-31', 
     mainTag: '網購/百貨/餐飲',
@@ -352,6 +381,8 @@ const INITIAL_CAMPAIGNS = [
     totalRate: 3.5,
     baseRate: 0.3,
     bonusRate: 3.2,
+    domesticRate: 3.3,
+    overseasRate: 3.3,
     startDate: '2025-10-01', 
     endDate: '2025-12-31', 
     mainTag: '多重權益',
@@ -381,6 +412,8 @@ const INITIAL_CAMPAIGNS = [
     totalRate: 3.8,
     baseRate: 0.5,
     bonusRate: 3.3,
+    domesticRate: 3.8,
+    overseasRate: 0.5,
     startDate: '2025-10-01', 
     endDate: '2025-12-31', 
     mainTag: '行動支付',
@@ -406,6 +439,8 @@ const INITIAL_CAMPAIGNS = [
     totalRate: 7,
     baseRate: 1,
     bonusRate: 6,
+    domesticRate: 7,
+    overseasRate: 7,
     startDate: '2025-10-15', 
     endDate: '2025-12-20', 
     mainTag: 'Apple Watch',
@@ -433,8 +468,7 @@ const CardVisual = ({ image, gradient, textColor, cardName, bankName, uiStyle })
   const [imageError, setImageError] = useState(false);
 
   return (
-    // 手機版尺寸 w-28 h-20 (約112x80px)，比例更緊湊
-    <div className={`relative w-28 h-20 md:w-44 md:h-28 perspective-1000 z-0 flex-shrink-0 group-hover:z-20 mt-1 md:mt-0 self-start md:self-auto ${uiStyle === 'korean' ? 'perspective-none' : ''}`}>
+    <div className={`relative w-36 h-24 md:w-44 md:h-28 perspective-1000 z-0 flex-shrink-0 group-hover:z-20 mt-1 md:mt-0 self-end md:self-auto ${uiStyle === 'korean' ? 'perspective-none' : ''}`}>
       {!imageError && image ? (
         <img 
             src={image} 
@@ -453,16 +487,16 @@ const CardVisual = ({ image, gradient, textColor, cardName, bankName, uiStyle })
         <div className={`
             w-full h-full shadow-md
             transition-all duration-300 ease-out
-            bg-gradient-to-br ${gradient} p-2 md:p-3 flex flex-col justify-between border border-white/10
+            bg-gradient-to-br ${gradient} p-3 flex flex-col justify-between border border-white/10
             ${uiStyle === 'korean'
                 ? 'rounded-3xl rotate-0 scale-95 group-hover:scale-105 group-hover:-translate-y-2' 
                 : 'rounded-xl transform rotate-6 md:rotate-6 md:-translate-y-2 md:translate-x-4 group-active:rotate-0 md:group-hover:rotate-12 group-active:scale-105 md:group-hover:scale-110'
             }
         `}>
-             <div className={`text-[8px] md:text-[10px] uppercase tracking-widest opacity-80 italic ${textColor} font-serif`}>{bankName.split(' ')[0]}</div>
+             <div className={`text-[10px] uppercase tracking-widest opacity-80 italic ${textColor} font-serif`}>{bankName.split(' ')[0]}</div>
              <div className="flex justify-between items-end">
-                <div className={`text-[10px] md:text-xs font-bold leading-tight italic ${textColor} font-serif mt-0.5`}>{cardName}</div>
-                <CreditCard size={14} className={`opacity-50 ${textColor}`} />
+                <div className={`text-xs font-bold leading-tight italic ${textColor} font-serif mt-0.5`}>{cardName}</div>
+                <CreditCard size={16} className={`opacity-50 ${textColor}`} />
              </div>
         </div>
       )}
@@ -487,6 +521,10 @@ const App = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [expandedFilterBanks, setExpandedFilterBanks] = useState([]);
   const [lastUpdated, setLastUpdated] = useState("2025/12/10"); 
+  
+  // 新增：排序狀態
+  const [isReorderOpen, setIsReorderOpen] = useState(false);
+  const [cardOrder, setCardOrder] = useState([]);
 
   const [isUpdating, setIsUpdating] = useState(false);
   
@@ -518,11 +556,27 @@ const App = () => {
     if (saved) {
       setRegisteredIds(JSON.parse(saved));
     }
+    
+    // 初始化或讀取排序
+    const savedOrder = localStorage.getItem('card_order_v1');
+    if (savedOrder) {
+        setCardOrder(JSON.parse(savedOrder));
+    } else {
+        // 預設順序
+        setCardOrder(INITIAL_CAMPAIGNS.map(c => c.id));
+    }
   }, []);
 
   useEffect(() => {
     localStorage.setItem('registeredCampaigns_v4', JSON.stringify(registeredIds));
   }, [registeredIds]);
+  
+  // 保存排序
+  useEffect(() => {
+    if (cardOrder.length > 0) {
+        localStorage.setItem('card_order_v1', JSON.stringify(cardOrder));
+    }
+  }, [cardOrder]);
 
   const toggleRegistration = (e, id) => {
     e.stopPropagation();
@@ -576,9 +630,26 @@ const App = () => {
     setSelectedCards([]);
     setSelectedCategories([]);
   };
+  
+  // 排序移動邏輯
+  const moveCard = (id, direction) => {
+      setCardOrder(prev => {
+          const currentIndex = prev.indexOf(id);
+          if (currentIndex === -1) return prev;
+          
+          const newOrder = [...prev];
+          if (direction === 'up' && currentIndex > 0) {
+              [newOrder[currentIndex], newOrder[currentIndex - 1]] = [newOrder[currentIndex - 1], newOrder[currentIndex]];
+          } else if (direction === 'down' && currentIndex < newOrder.length - 1) {
+              [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
+          }
+          return newOrder;
+      });
+  };
 
   const filteredCampaigns = useMemo(() => {
-    return INITIAL_CAMPAIGNS.filter(c => {
+    // 先篩選
+    const filtered = INITIAL_CAMPAIGNS.filter(c => {
       const matchesFilter = selectedCards.includes(c.card) && selectedCategories.includes(c.category);
       if (!matchesFilter) return false;
       if (searchQuery.trim() !== '') {
@@ -593,7 +664,17 @@ const App = () => {
       }
       return true;
     });
-  }, [selectedCards, selectedCategories, searchQuery]);
+    
+    // 再排序 (依照 cardOrder 的順序)
+    return filtered.sort((a, b) => {
+        const indexA = cardOrder.indexOf(a.id);
+        const indexB = cardOrder.indexOf(b.id);
+        // 如果是新卡片(不在排序表中)，排在最後
+        const safeIndexA = indexA === -1 ? 9999 : indexA;
+        const safeIndexB = indexB === -1 ? 9999 : indexB;
+        return safeIndexA - safeIndexB;
+    });
+  }, [selectedCards, selectedCategories, searchQuery, cardOrder]);
 
   const getTheme = () => {
     if (uiStyle === 'nyc') {
@@ -634,11 +715,52 @@ const App = () => {
   const theme = getTheme();
 
   return (
-    // 使用 max-w-md 限制寬度，mx-auto 讓它在桌面置中，模仿手機 App 介面
-    // overflow-x-hidden 與 overscroll-x-none 鎖定水平捲動
     <div className={`min-h-screen w-full transition-colors duration-500 selection:bg-rose-200 selection:text-rose-900 ${theme.bg} ${theme.text} ${theme.fontBody} flex justify-center overflow-x-hidden touch-pan-y`}>
       <div className={`w-full max-w-md ${theme.bg} min-h-screen flex flex-col shadow-2xl relative overscroll-x-none`}>
       
+      {/* REORDER MODAL (New) */}
+      {isReorderOpen && (
+        <div className="fixed inset-0 z-[70] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+           <div className={`w-full max-w-sm max-h-[70vh] flex flex-col ${theme.rounded === 'rounded-none' ? 'rounded-xl' : 'rounded-[1.5rem]'} shadow-2xl relative ${theme.cardBg} border ${theme.cardBorder}`}>
+                <div className={`p-4 border-b ${theme.cardBorder} flex justify-between items-center`}>
+                    <h3 className={`text-lg font-bold ${theme.text}`}>Reorder Cards</h3>
+                    <button onClick={() => setIsReorderOpen(false)}><X size={20} className={theme.subText} /></button>
+                </div>
+                <div className="overflow-y-auto p-4 space-y-2 custom-scrollbar">
+                    {/* List all items from INITIAL_CAMPAIGNS sorted by current order */}
+                    {INITIAL_CAMPAIGNS
+                        .slice()
+                        .sort((a,b) => {
+                             const indexA = cardOrder.indexOf(a.id);
+                             const indexB = cardOrder.indexOf(b.id);
+                             return (indexA === -1 ? 9999 : indexA) - (indexB === -1 ? 9999 : indexB);
+                        })
+                        .map((card, idx, arr) => (
+                        <div key={card.id} className={`flex items-center justify-between p-3 border ${theme.cardBorder} ${theme.buttonShape} ${isDarkMode?'bg-white/5':'bg-black/5'}`}>
+                            <span className={`text-sm font-medium ${theme.text}`}>{card.card}</span>
+                            <div className="flex gap-1">
+                                <button 
+                                    onClick={() => moveCard(card.id, 'up')} 
+                                    disabled={idx === 0}
+                                    className={`p-1.5 rounded hover:bg-white/10 ${idx === 0 ? 'opacity-30' : ''}`}
+                                >
+                                    <ArrowUp size={16} />
+                                </button>
+                                <button 
+                                    onClick={() => moveCard(card.id, 'down')} 
+                                    disabled={idx === arr.length - 1}
+                                    className={`p-1.5 rounded hover:bg-white/10 ${idx === arr.length - 1 ? 'opacity-30' : ''}`}
+                                >
+                                    <ArrowDown size={16} />
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+           </div>
+        </div>
+      )}
+
       {/* FILTER MODAL */}
       {isFilterOpen && (
         <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
@@ -822,13 +944,24 @@ const App = () => {
                 </button>
              </div>
              
-             <button 
-                onClick={() => setIsFilterOpen(true)}
-                className={`flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase ${theme.subText} hover:${theme.accent} transition-colors px-3 py-1 border border-transparent ${theme.buttonShape} hover:bg-black/5`}
-             >
-                <Filter size={12} />
-                Filter View
-             </button>
+             <div className="flex gap-2">
+                 {/* Reorder Button */}
+                 <button 
+                    onClick={() => setIsReorderOpen(true)}
+                    className={`flex items-center justify-center w-8 h-8 rounded-full border ${theme.cardBorder} hover:bg-black/5 transition-colors`}
+                    title="Sort Order"
+                 >
+                    <ArrowUpDown size={14} className={theme.subText} />
+                 </button>
+
+                 <button 
+                    onClick={() => setIsFilterOpen(true)}
+                    className={`flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase ${theme.subText} hover:${theme.accent} transition-colors px-3 py-1 border border-transparent ${theme.buttonShape} hover:bg-black/5`}
+                 >
+                    <Filter size={12} />
+                    Filter View
+                 </button>
+             </div>
           </div>
         </div>
       </header>
@@ -851,7 +984,7 @@ const App = () => {
                     ${isRegistered ? '' : 'hover:-translate-y-1'}
                   `}
                 >
-                  {/* Number - Only show in NYC style for cleanliness in Korean style */}
+                  {/* Number */}
                   {uiStyle === 'nyc' && (
                     <div className={`absolute -left-2 -top-5 text-[60px] font-black leading-none opacity-5 select-none font-serif ${theme.text}`}>
                         {index + 1 < 10 ? `0${index + 1}` : index + 1}
@@ -869,7 +1002,7 @@ const App = () => {
                   {/* Card Body */}
                   <div className={`relative ${uiStyle === 'nyc' ? 'border-t-2' : ''} ${isRegistered ? theme.accentBorder : (theme.text === 'text-white' ? 'border-white' : 'border-black')} pt-4 transition-colors duration-500 ${uiStyle === 'korean' ? `p-6 ${theme.cardBg} ${theme.shadow} ${theme.rounded}` : ''}`}>
                     
-                    {/* Header Layout: Modified to place CardVisual on the LEFT */}
+                    {/* Header Layout */}
                     <div className="flex flex-col gap-4 mb-6">
                       
                       {/* Top Row: Checkbox + Card + Info */}
@@ -926,7 +1059,7 @@ const App = () => {
                         </div>
                       </div>
 
-                      {/* Bottom Row: Rate Display (Full Width) */}
+                      {/* Bottom Row: Rate Display */}
                       <div className="flex justify-end items-baseline gap-2 relative border-t border-dashed border-white/10 pt-2">
                             <span className="text-[10px] text-neutral-500">MAX REWARD</span>
                             <div className={`text-4xl font-black tracking-tighter ${theme.text}`}>
@@ -1078,18 +1211,23 @@ const App = () => {
                     <div className={`w-12 h-1 ${theme.accentBg} mx-auto rounded-full`}></div>
                 </div>
 
-                {['旅遊', '網購', '一般消費', '生活'].map((cat) => {
-                    const topCards = INITIAL_CAMPAIGNS.filter(c => c.category === cat).sort((a,b) => b.totalRate - a.totalRate);
+                {['國內消費霸主', '海外消費霸主'].map((cat) => {
+                    // Sort by domestic or overseas rate
+                    const isDomestic = cat === '國內消費霸主';
+                    const topCards = INITIAL_CAMPAIGNS
+                        .sort((a,b) => isDomestic ? (b.domesticRate || 0) - (a.domesticRate || 0) : (b.overseasRate || 0) - (a.overseasRate || 0));
+                    
                     if (topCards.length === 0) return null;
                     const winner = topCards[0];
+                    const rate = isDomestic ? winner.domesticRate : winner.overseasRate;
 
                     return (
                         <div key={cat} className={`grid gap-8 items-center border-b ${theme.cardBorder} pb-12`}>
                              <div>
-                                <div className={`text-[10px] uppercase tracking-[0.3em] mb-2 ${theme.accent}`}>Category Winner</div>
+                                <div className={`text-[10px] uppercase tracking-[0.3em] mb-2 ${theme.accent}`}>{isDomestic ? 'DOMESTIC KING' : 'OVERSEAS KING'}</div>
                                 <h3 className={`text-4xl font-black uppercase mb-1 ${theme.text}`}>{cat}</h3>
                                 <div className={`text-6xl font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-amber-700 mb-6`}>
-                                    {winner.totalRate}%
+                                    {rate}%
                                 </div>
                                 <div className="space-y-2">
                                     <a 
@@ -1109,11 +1247,10 @@ const App = () => {
                                 </div>
                              </div>
 
-                             {/* 如果有圖片則顯示卡片，否則顯示抽象圖 */}
+                             {/* Card Display */}
                              <div className={`h-64 relative overflow-hidden flex items-center justify-center border ${theme.cardBorder} p-6`}>
                                  <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/noise-lines.png')]"></div>
                                  
-                                 {/* 使用 CardVisual 來確保這裡也能正確顯示 fallback */}
                                  <div className="scale-125 transform">
                                     <CardVisual 
                                         image={winner.image} 
@@ -1132,7 +1269,21 @@ const App = () => {
         )}
 
       </main>
-      </div>
+
+      <footer className={`py-8 md:py-12 border-t ${theme.cardBorder} ${theme.bg}`}>
+        <div className="w-full px-6 text-center">
+             <h2 className={`text-xl md:text-2xl font-black italic tracking-tighter mb-6 opacity-30 ${theme.text}`}>REWARD ENGINE</h2>
+             <div className={`flex justify-center gap-8 text-[10px] uppercase tracking-widest ${theme.subText}`}>
+                <span>Privacy</span>
+                <span>Terms</span>
+                <a href="https://www.threads.com/@w.tzuyin" target="_blank" rel="noopener noreferrer" className="hover:text-[#D4AF37] transition-colors">Contact</a>
+             </div>
+             <div className={`mt-8 text-[10px] ${theme.subText} opacity-50`}>
+                &copy; 2025 DESIGNED BY TZU YIN WANG (SARAH). ALL RIGHTS RESERVED.
+             </div>
+        </div>
+      </footer>
+    </div>
     </div>
   );
 };
