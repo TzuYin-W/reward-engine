@@ -42,6 +42,7 @@ const BANK_HIERARCHY = [
 
 // --- 模擬數據資料庫 ---
 const INITIAL_CAMPAIGNS = [
+  // 1. 富邦 J 卡 (已補上國內一般回饋)
   { 
     id: 'fubon_j', 
     bank: 'FUBON 台北富邦', 
@@ -49,8 +50,8 @@ const INITIAL_CAMPAIGNS = [
     name: '日韓旅遊/交通回饋', 
     category: '旅遊', 
     totalRate: 10, 
-    baseRate: 3,
-    bonusRate: 7,
+    baseRate: 1, // 調整基礎回饋為國內一般
+    bonusRate: 9, // 調整加碼回饋
     startDate: '2025-10-01', 
     endDate: '2025-12-31', 
     mainTag: '日韓旅遊',
@@ -59,6 +60,7 @@ const INITIAL_CAMPAIGNS = [
     textColor: 'text-rose-900',
     link: 'https://www.fubon.com/banking/Personal/credit_card/all_card/omiyage/omiyage.htm',
     details: [
+      { label: '國內一般消費', value: '1% LINE POINTS (無上限)' }, // 新增
       { label: '日韓原權益', value: '3% LINE POINTS (無上限)' },
       { label: '實體活動加碼', value: '+3% (需登錄，季上限600元)' },
       { label: '交通卡加碼', value: '+7% (需登錄，季上限200元)' }
@@ -92,6 +94,7 @@ const INITIAL_CAMPAIGNS = [
       { title: '🏪 當地指定便利店 (10%)', content: '日本三大超商: 7-Eleven, Lawson, FamilyMart | 韓國便利商店: CU, GS25, Emart24 (需登錄)', rate: '10%' }
     ]
   },
+  // 2. 中信 LINE Pay 卡 (資訊完整)
   {
     id: 'ctbc_linepay',
     bank: 'CTBC 中國信託',
@@ -109,8 +112,9 @@ const INITIAL_CAMPAIGNS = [
     textColor: 'text-white',
     link: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/LINEPay/index.html',
     details: [
-        { label: '一般消費', value: '國內1% / 國外2.8% (無上限)' },
-        { label: '指定通路', value: '最高 15% (Hotels.com, 等)' }
+        { label: '國內一般消費', value: '1% LINE POINTS (無上限)' },
+        { label: '國外實體消費', value: '2.8% LINE POINTS (無上限)' },
+        { label: '指定通路加碼', value: '最高 15% (如 Hotels.com)' }
     ],
     importantNotesList: [
         {
@@ -129,6 +133,7 @@ const INITIAL_CAMPAIGNS = [
         { title: '🎬 影音娛樂 (10%)', content: 'Netflix, Disney+, Spotify 等指定影音平台消費享 10% 回饋 (需登錄)。', rate: '10%' }
     ]
   },
+  // 3. 中信 All Me 卡 (資訊完整)
   {
     id: 'ctbc_allme',
     bank: 'CTBC 中國信託',
@@ -147,7 +152,7 @@ const INITIAL_CAMPAIGNS = [
     link: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/ALLME/index.html',
     details: [
         { label: '一般消費', value: '1% 中信點' },
-        { label: '指定通路', value: '8% (需綁定 Hami Pay/Pi 錢包)' }
+        { label: '指定通路加碼', value: '8% (需綁定 Hami Pay/Pi 錢包)' }
     ],
     channels: [
         { title: '📡 電信繳費 (8%)', content: '中華電信費 (包含5G/光世代)、Hami Video、KKBOX。', rate: '8%' },
@@ -155,6 +160,7 @@ const INITIAL_CAMPAIGNS = [
         { title: '🏪 超商/超市 (8%)', content: '7-ELEVEN, 全家, 萊爾富, OK, 美廉社 (需使用 Hami Pay 感應支付)。', rate: '8%' }
     ]
   },
+  // 4. 玉山 U Bear 卡 (資訊完整)
   {
     id: 'esun_ubear',
     bank: 'E.SUN 玉山銀行',
@@ -172,14 +178,16 @@ const INITIAL_CAMPAIGNS = [
     textColor: 'text-black',
     link: 'https://event.esunbank.com.tw/credit/ubear/index.html',
     details: [
-        { label: '網購', value: '3% (含行動支付)' },
-        { label: '指定影音', value: '13% (上限100元)' }
+        { label: '國內外一般消費', value: '1% 現金回饋' },
+        { label: '指定網路消費', value: '3% (含行動支付)' },
+        { label: '指定影音平台', value: '13% (上限100元)' }
     ],
     channels: [
         { title: '🛒 指定網購 (3%)', content: '國內外網購、行動支付 (LINE Pay, 街口, Apple Pay等)、訂房網、高鐵台鐵APP。', rate: '3%' },
         { title: '🎬 指定影音 (13%)', content: 'Disney+, Netflix, Spotify, Nintendo, PlayStation。', rate: '13%' }
     ]
   },
+  // 5. 聯邦 吉鶴卡 (資訊完整)
   {
     id: 'federal_jihe',
     bank: 'FEDERAL 聯邦銀行',
@@ -187,8 +195,8 @@ const INITIAL_CAMPAIGNS = [
     name: '日本消費神卡',
     category: '旅遊',
     totalRate: 4,
-    baseRate: 2.5,
-    bonusRate: 1.5,
+    baseRate: 1, // 調整基礎回饋
+    bonusRate: 3, // 調整加碼回饋
     startDate: '2025-07-01',
     endDate: '2025-12-31',
     mainTag: '日本 4%',
@@ -197,9 +205,9 @@ const INITIAL_CAMPAIGNS = [
     textColor: 'text-white',
     link: 'https://card.ubot.com.tw/eCard/activity/2025JIHO/index.htm',
     details: [
+        { label: '國內一般消費', value: '1% 無上限' },
         { label: '日幣消費', value: '2.5% 無上限' },
-        { label: 'QUICPay', value: '+1.5% (綁定 Apple Pay)' },
-        { label: '國內', value: '1% 無上限' }
+        { label: '日本QUICPay', value: '+1.5% (綁定 Apple Pay)' }
     ],
     channels: [
         { title: '🇯🇵 日本 QUICPay (4%)', content: '日本當地使用 Apple Pay 綁定吉鶴卡並選擇 QUICPay 支付，享 4% 回饋。', rate: '4%' },
@@ -207,6 +215,7 @@ const INITIAL_CAMPAIGNS = [
         { title: '🍽️ 日系美饌 (10%)', content: '國內指定日系餐廳 (勝博殿, 一風堂, 欣葉日本料理...) 現折 10%。', rate: '10%' }
     ]
   },
+  // 6. 永豐大戶 (資訊完整)
   { 
     id: 'sinopac_dawho', 
     bank: 'SINOPAC 永豐銀行', 
@@ -214,8 +223,8 @@ const INITIAL_CAMPAIGNS = [
     name: '大戶等級七大通路', 
     category: '旅遊', 
     totalRate: 7, 
-    baseRate: 2,
-    bonusRate: 5,
+    baseRate: 1, // 調整基礎回饋
+    bonusRate: 6, // 調整加碼回饋
     startDate: '2025-10-01', 
     endDate: '2025-12-31', 
     mainTag: '國內外 7%',
@@ -224,9 +233,10 @@ const INITIAL_CAMPAIGNS = [
     textColor: 'text-yellow-500', 
     link: 'https://bank.sinopac.com/sinopacBT/personal/credit-card/introduction/bankcard/DAWHO.html',
     details: [
-      { label: '基本回饋', value: '國內1% / 國外2% (無上限)' },
-      { label: '指定任務', value: '+1% (需綁定大戶自動扣繳)' },
-      { label: '七大通路', value: '+5% (上限300元/月)' }
+      { label: '國內一般消費', value: '1% 現金回饋' },
+      { label: '國外一般消費', value: '2% 現金回饋' },
+      { label: '指定任務加碼', value: '+1% (需綁定大戶自動扣繳)' },
+      { label: '七大通路加碼', value: '+5% (上限300元/月)' }
     ],
     channels: [
       { title: '✈️ 【行】旅遊/交通', content: '旅行社、免稅店、航空公司、飯店類、Uber、高鐵、台鐵。', rate: '7%' },
@@ -238,6 +248,7 @@ const INITIAL_CAMPAIGNS = [
       { title: '🏠 【家】居家生活', content: 'IKEA, 誠品生活, 特力屋, Pinkoi', rate: '7%' }
     ]
   },
+  // 7. 永豐 JCB (資訊完整)
   { 
     id: 'sinopac_jcb', 
     bank: 'SINOPAC 永豐銀行', 
@@ -245,8 +256,8 @@ const INITIAL_CAMPAIGNS = [
     name: '特選通路回饋', 
     category: '一般消費', 
     totalRate: 5,
-    baseRate: 2,
-    bonusRate: 3,
+    baseRate: 1, // 調整基礎回饋
+    bonusRate: 4, // 調整加碼回饋
     startDate: '2025-10-01', 
     endDate: '2025-12-31', 
     mainTag: '網購/百貨/餐飲',
@@ -255,9 +266,9 @@ const INITIAL_CAMPAIGNS = [
     textColor: 'text-white',
     link: 'https://bank.sinopac.com/sinopacBT/personal/credit-card/introduction/bankcard/cashcardJCB.html',
     details: [
-      { label: '國內一般', value: '1% 現金回饋' },
-      { label: '特選通路', value: '+3% (當期帳單滿3000)' },
-      { label: '網購/百貨', value: '最高 5% (上限300元/月)' }
+      { label: '國內一般消費', value: '1% 現金回饋' },
+      { label: '特選通路加碼', value: '+3% (當期帳單滿3000)' },
+      { label: '網購/百貨加碼', value: '最高 5% (上限300元/月)' }
     ],
     channels: [
       { title: '🛍️ 百貨購物 (5%)', content: '漢神巨蛋、漢神百貨、遠東SOGO、遠東百貨、微風廣場、華泰名品城、新光三越、台北101。', rate: '5%' },
@@ -265,6 +276,7 @@ const INITIAL_CAMPAIGNS = [
       { title: '🍽️ 餐廳/外送 (5%)', content: '國內所有實體餐廳(含連鎖速食/咖啡廳/火鍋/燒肉)、Uber Eats、Foodpanda', rate: '5%' }
     ]
   },
+  // 8. 國泰 CUBE (資訊完整)
   { 
     id: 'cathay_cube', 
     bank: 'CATHAY 國泰世華', 
@@ -282,8 +294,9 @@ const INITIAL_CAMPAIGNS = [
     textColor: 'text-gray-600',
     link: 'https://www.cathaybk.com.tw/cathaybk/personal/product/credit-card/cards/cube/',
     details: [
-      { label: '原始權益', value: '0.3% 小樹點' },
-      { label: '任務加碼', value: '每日可切換一次權益' }
+      { label: '一般消費', value: '0.3% 小樹點' },
+      { label: '指定權益加碼', value: '3% (每日可切換一次)' },
+      { label: '日本賞加碼', value: '3.5% (期間限定)' }
     ],
     channels: [
       { title: '🇯🇵 日本賞 (3.5%)', content: '日本實體消費、JR東日本、唐吉訶德、BicCamera、松本清、東京迪士尼、日本環球影城、阪急百貨、阪神百貨、大丸百貨、高島屋、SUIGI藥局', rate: '3.5%' },
@@ -293,6 +306,7 @@ const INITIAL_CAMPAIGNS = [
       { title: '🛒 集精選 (2%)', content: '全聯福利中心、家樂福、7-ELEVEN、全家便利商店、麥當勞、肯德基、中油直營(加油)、IKEA、宜得利家居', rate: '2%' }
     ]
   },
+  // 9. 台新 GoGo (資訊完整)
   { 
     id: 'taishin_gogo', 
     bank: 'TAISHIN 台新銀行', 
@@ -310,14 +324,15 @@ const INITIAL_CAMPAIGNS = [
     textColor: 'text-white',
     link: 'https://www.taishinbank.com.tw/TS/TS02/TS0201/TS020101/TS02010101/TS0201010104/TS020101010409/index.htm',
     details: [
-      { label: '基本回饋', value: '0.5% 現金回饋' },
-      { label: '任務加碼', value: '+3.3% (需電子帳單+Richart扣繳)' }
+      { label: '一般消費', value: '0.5% 現金回饋' },
+      { label: '精選通路加碼', value: '+3.3% (需電子帳單+Richart扣繳)' }
     ],
     channels: [
       { title: '📱 行動支付 (3.8%)', content: 'LINE Pay, 全支付, 台新Pay, 全盈+PAY (適用於超商、超市、百貨、餐廳、夜市、飲料店、計程車等支援上述支付之所有通路)', rate: '3.8%' },
       { title: '🛒 精選網購 (3.8%)', content: '蝦皮購物, momo購物網, PChome, Yahoo奇摩, Amazon, Coupang(酷澎), 博客來, Pinkoi, 露天拍賣, 淘寶, 東森購物, PayEasy', rate: '3.8%' }
     ]
   },
+  // 10. 永豐 Sport (資訊完整)
   { 
     id: 'sinopac_sport', 
     bank: 'SINOPAC 永豐銀行', 
@@ -335,9 +350,9 @@ const INITIAL_CAMPAIGNS = [
     textColor: 'text-white',
     link: 'https://bank.sinopac.com/sinopacBT/personal/credit-card/introduction/bankcard/sport-card.html',
     details: [
-      { label: '基本回饋', value: '1% 豐點' },
-      { label: '運動獎勵', value: '+2% (每月7000卡路里)' },
-      { label: '支付加碼', value: '+4% (指定支付方式)' }
+      { label: '一般消費', value: '1% 豐點' },
+      { label: '運動獎勵加碼', value: '+2% (每月7000卡路里)' },
+      { label: '指定支付加碼', value: '+4% (指定支付方式)' }
     ],
     channels: [
       { title: '🍎 指定行動支付', content: 'Apple Pay, Google Pay (適用全台支援感應支付之實體通路：百貨/量販/超商/餐廳/加油站/電影院/誠品/Uniqlo/Zara...)', rate: '7%' },
@@ -501,7 +516,8 @@ const App = () => {
   };
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 selection:bg-[#D4AF37] selection:text-black ${theme.bg} ${theme.text} ${theme.fontBody}`}>
+    // 修改: 最外層容器設為 w-full，移除 min-h-screen 改用 h-full (如果需要)，這裡保持 min-h-screen
+    <div className={`min-h-screen w-full transition-colors duration-500 selection:bg-[#D4AF37] selection:text-black ${theme.bg} ${theme.text} ${theme.fontBody}`}>
       
       {/* --- FILTER MODAL --- */}
       {isFilterOpen && (
@@ -623,19 +639,20 @@ const App = () => {
       )}
 
       {/* --- HEADER (Sticky) --- */}
-      <header className={`sticky top-0 z-50 backdrop-blur-xl bg-opacity-90 transition-all border-b border-neutral-800/50 pt-4 pb-4 md:pt-12 md:pb-8 ${theme.bg}`}>
-        <div className="w-full px-4 md:px-12">
+      {/* 修改: 移除 md:px-12，改用統一的 px-4，確保手機版滿版，桌面版也不會太窄 */}
+      <header className={`sticky top-0 z-50 backdrop-blur-xl bg-opacity-90 transition-all border-b border-neutral-800/50 pt-4 pb-4 md:pt-6 md:pb-6 ${theme.bg}`}>
+        <div className="w-full px-4">
           <div className="flex justify-between items-start">
             <div className="flex-1">
-              <h1 className={`text-3xl md:text-7xl font-black tracking-tighter uppercase leading-[0.85] ${theme.text}`}>
+              <h1 className={`text-3xl md:text-5xl lg:text-7xl font-black tracking-tighter uppercase leading-[0.85] ${theme.text}`}>
                 Reward
-                <span className={`block font-serif italic font-light tracking-normal text-2xl md:text-5xl mt-1 ${theme.accent}`}>
+                <span className={`block font-serif italic font-light tracking-normal text-2xl md:text-4xl lg:text-5xl mt-1 ${theme.accent}`}>
                   Engine.
                 </span>
               </h1>
             </div>
             
-            <div className="flex flex-col items-end gap-2 md:gap-4">
+            <div className="flex flex-col items-end gap-2 md:gap-3">
                {/* 模擬更新按鈕 */}
                <div className="flex items-center gap-2 md:gap-3">
                    <div className="hidden md:flex flex-col items-end mr-2">
@@ -645,14 +662,14 @@ const App = () => {
                    <button 
                     onClick={handleRefreshData}
                     disabled={isUpdating}
-                    className={`w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full border ${theme.cardBorder} hover:border-[#D4AF37] transition-all ${isUpdating ? 'animate-spin opacity-50' : ''}`}
+                    className={`w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-full border ${theme.cardBorder} hover:border-[#D4AF37] transition-all ${isUpdating ? 'animate-spin opacity-50' : ''}`}
                     title="Sync Latest Data"
                    >
                     <RefreshCw size={14} className="md:w-4 md:h-4" />
                    </button>
                    <button 
                     onClick={() => setIsDarkMode(!isDarkMode)}
-                    className={`w-8 h-8 md:w-10 md:h-10 flex items-center justify-center rounded-full border ${theme.cardBorder} hover:scale-110 transition-transform`}
+                    className={`w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-full border ${theme.cardBorder} hover:scale-110 transition-transform`}
                    >
                     {isDarkMode ? <Sun size={16} strokeWidth={1.5} className="md:w-[18px]" /> : <Moon size={16} strokeWidth={1.5} className="md:w-[18px]" />}
                    </button>
@@ -665,7 +682,7 @@ const App = () => {
             </div>
           </div>
 
-          <div className="mt-4 md:mt-8 flex items-center justify-between border-t border-b border-neutral-800 py-3">
+          <div className="mt-4 md:mt-6 flex items-center justify-between border-t border-b border-neutral-800 py-3">
              <div className="flex gap-4 md:gap-6 text-xs font-bold tracking-widest uppercase">
                 <button 
                     onClick={() => setViewMode('list')}
@@ -683,7 +700,7 @@ const App = () => {
              
              <button 
                 onClick={() => setIsFilterOpen(true)}
-                className={`flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase ${theme.subText} hover:${theme.accent} transition-colors px-2 py-1 md:px-3 md:py-1 border border-transparent hover:border-neutral-700`}
+                className={`flex items-center gap-2 text-[10px] tracking-[0.2em] uppercase ${theme.subText} hover:${theme.accent} transition-colors px-2 py-1 border border-transparent hover:border-neutral-700`}
              >
                 <Filter size={12} />
                 Filter View
@@ -693,10 +710,11 @@ const App = () => {
       </header>
 
       {/* --- MAIN CONTENT --- */}
-      <main className="w-full px-4 md:px-12 py-8 md:py-12">
+      {/* 修改: 移除 md:px-12，改用統一的 px-4，確保手機版滿版 */}
+      <main className="w-full px-4 py-6 md:py-8">
         
         {viewMode === 'list' && (
-          <div className="grid gap-8 md:gap-12">
+          <div className="grid gap-6 md:gap-10">
             {filteredCampaigns.map((campaign, index) => {
               const isRegistered = registeredIds.includes(campaign.id);
               const isExpanded = expandedId === campaign.id;
@@ -711,7 +729,7 @@ const App = () => {
                   `}
                 >
                   {/* Number */}
-                  <div className={`absolute -left-2 md:-left-4 -top-6 md:-top-8 text-[60px] md:text-[120px] font-black leading-none opacity-5 select-none font-serif ${theme.text}`}>
+                  <div className={`absolute -left-2 md:-left-3 -top-5 md:-top-6 text-[60px] md:text-[80px] font-black leading-none opacity-5 select-none font-serif ${theme.text}`}>
                     {index + 1 < 10 ? `0${index + 1}` : index + 1}
                   </div>
 
@@ -730,17 +748,17 @@ const App = () => {
                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 md:gap-6 mb-6">
                       
                       {/* Left: Checkbox & Info */}
-                      <div className="flex gap-4 md:gap-6 z-10">
+                      <div className="flex gap-4 md:gap-5 z-10">
                         <button 
                           onClick={(e) => toggleRegistration(e, campaign.id)}
                           className={`
-                            relative w-10 h-10 md:w-12 md:h-12 flex-shrink-0 border transition-all duration-300 flex items-center justify-center
+                            relative w-10 h-10 md:w-11 md:h-11 flex-shrink-0 border transition-all duration-300 flex items-center justify-center
                             ${isRegistered 
                               ? `${theme.accentBg} border-[#D4AF37] text-black shadow-[0_0_15px_rgba(212,175,55,0.4)]` 
                               : `bg-transparent ${theme.cardBorder} hover:border-[#D4AF37]`}
                           `}
                         >
-                          {isRegistered && <Check size={20} strokeWidth={3} className="md:w-6 md:h-6" />}
+                          {isRegistered && <Check size={20} strokeWidth={3} className="md:w-5 md:h-5" />}
                           <span className="absolute -bottom-5 left-0 text-[8px] md:text-[9px] uppercase tracking-widest w-full text-center opacity-50">
                             {isRegistered ? 'Done' : 'Log'}
                           </span>
@@ -758,7 +776,7 @@ const App = () => {
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()} 
                                 className={`
-                                    text-2xl md:text-4xl font-serif italic leading-tight mb-2 hover:underline hover:decoration-2 hover:decoration-[#D4AF37] transition-all
+                                    text-2xl md:text-3xl lg:text-4xl font-serif italic leading-tight mb-2 hover:underline hover:decoration-2 hover:decoration-[#D4AF37] transition-all
                                     ${theme.text}
                                 `}
                             >
@@ -785,7 +803,7 @@ const App = () => {
                                 <span>{campaign.bonusRate}%</span>
                                 <span className="text-[10px] md:text-xs mx-1 text-[#D4AF37]">BONUS</span>
                             </div>
-                            <div className={`text-4xl md:text-6xl font-black tracking-tighter flex items-start ${theme.text}`}>
+                            <div className={`text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter flex items-start ${theme.text}`}>
                             {campaign.totalRate}
                             <span className="text-xl md:text-2xl mt-1 ml-1 font-light">%</span>
                             </div>
@@ -810,7 +828,7 @@ const App = () => {
                         onClick={(e) => e.stopPropagation()} 
                         className={`overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${isExpanded ? 'max-h-[3000px] opacity-100' : 'max-h-0 opacity-0'}`}
                     >
-                        <div className={`pt-4 md:pt-8 pb-4 border-t border-dashed ${theme.cardBorder}`}>
+                        <div className={`pt-4 md:pt-6 pb-4 border-t border-dashed ${theme.cardBorder}`}>
                             
                             {/* --- 重要注意事項區塊 --- */}
                             {campaign.importantNotesList && campaign.importantNotesList.map((note, index) => {
@@ -821,7 +839,7 @@ const App = () => {
                                 <div 
                                     key={index} 
                                     className={`
-                                        mb-6 p-4 md:p-6 border-l-4 transition-all duration-300 relative overflow-hidden group/note
+                                        mb-6 p-4 md:p-5 border-l-4 transition-all duration-300 relative overflow-hidden group/note
                                         ${isNoteRegistered 
                                             ? `border-[#D4AF37] ${isDarkMode ? 'bg-amber-900/10' : 'bg-amber-50'} shadow-[inset_0_0_20px_rgba(212,175,55,0.1)]` 
                                             : `border-neutral-500/30 ${isDarkMode ? 'bg-neutral-900/30' : 'bg-neutral-50'} hover:border-[#D4AF37]/50`
@@ -833,19 +851,19 @@ const App = () => {
                                     </div>
 
                                     {/* Header Row with Checkbox */}
-                                    <div className="flex items-start gap-4 mb-3 relative z-10">
+                                    <div className="flex items-start gap-3 md:gap-4 mb-3 relative z-10">
                                         {/* Sub-Checkbox */}
                                         <button 
                                             onClick={(e) => toggleRegistration(e, noteId)}
                                             className={`
-                                                w-6 h-6 md:w-8 md:h-8 flex-shrink-0 border flex items-center justify-center transition-all duration-300
+                                                w-6 h-6 md:w-7 md:h-7 flex-shrink-0 border flex items-center justify-center transition-all duration-300
                                                 ${isNoteRegistered 
                                                     ? `${theme.accentBg} border-[#D4AF37] text-black shadow-md` 
                                                     : `bg-transparent ${theme.cardBorder} hover:border-[#D4AF37]`
                                                 }
                                             `}
                                         >
-                                            {isNoteRegistered && <Check size={14} strokeWidth={3} className="md:w-4 md:h-4" />}
+                                            {isNoteRegistered && <Check size={14} strokeWidth={3} className="md:w-3.5 md:h-3.5" />}
                                         </button>
 
                                         <div>
@@ -853,34 +871,34 @@ const App = () => {
                                                 <AlertTriangle size={14} /> Important Notice {index + 1}
                                                 {isNoteRegistered && <span className="ml-2 text-[8px] md:text-[10px] bg-[#D4AF37] text-black px-1.5 py-0.5 rounded-sm">COMPLETED</span>}
                                             </h4>
-                                            <h5 className={`text-sm md:text-lg font-bold mt-1 ${isNoteRegistered ? 'opacity-50 line-through decoration-2 decoration-[#D4AF37]' : theme.text}`}>
+                                            <h5 className={`text-sm md:text-base font-bold mt-1 ${isNoteRegistered ? 'opacity-50 line-through decoration-2 decoration-[#D4AF37]' : theme.text}`}>
                                                 {note.title}
                                             </h5>
                                         </div>
                                     </div>
                                     
-                                    <p className={`mb-6 text-xs md:text-sm font-medium leading-relaxed pl-10 md:pl-12 ${isDarkMode ? 'text-white' : 'text-amber-900'} ${isNoteRegistered ? 'opacity-50' : ''}`}>
+                                    <p className={`mb-5 text-xs md:text-sm font-medium leading-relaxed pl-9 md:pl-11 ${isDarkMode ? 'text-white' : 'text-amber-900'} ${isNoteRegistered ? 'opacity-50' : ''}`}>
                                         {note.highlight}
                                     </p>
 
-                                    <div className={`grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4 pl-10 md:pl-12 ${isNoteRegistered ? 'opacity-50 grayscale' : ''}`}>
+                                    <div className={`grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4 pl-9 md:pl-11 ${isNoteRegistered ? 'opacity-50 grayscale' : ''}`}>
                                         {note.schedule.map((item, i) => (
-                                            <div key={i} className={`p-3 md:p-4 border ${isDarkMode ? 'border-neutral-700 bg-neutral-950' : 'border-amber-200 bg-white'}`}>
-                                                <div className={`text-[10px] md:text-xs font-bold uppercase mb-1 md:mb-2 ${theme.subText}`}>{item.month}</div>
+                                            <div key={i} className={`p-3 border ${isDarkMode ? 'border-neutral-700 bg-neutral-950' : 'border-amber-200 bg-white'}`}>
+                                                <div className={`text-[10px] md:text-xs font-bold uppercase mb-1 ${theme.subText}`}>{item.month}</div>
                                                 <div className={`text-xs md:text-sm font-mono font-bold mb-1 ${theme.text}`}>{item.time}</div>
                                                 <div className={`text-[10px] md:text-xs ${theme.accent}`}>{item.limit}</div>
                                             </div>
                                         ))}
                                     </div>
                                     
-                                    <p className={`text-[10px] md:text-xs mt-2 opacity-70 pl-10 md:pl-12 ${theme.subText}`}>
+                                    <p className={`text-[10px] md:text-xs mt-2 opacity-70 pl-9 md:pl-11 ${theme.subText}`}>
                                         {note.footer}
                                     </p>
                                 </div>
                             )})}
 
-                            <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-                                <div className="md:col-span-4 space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
+                                <div className="md:col-span-5 space-y-4">
                                     <h4 className={`text-xs font-bold uppercase tracking-widest mb-4 border-l-2 pl-3 ${theme.text} border-[#D4AF37]`}>
                                         Reward Structure
                                     </h4>
@@ -894,20 +912,20 @@ const App = () => {
                                     </ul>
                                 </div>
 
-                                <div className="md:col-span-8">
+                                <div className="md:col-span-7">
                                     <h4 className={`text-xs font-bold uppercase tracking-widest mb-4 border-l-2 pl-3 ${theme.text} border-[#D4AF37]`}>
                                         Applicable Channels
                                     </h4>
                                     <div className="grid gap-3">
                                         {campaign.channels.map((channel, cIdx) => (
-                                            <div key={cIdx} className={`p-4 md:p-5 ${isDarkMode ? 'bg-neutral-900/50' : 'bg-neutral-100'} border ${theme.cardBorder} hover:border-[#D4AF37] transition-colors`}>
-                                                <div className="flex justify-between items-center mb-3">
+                                            <div key={cIdx} className={`p-4 ${isDarkMode ? 'bg-neutral-900/50' : 'bg-neutral-100'} border ${theme.cardBorder} hover:border-[#D4AF37] transition-colors`}>
+                                                <div className="flex justify-between items-center mb-2">
                                                     <span className={`font-bold ${theme.text} text-xs md:text-sm flex items-center gap-2`}>
                                                         {channel.title}
                                                     </span>
                                                     <span className={`font-black text-lg md:text-xl italic ${theme.accent}`}>{channel.rate}</span>
                                                 </div>
-                                                <p className={`text-xs leading-6 ${theme.subText} text-justify`}>
+                                                <p className={`text-xs leading-5 ${theme.subText} text-justify`}>
                                                     {channel.content}
                                                 </p>
                                             </div>
@@ -1001,9 +1019,9 @@ const App = () => {
 
       </main>
 
-      <footer className={`py-12 border-t border-neutral-800 ${theme.bg}`}>
-        <div className="max-w-4xl mx-auto px-6 text-center">
-             <h2 className={`text-2xl font-black italic tracking-tighter mb-6 opacity-30 ${theme.text}`}>REWARD ENGINE</h2>
+      <footer className={`py-8 md:py-12 border-t border-neutral-800 ${theme.bg}`}>
+        <div className="w-full px-6 text-center">
+             <h2 className={`text-xl md:text-2xl font-black italic tracking-tighter mb-6 opacity-30 ${theme.text}`}>REWARD ENGINE</h2>
              <div className={`flex justify-center gap-8 text-[10px] uppercase tracking-widest ${theme.subText}`}>
                 <span>Privacy</span>
                 <span>Terms</span>
