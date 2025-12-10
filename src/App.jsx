@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Check, Calendar, ArrowUpRight, Clock, Sun, Moon, Gift, Plus, ChevronDown, ChevronUp, Star, Zap, ShoppingBag, Plane, Coffee, ExternalLink, Filter, X, AlertTriangle, ChevronRight, Globe, Utensils, Music, Gamepad, GraduationCap, Cat, Home, CreditCard, RefreshCw, Search, Palette, Heart } from 'lucide-react';
+// 修正：補回漏掉的 Arrow 系列圖示，解決白屏問題
+import { Check, Calendar, ArrowUpRight, Clock, Sun, Moon, Gift, Plus, ChevronDown, ChevronUp, Star, Zap, ShoppingBag, Plane, Coffee, ExternalLink, Filter, X, AlertTriangle, ChevronRight, Globe, Utensils, Music, Gamepad, GraduationCap, Cat, Home, CreditCard, RefreshCw, Search, Palette, Heart, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 
 // --- 銀行與卡別層級資料庫 ---
 const BANK_HIERARCHY = [
@@ -14,7 +15,6 @@ const BANK_HIERARCHY = [
 
 // --- 模擬數據資料庫 ---
 const INITIAL_CAMPAIGNS = [
-  // 1. 富邦 J 卡
   { 
     id: 'fubon_j', 
     bank: 'FUBON 台北富邦', 
@@ -68,7 +68,6 @@ const INITIAL_CAMPAIGNS = [
       { title: '🏪 當地指定便利店 (10%)', content: '日本三大超商: 7-Eleven, Lawson, FamilyMart | 韓國便利商店: CU, GS25, Emart24 (需登錄)', rate: '10%' }
     ]
   },
-  // 2. 永豐 DAWAY 卡 (新增)
   { 
     id: 'sinopac_daway', 
     bank: 'SINOPAC 永豐銀行', 
@@ -78,13 +77,13 @@ const INITIAL_CAMPAIGNS = [
     totalRate: 6, 
     baseRate: 0.5, 
     bonusRate: 5.5, 
-    domesticRate: 6, // 新戶最高 6%
-    overseasRate: 6, // 海外最高 6%
+    domesticRate: 6,
+    overseasRate: 6,
     startDate: '2025-07-01', 
     endDate: '2025-12-31', 
     mainTag: 'LINE Pay 6%',
     image: 'https://bank.sinopac.com/upload/sinopac/creditcard/DAWAY_Card.png', 
-    gradient: 'from-lime-400 to-green-600', // 螢光綠
+    gradient: 'from-lime-400 to-green-600', 
     textColor: 'text-black',
     link: 'https://bank.sinopac.com/sinopacbt/personal/credit-card/introduction/bankcard/DAWAY.html',
     details: [
@@ -108,7 +107,6 @@ const INITIAL_CAMPAIGNS = [
       { title: '🌃 指定夜市 (加碼)', content: '於指定合作夜市攤位使用 LINE Pay 掃碼付款，享額外加碼回饋或優惠券。', rate: '加碼' }
     ]
   },
-  // 3. 中信 LINE Pay 卡
   {
     id: 'ctbc_linepay',
     bank: 'CTBC 中國信託',
@@ -511,7 +509,7 @@ const CardVisual = ({ image, gradient, textColor, cardName, bankName, uiStyle })
   const [imageError, setImageError] = useState(false);
 
   return (
-    <div className={`relative w-36 h-24 md:w-44 md:h-28 perspective-1000 z-0 flex-shrink-0 group-hover:z-20 mt-1 md:mt-0 self-end md:self-auto ${uiStyle === 'korean' ? 'perspective-none' : ''}`}>
+    <div className={`relative w-32 h-20 md:w-44 md:h-28 perspective-1000 z-0 flex-shrink-0 group-hover:z-20 mt-1 md:mt-0 self-end md:self-auto ${uiStyle === 'korean' ? 'perspective-none' : ''}`}>
       {!imageError && image ? (
         <img 
             src={image} 
@@ -543,8 +541,6 @@ const CardVisual = ({ image, gradient, textColor, cardName, bankName, uiStyle })
              </div>
         </div>
       )}
-      
-      {/* Glow Effect */}
       <div className={`absolute inset-0 bg-gradient-to-tr from-white/30 to-transparent opacity-0 group-hover:opacity-40 transition-opacity duration-500 pointer-events-none mix-blend-overlay ${uiStyle === 'korean' ? 'rounded-3xl' : 'rounded-xl'}`}></div>
     </div>
   );
@@ -600,12 +596,10 @@ const App = () => {
       setRegisteredIds(JSON.parse(saved));
     }
     
-    // 初始化或讀取排序
     const savedOrder = localStorage.getItem('card_order_v1');
     if (savedOrder) {
         setCardOrder(JSON.parse(savedOrder));
     } else {
-        // 預設順序
         setCardOrder(INITIAL_CAMPAIGNS.map(c => c.id));
     }
   }, []);
@@ -614,7 +608,6 @@ const App = () => {
     localStorage.setItem('registeredCampaigns_v4', JSON.stringify(registeredIds));
   }, [registeredIds]);
   
-  // 保存排序
   useEffect(() => {
     if (cardOrder.length > 0) {
         localStorage.setItem('card_order_v1', JSON.stringify(cardOrder));
@@ -674,7 +667,6 @@ const App = () => {
     setSelectedCategories([]);
   };
   
-  // 排序移動邏輯
   const moveCard = (id, direction) => {
       setCardOrder(prev => {
           const currentIndex = prev.indexOf(id);
@@ -691,7 +683,6 @@ const App = () => {
   };
 
   const filteredCampaigns = useMemo(() => {
-    // 先篩選
     const filtered = INITIAL_CAMPAIGNS.filter(c => {
       const matchesFilter = selectedCards.includes(c.card) && selectedCategories.includes(c.category);
       if (!matchesFilter) return false;
@@ -708,11 +699,9 @@ const App = () => {
       return true;
     });
     
-    // 再排序 (依照 cardOrder 的順序)
     return filtered.sort((a, b) => {
         const indexA = cardOrder.indexOf(a.id);
         const indexB = cardOrder.indexOf(b.id);
-        // 如果是新卡片(不在排序表中)，排在最後
         const safeIndexA = indexA === -1 ? 9999 : indexA;
         const safeIndexB = indexB === -1 ? 9999 : indexB;
         return safeIndexA - safeIndexB;
@@ -761,7 +750,7 @@ const App = () => {
     <div className={`min-h-screen w-full transition-colors duration-500 selection:bg-rose-200 selection:text-rose-900 ${theme.bg} ${theme.text} ${theme.fontBody} flex justify-center overflow-x-hidden touch-pan-y`}>
       <div className={`w-full max-w-md ${theme.bg} min-h-screen flex flex-col shadow-2xl relative overscroll-x-none`}>
       
-      {/* REORDER MODAL (New) */}
+      {/* REORDER MODAL */}
       {isReorderOpen && (
         <div className="fixed inset-0 z-[70] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
            <div className={`w-full max-w-sm max-h-[70vh] flex flex-col ${theme.rounded === 'rounded-none' ? 'rounded-xl' : 'rounded-[1.5rem]'} shadow-2xl relative ${theme.cardBg} border ${theme.cardBorder}`}>
@@ -770,7 +759,6 @@ const App = () => {
                     <button onClick={() => setIsReorderOpen(false)}><X size={20} className={theme.subText} /></button>
                 </div>
                 <div className="overflow-y-auto p-4 space-y-2 custom-scrollbar">
-                    {/* List all items from INITIAL_CAMPAIGNS sorted by current order */}
                     {INITIAL_CAMPAIGNS
                         .slice()
                         .sort((a,b) => {
@@ -1254,18 +1242,23 @@ const App = () => {
                     <div className={`w-12 h-1 ${theme.accentBg} mx-auto rounded-full`}></div>
                 </div>
 
-                {['旅遊', '網購', '一般消費', '生活'].map((cat) => {
-                    const topCards = INITIAL_CAMPAIGNS.filter(c => c.category === cat).sort((a,b) => b.totalRate - a.totalRate);
+                {['國內消費霸主', '海外消費霸主'].map((cat) => {
+                    // Sort by domestic or overseas rate
+                    const isDomestic = cat === '國內消費霸主';
+                    const topCards = INITIAL_CAMPAIGNS
+                        .sort((a,b) => isDomestic ? (b.domesticRate || 0) - (a.domesticRate || 0) : (b.overseasRate || 0) - (a.overseasRate || 0));
+                    
                     if (topCards.length === 0) return null;
                     const winner = topCards[0];
+                    const rate = isDomestic ? winner.domesticRate : winner.overseasRate;
 
                     return (
                         <div key={cat} className={`grid gap-8 items-center border-b ${theme.cardBorder} pb-12`}>
                              <div>
-                                <div className={`text-[10px] uppercase tracking-[0.3em] mb-2 ${theme.accent}`}>Category Winner</div>
+                                <div className={`text-[10px] uppercase tracking-[0.3em] mb-2 ${theme.accent}`}>{isDomestic ? 'DOMESTIC KING' : 'OVERSEAS KING'}</div>
                                 <h3 className={`text-4xl font-black uppercase mb-1 ${theme.text}`}>{cat}</h3>
                                 <div className={`text-6xl font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-amber-700 mb-6`}>
-                                    {winner.totalRate}%
+                                    {rate}%
                                 </div>
                                 <div className="space-y-2">
                                     <a 
@@ -1285,7 +1278,7 @@ const App = () => {
                                 </div>
                              </div>
 
-                             {/* 如果有圖片則顯示卡片，否則顯示抽象圖 */}
+                             {/* Card Display */}
                              <div className={`h-64 relative overflow-hidden flex items-center justify-center border ${theme.cardBorder} p-6`}>
                                  <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/noise-lines.png')]"></div>
                                  
