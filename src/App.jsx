@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Check, Calendar, ArrowUpRight, Clock, Sun, Moon, Gift, Plus, ChevronDown, ChevronUp, Star, Zap, ShoppingBag, Plane, Coffee, ExternalLink, Filter, X, AlertTriangle, ChevronRight, Globe, Utensils, Music, Gamepad, GraduationCap, Cat, Home, CreditCard, RefreshCw, Search, Palette, Heart, Trophy, MapPin, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { Check, Calendar, ArrowUpRight, Clock, Sun, Moon, Gift, Plus, ChevronDown, ChevronUp, Star, Zap, ShoppingBag, Plane, Coffee, ExternalLink, Filter, X, AlertTriangle, ChevronRight, Globe, Utensils, Music, Gamepad, GraduationCap, Cat, Home, CreditCard, RefreshCw, Search, Palette, Heart } from 'lucide-react';
 
 // --- 銀行與卡別層級資料庫 ---
 const BANK_HIERARCHY = [
@@ -8,12 +8,13 @@ const BANK_HIERARCHY = [
   { name: 'FUBON 台北富邦', code: 'FUBON', cards: ['J 卡', 'Open Possible 卡'] },
   { name: 'TAISHIN 台新銀行', code: 'TAISHIN', cards: ['@GoGo 卡', '玫瑰卡', 'Richart 卡'] },
   { name: 'E.SUN 玉山銀行', code: 'ESUN', cards: ['U Bear 卡'] },
-  { name: 'SINOPAC 永豐銀行', code: 'SINOPAC', cards: ['Sport 卡', '大戶 DAWHO 現金回饋卡', '現金回饋 JCB 卡'] },
+  { name: 'SINOPAC 永豐銀行', code: 'SINOPAC', cards: ['DAWAY 卡', 'Sport 卡', '大戶 DAWHO 現金回饋卡', '現金回饋 JCB 卡'] },
   { name: 'FEDERAL 聯邦銀行', code: 'FEDERAL', cards: ['吉鶴卡'] }
 ];
 
 // --- 模擬數據資料庫 ---
 const INITIAL_CAMPAIGNS = [
+  // 1. 富邦 J 卡
   { 
     id: 'fubon_j', 
     bank: 'FUBON 台北富邦', 
@@ -67,6 +68,47 @@ const INITIAL_CAMPAIGNS = [
       { title: '🏪 當地指定便利店 (10%)', content: '日本三大超商: 7-Eleven, Lawson, FamilyMart | 韓國便利商店: CU, GS25, Emart24 (需登錄)', rate: '10%' }
     ]
   },
+  // 2. 永豐 DAWAY 卡 (新增)
+  { 
+    id: 'sinopac_daway', 
+    bank: 'SINOPAC 永豐銀行', 
+    card: 'DAWAY 卡', 
+    name: 'LINE Pay 神卡', 
+    category: '生活', 
+    totalRate: 6, 
+    baseRate: 0.5, 
+    bonusRate: 5.5, 
+    domesticRate: 6, // 新戶最高 6%
+    overseasRate: 6, // 海外最高 6%
+    startDate: '2025-07-01', 
+    endDate: '2025-12-31', 
+    mainTag: 'LINE Pay 6%',
+    image: 'https://bank.sinopac.com/upload/sinopac/creditcard/DAWAY_Card.png', 
+    gradient: 'from-lime-400 to-green-600', // 螢光綠
+    textColor: 'text-black',
+    link: 'https://bank.sinopac.com/sinopacbt/personal/credit-card/introduction/bankcard/DAWAY.html',
+    details: [
+      { label: '國內外一般', value: '0.5% 無上限' },
+      { label: 'LINE Pay 加碼', value: '+1.5% (需自動扣繳)' },
+      { label: '新戶再加碼', value: '+4% (上限300元)' }
+    ],
+    importantNotesList: [
+        {
+            title: '新戶 LINE Pay 最高 6%',
+            highlight: '※ 新戶申辦並設定自動扣繳，LINE Pay 消費享 6% 回饋 (月上限 300 元)。',
+            schedule: [
+                { month: '每月', time: '新戶專屬', limit: '舊戶享 2%' }
+            ],
+            footer: '舊戶 LINE Pay 仍享 2% 回饋無上限。'
+        }
+    ],
+    channels: [
+      { title: '📱 LINE Pay 全通路 (6%)', content: '全台支援 LINE Pay 之實體與網路商店 (超商、餐飲、網購等)。新戶 6%，舊戶 2% 無上限。', rate: '6%' },
+      { title: '🥤 指定手搖飲 (10%)', content: '50嵐(北北基)、清心福全、龜記、萬波、可不可、麻古茶坊。使用 LINE Pay 綁定 DAWAY 卡消費。', rate: '10%' },
+      { title: '🌃 指定夜市 (加碼)', content: '於指定合作夜市攤位使用 LINE Pay 掃碼付款，享額外加碼回饋或優惠券。', rate: '加碼' }
+    ]
+  },
+  // 3. 中信 LINE Pay 卡
   {
     id: 'ctbc_linepay',
     bank: 'CTBC 中國信託',
@@ -339,6 +381,7 @@ const INITIAL_CAMPAIGNS = [
       { title: '🎬 【樂】娛樂影音', content: '全台電影院、Netflix、Spotify、Disney+、KKBOX、两廳院售票。', rate: '7%' },
       { title: '🍽️ 【食】美饌佳餚', content: 'Foodpanda, Uber Eats, 國內全部餐廳實體刷卡消費。', rate: '7%' },
       { title: '🎮 【玩】電玩娛樂', content: 'PlayStation, XBOX, Steam, Nintendo', rate: '7%' },
+      { title: '🎓 【學】學習進修', content: 'Hahow, Udemy, VoiceTube', rate: '7%' },
       { title: '🐱 【寵】寵物愛護', content: '東森寵物雲, 魚中魚, 動物星球', rate: '7%' },
       { title: '🏠 【家】居家生活', content: 'IKEA, 誠品生活, 特力屋, Pinkoi', rate: '7%' }
     ]
@@ -1059,7 +1102,7 @@ const App = () => {
                         </div>
                       </div>
 
-                      {/* Bottom Row: Rate Display */}
+                      {/* Bottom Row: Rate Display (Full Width) */}
                       <div className="flex justify-end items-baseline gap-2 relative border-t border-dashed border-white/10 pt-2">
                             <span className="text-[10px] text-neutral-500">MAX REWARD</span>
                             <div className={`text-4xl font-black tracking-tighter ${theme.text}`}>
@@ -1211,23 +1254,18 @@ const App = () => {
                     <div className={`w-12 h-1 ${theme.accentBg} mx-auto rounded-full`}></div>
                 </div>
 
-                {['國內消費霸主', '海外消費霸主'].map((cat) => {
-                    // Sort by domestic or overseas rate
-                    const isDomestic = cat === '國內消費霸主';
-                    const topCards = INITIAL_CAMPAIGNS
-                        .sort((a,b) => isDomestic ? (b.domesticRate || 0) - (a.domesticRate || 0) : (b.overseasRate || 0) - (a.overseasRate || 0));
-                    
+                {['旅遊', '網購', '一般消費', '生活'].map((cat) => {
+                    const topCards = INITIAL_CAMPAIGNS.filter(c => c.category === cat).sort((a,b) => b.totalRate - a.totalRate);
                     if (topCards.length === 0) return null;
                     const winner = topCards[0];
-                    const rate = isDomestic ? winner.domesticRate : winner.overseasRate;
 
                     return (
                         <div key={cat} className={`grid gap-8 items-center border-b ${theme.cardBorder} pb-12`}>
                              <div>
-                                <div className={`text-[10px] uppercase tracking-[0.3em] mb-2 ${theme.accent}`}>{isDomestic ? 'DOMESTIC KING' : 'OVERSEAS KING'}</div>
+                                <div className={`text-[10px] uppercase tracking-[0.3em] mb-2 ${theme.accent}`}>Category Winner</div>
                                 <h3 className={`text-4xl font-black uppercase mb-1 ${theme.text}`}>{cat}</h3>
                                 <div className={`text-6xl font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-[#D4AF37] to-amber-700 mb-6`}>
-                                    {rate}%
+                                    {winner.totalRate}%
                                 </div>
                                 <div className="space-y-2">
                                     <a 
@@ -1247,7 +1285,7 @@ const App = () => {
                                 </div>
                              </div>
 
-                             {/* Card Display */}
+                             {/* 如果有圖片則顯示卡片，否則顯示抽象圖 */}
                              <div className={`h-64 relative overflow-hidden flex items-center justify-center border ${theme.cardBorder} p-6`}>
                                  <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/noise-lines.png')]"></div>
                                  
