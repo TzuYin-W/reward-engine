@@ -16,12 +16,12 @@ const BANK_HIERARCHY = [
   {
     name: 'FUBON 台北富邦',
     code: 'FUBON',
-    cards: ['J 卡']
+    cards: ['J 卡', 'Open Possible 卡']
   },
   {
     name: 'TAISHIN 台新銀行',
     code: 'TAISHIN',
-    cards: ['@GoGo 卡']
+    cards: ['@GoGo 卡', '玫瑰卡', 'Richart 卡']
   },
   {
     name: 'E.SUN 玉山銀行',
@@ -50,8 +50,8 @@ const INITIAL_CAMPAIGNS = [
     name: '日韓旅遊/交通回饋', 
     category: '旅遊', 
     totalRate: 10, 
-    baseRate: 1, // 調整基礎回饋為國內一般
-    bonusRate: 9, // 調整加碼回饋
+    baseRate: 1, 
+    bonusRate: 9, 
     startDate: '2025-10-01', 
     endDate: '2025-12-31', 
     mainTag: '日韓旅遊',
@@ -60,7 +60,7 @@ const INITIAL_CAMPAIGNS = [
     textColor: 'text-rose-900',
     link: 'https://www.fubon.com/banking/Personal/credit_card/all_card/omiyage/omiyage.htm',
     details: [
-      { label: '國內一般消費', value: '1% LINE POINTS (無上限)' }, // 新增
+      { label: '國內一般消費', value: '1% LINE POINTS (無上限)' }, 
       { label: '日韓原權益', value: '3% LINE POINTS (無上限)' },
       { label: '實體活動加碼', value: '+3% (需登錄，季上限600元)' },
       { label: '交通卡加碼', value: '+7% (需登錄，季上限200元)' }
@@ -94,7 +94,112 @@ const INITIAL_CAMPAIGNS = [
       { title: '🏪 當地指定便利店 (10%)', content: '日本三大超商: 7-Eleven, Lawson, FamilyMart | 韓國便利商店: CU, GS25, Emart24 (需登錄)', rate: '10%' }
     ]
   },
-  // 2. 中信 LINE Pay 卡 (資訊完整)
+  // 2. 富邦 Open Possible 聯名卡 (新增)
+  {
+    id: 'fubon_op',
+    bank: 'FUBON 台北富邦',
+    card: 'Open Possible 卡',
+    name: '電信/餐飲生活',
+    category: '生活',
+    totalRate: 10, // 最高 10% (餐飲)
+    baseRate: 2,
+    bonusRate: 8,
+    startDate: '2025-07-01',
+    endDate: '2025-12-31',
+    mainTag: '電信 3.5%',
+    image: 'https://www.fubon.com/banking/images/credit_card/OpenPossible_card_1.png',
+    gradient: 'from-purple-600 to-indigo-700', // 台灣大哥大配色
+    textColor: 'text-white',
+    link: 'https://www.fubon.com/banking/Personal/credit_card/all_card/OpenPossible/OpenPossible.htm',
+    details: [
+        { label: '一般消費', value: '1% 無上限' },
+        { label: '台灣大 5G 電信費', value: '3.5% 現金回饋' },
+        { label: '指定生活/餐飲', value: '最高 10% (需 icash 2.0)' }
+    ],
+    importantNotesList: [
+        {
+            title: '新戶首刷好禮',
+            highlight: '※ 新戶核卡後 30 天內刷滿 5 筆或累積 5,000 元，享 300 元刷卡金。',
+            schedule: [
+                { month: '常態', time: '核卡後 30 天內', limit: '新戶專屬' }
+            ],
+            footer: '完成指定任務 (Fubon+ App / 自動扣繳) 再加贈 100 元。'
+        }
+    ],
+    channels: [
+        { title: '📱 電信費 (3.5%)', content: '台灣大哥大 5G 電信費 (需代扣繳) 享 3.5%；4G 電信費、家用寬頻、momo 隨帳收享 2%。', rate: '3.5%' },
+        { title: '🏪 生活消費 (2%)', content: '全台 7-ELEVEN、全家便利商店、中港澳地區消費、加油站 (中油/台塑/全國)。', rate: '2%' },
+        { title: '🍔 指定餐飲 (10%)', content: '使用 icash 2.0 功能支付：麥當勞、漢堡王、達美樂、必勝客、肯德基、星巴克 (需 icash Pay 帳戶)。', rate: '10%' }
+    ]
+  },
+  // 3. 台新 玫瑰卡 (新增 - 切換刷)
+  {
+    id: 'taishin_rose',
+    bank: 'TAISHIN 台新銀行',
+    card: '玫瑰卡',
+    name: '權益切換刷',
+    category: '一般消費',
+    totalRate: 3.8,
+    baseRate: 0.3,
+    bonusRate: 3.5,
+    startDate: '2025-09-01',
+    endDate: '2025-12-31',
+    mainTag: '切換 3.8%',
+    image: 'https://www.taishinbank.com.tw/TS/TS02/TS0201/TS020101/TS02010101/TS0201010102/TS020101010202/images/card_02.png',
+    gradient: 'from-rose-400 to-pink-600',
+    textColor: 'text-white',
+    link: 'https://www.taishinbank.com.tw/TSB/personal/credit/intro/overview/cg013/card0001/',
+    details: [
+        { label: '一般消費', value: '0.3% 台新 Point' },
+        { label: '指定權益切換', value: '3.8% (天天/大筆/好饗)' },
+        { label: '海外消費', value: '3.8% (日韓歐美免切換)' }
+    ],
+    channels: [
+        { title: '🔄 權益切換 (3.8%)', content: '每日可於 Richart Life App 切換權益：「天天刷」(超商/量販/加油)、「大筆刷」(百貨/網購/訂房)、「好饗刷」(餐飲/外送)。', rate: '3.8%' },
+        { title: '🏪 天天刷 (3.8%)', content: '全家, 7-11 (限台新Pay), 家樂福, 中油, 台亞, 台灣大車隊, Uber。', rate: '3.8%' },
+        { title: '🛍️ 大筆刷 (3.8%)', content: '新光三越, SOGO, 遠東百貨, momo, 蝦皮, PChome, 淘寶, 昇恆昌。', rate: '3.8%' },
+        { title: '🍽️ 好饗刷 (3.8%)', content: '全台餐廳, 外送平台 (UberEats/Foodpanda), 星巴克, 路易莎, 錢櫃, 好樂迪。', rate: '3.8%' }
+    ]
+  },
+  // 4. 台新 Richart 卡 (新增 - 數位整合)
+  {
+    id: 'taishin_richart',
+    bank: 'TAISHIN 台新銀行',
+    card: 'Richart 卡',
+    name: '數位生活整合',
+    category: '網購',
+    totalRate: 3.8,
+    baseRate: 0.3,
+    bonusRate: 3.5,
+    startDate: '2025-09-01',
+    endDate: '2025-12-31',
+    mainTag: '數位 3.8%',
+    image: 'https://www.taishinbank.com.tw/TS/TS02/TS0201/TS020101/TS02010101/TS0201010104/TS020101010409/images/card_01.png', // 使用 Richart 風格圖片
+    gradient: 'from-gray-100 to-white', // Richart 白
+    textColor: 'text-gray-800',
+    link: 'https://mkp.taishinbank.com.tw/s/2025/RichartCard_2025/index.html',
+    details: [
+        { label: '一般消費', value: '0.3% 台新 Point' },
+        { label: '數位/網購', value: '3.8% (需綁定 Richart 帳戶)' },
+        { label: '保費', value: '1.3% (免切換)' }
+    ],
+    importantNotesList: [
+        {
+            title: 'Richart 帳戶扣繳任務',
+            highlight: '※ 需使用 Richart 數位帳戶自動扣繳信用卡費，始享 3.8% 高回饋。',
+            schedule: [
+                { month: '每月', time: '帳單結帳前設定', limit: '必要條件' }
+            ],
+            footer: '未設定自動扣繳僅享 0.3% 回饋。'
+        }
+    ],
+    channels: [
+        { title: '🛒 精選網購 (3.8%)', content: '蝦皮購物, momo, PChome, Yahoo, Amazon, Coupang, 博客來。', rate: '3.8%' },
+        { title: '📱 行動支付 (3.8%)', content: 'LINE Pay, 全支付, 台新Pay, 全盈+PAY (適用超商/百貨/餐飲等)。', rate: '3.8%' },
+        { title: '📄 保費回饋 (1.3%)', content: '繳納保費享 1.3% 回饋無上限，且可分期 0 利率 (需登錄)。', rate: '1.3%' }
+    ]
+  },
+  // 5. 中信 LINE Pay 卡
   {
     id: 'ctbc_linepay',
     bank: 'CTBC 中國信託',
@@ -133,7 +238,7 @@ const INITIAL_CAMPAIGNS = [
         { title: '🎬 影音娛樂 (10%)', content: 'Netflix, Disney+, Spotify 等指定影音平台消費享 10% 回饋 (需登錄)。', rate: '10%' }
     ]
   },
-  // 3. 中信 All Me 卡 (資訊完整)
+  // 6. 中信 All Me 卡
   {
     id: 'ctbc_allme',
     bank: 'CTBC 中國信託',
@@ -160,7 +265,7 @@ const INITIAL_CAMPAIGNS = [
         { title: '🏪 超商/超市 (8%)', content: '7-ELEVEN, 全家, 萊爾富, OK, 美廉社 (需使用 Hami Pay 感應支付)。', rate: '8%' }
     ]
   },
-  // 4. 玉山 U Bear 卡 (資訊完整)
+  // 7. 玉山 U Bear 卡
   {
     id: 'esun_ubear',
     bank: 'E.SUN 玉山銀行',
@@ -187,7 +292,7 @@ const INITIAL_CAMPAIGNS = [
         { title: '🎬 指定影音 (13%)', content: 'Disney+, Netflix, Spotify, Nintendo, PlayStation。', rate: '13%' }
     ]
   },
-  // 5. 聯邦 吉鶴卡 (資訊完整)
+  // 8. 聯邦 吉鶴卡
   {
     id: 'federal_jihe',
     bank: 'FEDERAL 聯邦銀行',
@@ -195,8 +300,8 @@ const INITIAL_CAMPAIGNS = [
     name: '日本消費神卡',
     category: '旅遊',
     totalRate: 4,
-    baseRate: 1, // 調整基礎回饋
-    bonusRate: 3, // 調整加碼回饋
+    baseRate: 1, 
+    bonusRate: 3, 
     startDate: '2025-07-01',
     endDate: '2025-12-31',
     mainTag: '日本 4%',
@@ -215,7 +320,7 @@ const INITIAL_CAMPAIGNS = [
         { title: '🍽️ 日系美饌 (10%)', content: '國內指定日系餐廳 (勝博殿, 一風堂, 欣葉日本料理...) 現折 10%。', rate: '10%' }
     ]
   },
-  // 6. 永豐大戶 (資訊完整)
+  // 9. 永豐大戶
   { 
     id: 'sinopac_dawho', 
     bank: 'SINOPAC 永豐銀行', 
@@ -223,8 +328,8 @@ const INITIAL_CAMPAIGNS = [
     name: '大戶等級七大通路', 
     category: '旅遊', 
     totalRate: 7, 
-    baseRate: 1, // 調整基礎回饋
-    bonusRate: 6, // 調整加碼回饋
+    baseRate: 1, 
+    bonusRate: 6, 
     startDate: '2025-10-01', 
     endDate: '2025-12-31', 
     mainTag: '國內外 7%',
@@ -248,7 +353,7 @@ const INITIAL_CAMPAIGNS = [
       { title: '🏠 【家】居家生活', content: 'IKEA, 誠品生活, 特力屋, Pinkoi', rate: '7%' }
     ]
   },
-  // 7. 永豐 JCB (資訊完整)
+  // 10. 永豐 JCB
   { 
     id: 'sinopac_jcb', 
     bank: 'SINOPAC 永豐銀行', 
@@ -256,8 +361,8 @@ const INITIAL_CAMPAIGNS = [
     name: '特選通路回饋', 
     category: '一般消費', 
     totalRate: 5,
-    baseRate: 1, // 調整基礎回饋
-    bonusRate: 4, // 調整加碼回饋
+    baseRate: 1, 
+    bonusRate: 4, 
     startDate: '2025-10-01', 
     endDate: '2025-12-31', 
     mainTag: '網購/百貨/餐飲',
@@ -276,7 +381,7 @@ const INITIAL_CAMPAIGNS = [
       { title: '🍽️ 餐廳/外送 (5%)', content: '國內所有實體餐廳(含連鎖速食/咖啡廳/火鍋/燒肉)、Uber Eats、Foodpanda', rate: '5%' }
     ]
   },
-  // 8. 國泰 CUBE (資訊完整)
+  // 11. 國泰 CUBE
   { 
     id: 'cathay_cube', 
     bank: 'CATHAY 國泰世華', 
@@ -306,7 +411,7 @@ const INITIAL_CAMPAIGNS = [
       { title: '🛒 集精選 (2%)', content: '全聯福利中心、家樂福、7-ELEVEN、全家便利商店、麥當勞、肯德基、中油直營(加油)、IKEA、宜得利家居', rate: '2%' }
     ]
   },
-  // 9. 台新 GoGo (資訊完整)
+  // 12. 台新 GoGo
   { 
     id: 'taishin_gogo', 
     bank: 'TAISHIN 台新銀行', 
@@ -332,7 +437,7 @@ const INITIAL_CAMPAIGNS = [
       { title: '🛒 精選網購 (3.8%)', content: '蝦皮購物, momo購物網, PChome, Yahoo奇摩, Amazon, Coupang(酷澎), 博客來, Pinkoi, 露天拍賣, 淘寶, 東森購物, PayEasy', rate: '3.8%' }
     ]
   },
-  // 10. 永豐 Sport (資訊完整)
+  // 13. 永豐 Sport
   { 
     id: 'sinopac_sport', 
     bank: 'SINOPAC 永豐銀行', 
@@ -516,7 +621,6 @@ const App = () => {
   };
 
   return (
-    // 修改: 最外層容器設為 w-full，移除 min-h-screen 改用 h-full (如果需要)，這裡保持 min-h-screen
     <div className={`min-h-screen w-full transition-colors duration-500 selection:bg-[#D4AF37] selection:text-black ${theme.bg} ${theme.text} ${theme.fontBody}`}>
       
       {/* --- FILTER MODAL --- */}
@@ -639,7 +743,6 @@ const App = () => {
       )}
 
       {/* --- HEADER (Sticky) --- */}
-      {/* 修改: 移除 md:px-12，改用統一的 px-4，確保手機版滿版，桌面版也不會太窄 */}
       <header className={`sticky top-0 z-50 backdrop-blur-xl bg-opacity-90 transition-all border-b border-neutral-800/50 pt-4 pb-4 md:pt-6 md:pb-6 ${theme.bg}`}>
         <div className="w-full px-4">
           <div className="flex justify-between items-start">
@@ -710,7 +813,6 @@ const App = () => {
       </header>
 
       {/* --- MAIN CONTENT --- */}
-      {/* 修改: 移除 md:px-12，改用統一的 px-4，確保手機版滿版 */}
       <main className="w-full px-4 py-6 md:py-8">
         
         {viewMode === 'list' && (
@@ -965,7 +1067,7 @@ const App = () => {
                     <div className={`w-12 h-1 bg-[#D4AF37] mx-auto`}></div>
                 </div>
 
-                {['旅遊', '網購', '一般消費'].map((cat) => {
+                {['旅遊', '網購', '一般消費', '生活'].map((cat) => {
                     const topCards = INITIAL_CAMPAIGNS.filter(c => c.category === cat).sort((a,b) => b.totalRate - a.totalRate);
                     if (topCards.length === 0) return null;
                     const winner = topCards[0];
