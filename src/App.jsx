@@ -180,8 +180,8 @@ const INITIAL_CAMPAIGNS = [
     endDate: '2025-12-31',
     mainTag: '點數回饋',
     image: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/LINEPay/images/card_01.png',
-    gradient: 'from-green-400 to-green-600', 
-    textColor: 'text-white',
+    gradient: 'from-black to-zinc-800', 
+    textColor: 'text-green-400',
     link: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/LINEPay/index.html',
     details: [
         { label: '國內一般消費', value: '1% LINE POINTS (無上限)' },
@@ -433,7 +433,8 @@ const CardVisual = ({ image, gradient, textColor, cardName, bankName, uiStyle })
   const [imageError, setImageError] = useState(false);
 
   return (
-    // 調整：手機版尺寸 w-36 h-24 (144px x 96px, 1.5:1 ratio) 且保有旋轉效果
+    // 調整：手機版尺寸 w-36 h-24 (144px x 96px, 1.5:1 ratio)，恢復傾斜
+    // 使用 group-active 來實作點擊回正，放開彈回
     <div className={`relative w-36 h-24 md:w-44 md:h-28 perspective-1000 z-0 flex-shrink-0 group-hover:z-20 mt-1 md:mt-0 self-end md:self-auto ${uiStyle === 'korean' ? 'perspective-none' : ''}`}>
       {!imageError && image ? (
         <img 
@@ -441,7 +442,7 @@ const CardVisual = ({ image, gradient, textColor, cardName, bankName, uiStyle })
             alt={cardName} 
             className={`
                 w-full h-full object-cover shadow-[0_10px_30px_-5px_rgba(0,0,0,0.3)] md:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] 
-                transition-all duration-700 ease-out
+                transition-all duration-300 ease-out
                 ${uiStyle === 'korean' 
                   ? 'rounded-3xl rotate-0 scale-95 group-hover:scale-105 group-hover:-translate-y-2' 
                   : 'rounded-xl transform rotate-6 md:rotate-6 md:-translate-y-2 md:translate-x-4 group-active:rotate-0 md:group-hover:rotate-12 group-active:scale-105 md:group-hover:scale-110'
@@ -452,7 +453,7 @@ const CardVisual = ({ image, gradient, textColor, cardName, bankName, uiStyle })
       ) : (
         <div className={`
             w-full h-full shadow-md
-            transition-all duration-700 ease-out
+            transition-all duration-300 ease-out
             bg-gradient-to-br ${gradient} p-3 flex flex-col justify-between border border-white/10
             ${uiStyle === 'korean'
                 ? 'rounded-3xl rotate-0 scale-95 group-hover:scale-105 group-hover:-translate-y-2' 
@@ -635,8 +636,9 @@ const App = () => {
 
   return (
     // 使用 max-w-md 限制寬度，mx-auto 讓它在桌面置中，模仿手機 App 介面
-    <div className={`min-h-screen w-full transition-colors duration-500 selection:bg-rose-200 selection:text-rose-900 ${theme.bg} ${theme.text} ${theme.fontBody} flex justify-center`}>
-      <div className={`w-full max-w-md ${theme.bg} min-h-screen flex flex-col shadow-2xl relative`}>
+    // overflow-x-hidden 與 overscroll-x-none 鎖定水平捲動
+    <div className={`min-h-screen w-full transition-colors duration-500 selection:bg-rose-200 selection:text-rose-900 ${theme.bg} ${theme.text} ${theme.fontBody} flex justify-center overflow-x-hidden`}>
+      <div className={`w-full max-w-md ${theme.bg} min-h-screen flex flex-col shadow-2xl relative overscroll-x-none`}>
       
       {/* FILTER MODAL */}
       {isFilterOpen && (
@@ -755,7 +757,7 @@ const App = () => {
 
       {/* HEADER */}
       <header className={`sticky top-0 z-50 backdrop-blur-xl bg-opacity-90 transition-all border-b border-black/5 pt-4 pb-4 md:pt-6 md:pb-6 ${theme.bg}`}>
-        <div className="w-full px-4">
+        <div className="max-w-3xl mx-auto px-4">
           <div className="flex flex-col gap-4">
             
             <div className="flex justify-between items-start">
@@ -1137,3 +1139,5 @@ const App = () => {
 };
 
 export default App;
+
+
