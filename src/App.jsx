@@ -549,20 +549,45 @@ const CardVisual = ({ image, gradient, textColor, cardName, bankName, uiStyle })
 };
 
 const App = () => {
-  const [registeredIds, setRegisteredIds] = useState([]);
+  const ALL_CARDS = BANK_HIERARCHY.flatMap(b => b.cards);
+
+  // --- 狀態初始化 (加入 LocalStorage 讀取) ---
+  const [registeredIds, setRegisteredIds] = useState(() => {
+      const saved = localStorage.getItem('registeredCampaigns_v4');
+      return saved ? JSON.parse(saved) : [];
+  });
+  
   const [expandedId, setExpandedId] = useState(null); 
   const [viewMode, setViewMode] = useState('list'); 
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  const [uiStyle, setUiStyle] = useState('nyc'); 
+  
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+      const saved = localStorage.getItem('user_theme_mode');
+      return saved ? JSON.parse(saved) : true;
+  });
+
+  const [uiStyle, setUiStyle] = useState(() => {
+      const saved = localStorage.getItem('user_ui_style');
+      return saved ? saved : 'nyc';
+  });
+
   const [searchQuery, setSearchQuery] = useState('');
   
-  const ALL_CARDS = BANK_HIERARCHY.flatMap(b => b.cards);
-  const [selectedCards, setSelectedCards] = useState(ALL_CARDS); 
-  const [selectedCategories, setSelectedCategories] = useState(ALL_CATEGORIES);
+  // 篩選器狀態 (加入 Persistence，但新卡片預設不顯示的問題稍後邏輯處理)
+  const [selectedCards, setSelectedCards] = useState(() => {
+      const saved = localStorage.getItem('user_filter_cards');
+      return saved ? JSON.parse(saved) : ALL_CARDS;
+  });
+  
+  const [selectedCategories, setSelectedCategories] = useState(() => {
+      const saved = localStorage.getItem('user_filter_categories');
+      return saved ? JSON.parse(saved) : ALL_CATEGORIES;
+  });
+
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [expandedFilterBanks, setExpandedFilterBanks] = useState([]);
   const [lastUpdated, setLastUpdated] = useState("2025/12/10"); 
   
+  // 排序狀態
   const [isReorderOpen, setIsReorderOpen] = useState(false);
   const [cardOrder, setCardOrder] = useState([]);
 
@@ -577,6 +602,28 @@ const App = () => {
     }, 1500);
   };
 
+  // --- Effects for Persistence ---
+  useEffect(() => {
+    localStorage.setItem('registeredCampaigns_v4', JSON.stringify(registeredIds));
+  }, [registeredIds]);
+
+  useEffect(() => {
+    localStorage.setItem('user_theme_mode', JSON.stringify(isDarkMode));
+  }, [isDarkMode]);
+
+  useEffect(() => {
+    localStorage.setItem('user_ui_style', uiStyle);
+  }, [uiStyle]);
+
+  useEffect(() => {
+    localStorage.setItem('user_filter_cards', JSON.stringify(selectedCards));
+  }, [selectedCards]);
+
+  useEffect(() => {
+    localStorage.setItem('user_filter_categories', JSON.stringify(selectedCategories));
+  }, [selectedCategories]);
+
+  // 動態狀態列顏色
   useEffect(() => {
     let themeColor = '#ffffff'; 
     if (isDarkMode) {
@@ -590,33 +637,21 @@ const App = () => {
     }
     document.body.style.backgroundColor = themeColor;
   }, [isDarkMode, uiStyle]);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('registeredCampaigns_v4');
-    if (saved) {
-      setRegisteredIds(JSON.parse(saved));
-    }
     
-    // 初始化或讀取排序，並自動修復新卡片缺失問題
+  // 初始化排序與自動修復新卡片缺失
+  useEffect(() => {
     const savedOrder = localStorage.getItem('card_order_v1');
     const allCurrentIds = INITIAL_CAMPAIGNS.map(c => c.id);
 
     if (savedOrder) {
         const parsedOrder = JSON.parse(savedOrder);
-        // 找出所有「新加入」且「尚未在使用者儲存順序中」的卡片 ID
         const newIds = allCurrentIds.filter(id => !parsedOrder.includes(id));
-        // 找出所有「已存在儲存順序」但「現在資料庫已移除」的舊 ID (雖然目前沒移除，但做個清理比較好)
         const validSavedOrder = parsedOrder.filter(id => allCurrentIds.includes(id));
-        // 合併：舊的有效順序 + 新卡片 (排在最後)
         setCardOrder([...validSavedOrder, ...newIds]);
     } else {
         setCardOrder(allCurrentIds);
     }
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem('registeredCampaigns_v4', JSON.stringify(registeredIds));
-  }, [registeredIds]);
   
   useEffect(() => {
     if (cardOrder.length > 0) {
@@ -694,6 +729,9 @@ const App = () => {
 
   const filteredCampaigns = useMemo(() => {
     const filtered = INITIAL_CAMPAIGNS.filter(c => {
+      // 邏輯優化：如果使用者有「客製化篩選」，新卡片預設是「不顯示」的 (因為不在 selectedCards 裡)。
+      // 如果使用者希望看到新卡片，需要手動去 Filter 勾選，或者按 Select All。
+      // 這是符合「不更改原本設定」的原則。
       const matchesFilter = selectedCards.includes(c.card) && selectedCategories.includes(c.category);
       if (!matchesFilter) return false;
       if (searchQuery.trim() !== '') {
@@ -769,7 +807,6 @@ const App = () => {
                     <button onClick={() => setIsReorderOpen(false)}><X size={20} className={theme.subText} /></button>
                 </div>
                 <div className="overflow-y-auto p-4 space-y-2 custom-scrollbar">
-                    {/* List all items sorted by current order */}
                     {INITIAL_CAMPAIGNS
                         .slice()
                         .sort((a,b) => {
@@ -1331,5 +1368,3 @@ const App = () => {
 };
 
 export default App;
-
-
