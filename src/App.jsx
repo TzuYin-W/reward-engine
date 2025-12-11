@@ -9,7 +9,8 @@ const BANK_HIERARCHY = [
   { name: 'TAISHIN 台新銀行', code: 'TAISHIN', cards: ['@GoGo 卡', '玫瑰卡', 'Richart 卡'] },
   { name: 'E.SUN 玉山銀行', code: 'ESUN', cards: ['U Bear 卡'] },
   { name: 'SINOPAC 永豐銀行', code: 'SINOPAC', cards: ['DAWAY 卡', 'Sport 卡', '大戶 DAWHO 現金回饋卡', '現金回饋 JCB 卡'] },
-  { name: 'FEDERAL 聯邦銀行', code: 'FEDERAL', cards: ['吉鶴卡'] }
+  { name: 'FEDERAL 聯邦銀行', code: 'FEDERAL', cards: ['吉鶴卡'] },
+  { name: 'HSBC 滙豐銀行', code: 'HSBC', cards: ['現金回饋御璽卡'] }
 ];
 
 // --- 模擬數據資料庫 ---
@@ -157,6 +158,46 @@ const INITIAL_CAMPAIGNS = [
         { title: '🌏 美日韓泰實體 (5%)', content: '於美國、日本、韓國、泰國實體商店消費，享 5% 回饋 (含原2.8%+加碼2.2%)。需登錄。', rate: '5%' },
         { title: '🛵 Uber Eats (5%)', content: '【VISA 卡限定】當月累計消費滿額享 5% 回饋。需每月登錄。', rate: '5%' },
         { title: '🛒 ShopBack (4%~)', content: '透過 ShopBack 連結至 PChome、樂天、誠品線上等指定通路，享額外加碼回饋。', rate: '4%' }
+    ]
+  },
+  // 4. 滙豐 現金回饋御璽卡 (新增)
+  {
+    id: 'hsbc_cashback',
+    bank: 'HSBC 滙豐銀行',
+    card: '現金回饋御璽卡',
+    name: '無腦刷現金回饋',
+    category: '一般消費',
+    totalRate: 2.22, 
+    baseRate: 1.22,
+    bonusRate: 1,
+    domesticRate: 1.22,
+    overseasRate: 2.22,
+    startDate: '2025-01-01',
+    endDate: '2025-12-31',
+    mainTag: '無腦刷',
+    image: 'https://www.hsbc.com.tw/content/dam/hsbc/tw/images/credit-cards/hsbc-cash-back-card-490x306.png',
+    gradient: 'from-red-600 to-red-800', // HSBC 紅
+    textColor: 'text-white',
+    link: 'https://www.hsbc.com.tw/credit-cards/products/cashback-signature/',
+    details: [
+        { label: '國內消費', value: '1.22% 現金回饋 (無上限)' },
+        { label: '海外消費', value: '2.22% 現金回饋 (無上限)' },
+        { label: '保費', value: '1.22% (無上限)' }
+    ],
+    importantNotesList: [
+        {
+            title: '現金回饋無上限',
+            highlight: '※ 回饋終身有效，自動折抵帳單，無最低消費門檻。',
+            schedule: [
+                { month: '常態', time: '無期限', limit: '無上限' }
+            ],
+            footer: '海外不含歐盟及英國實體通路。'
+        }
+    ],
+    channels: [
+        { title: '🌏 海外消費 (2.22%)', content: '海外一般消費享 2.22% 現金回饋無上限 (歐盟/英國實體除外)。', rate: '2.22%' },
+        { title: '🇹🇼 國內消費 (1.22%)', content: '國內一般消費 (含保費) 享 1.22% 現金回饋無上限。', rate: '1.22%' },
+        { title: '📄 保費優惠 (1.22%)', content: '不限保險公司或險種，享 1.22% 回饋，滿額可享分期 3.88% 起優惠利率。', rate: '1.22%' }
     ]
   },
   {
