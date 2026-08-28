@@ -1,34 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { initializeApp, getApps } from 'firebase/app';
-import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, setDoc, onSnapshot } from 'firebase/firestore';
 import { 
   Check, Clock, Sun, Moon, Plus, ChevronDown, ChevronUp, Star, 
   ExternalLink, Filter, X, AlertTriangle, ChevronRight, Globe, 
   CreditCard, RefreshCw, Search, Palette, Heart, ArrowUpDown, 
-  ArrowUp, ArrowDown, Trophy, Smartphone
+  ArrowUp, ArrowDown, Trophy
 } from 'lucide-react';
-
-// --- 安全初始化 Firebase (相容 Vercel / LocalStorage) ---
-let db = null;
-let auth = null;
-let appId = 'reward-engine-2026';
-
-try {
-  if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-    if (getApps().length === 0) {
-      const config = JSON.parse(__firebase_config);
-      const firebaseApp = initializeApp(config);
-      auth = getAuth(firebaseApp);
-      db = getFirestore(firebaseApp);
-    }
-  }
-  if (typeof __app_id !== 'undefined' && __app_id) {
-    appId = String(__app_id).replace(/[^a-zA-Z0-9_-]/g, '_');
-  }
-} catch (e) {
-  console.warn("Firebase config not found or invalid, running in offline localStorage mode.");
-}
 
 // --- 銀行架構庫 ---
 const BANK_HIERARCHY = [
@@ -398,12 +374,17 @@ const CardVisual = ({ image, gradient, textColor, cardName, bankName, uiStyle })
 };
 
 export default function App() {
-  const [user, setUser] = useState(null);
-  const [isReady, setIsReady] = useState(false);
   const [prefs, setPrefs] = useState(() => {
     try {
       const saved = localStorage.getItem('reward_prefs_2026');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const allIds = INITIAL_CAMPAIGNS.map(c => c.id);
+        const savedOrder = parsed.cardOrder || [];
+        const validOrder = savedOrder.filter(id => allIds.includes(id));
+        const newIds = allIds.filter(id => !validOrder.includes(id));
+        return { ...parsed, cardOrder: [...validOrder, ...newIds] };
+      }
     } catch (e) {}
     return {
       registeredIds: [],
@@ -422,73 +403,13 @@ export default function App() {
   const [isReorderOpen, setIsReorderOpen] = useState(false);
   const lastUpdated = "2026/08/28";
 
-  // --- Auth 初始化 ---
-  useEffect(() => {
-    if (!auth) {
-      setIsReady(true);
-      return;
-    }
-    const startAuth = async () => {
-      try {
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
-        } else {
-          await signInAnonymously(auth);
-        }
-      } catch (err) {
-        setIsReady(true);
-      }
-    };
-    startAuth();
-    const unsub = onAuthStateChanged(auth, (u) => {
-      setUser(u);
-      setIsReady(true);
-    });
-    return unsub;
-  }, []);
-
-  // --- 雲端同步監聽 ---
-  useEffect(() => {
-    if (!user || !db) return;
-    try {
-      const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'userPrefs', 'settings');
-      const unsubscribe = onSnapshot(docRef, (snap) => {
-        if (snap.exists()) {
-          const cloudData = snap.data();
-          const allIds = INITIAL_CAMPAIGNS.map(c => c.id);
-          const cloudOrder = cloudData.cardOrder || [];
-          const validOrder = cloudOrder.filter(id => allIds.includes(id));
-          const newIds = allIds.filter(id => !validOrder.includes(id));
-          
-          setPrefs(prev => {
-            const merged = { ...prev, ...cloudData, cardOrder: [...validOrder, ...newIds] };
-            try { localStorage.setItem('reward_prefs_2026', JSON.stringify(merged)); } catch (e) {}
-            return merged;
-          });
-        }
-      }, () => {});
-      return () => unsubscribe();
-    } catch (e) {}
-  }, [user]);
-
-  // --- 本地與雲端儲存 ---
-  const savePreferences = async (newData) => {
-    try {
-      localStorage.setItem('reward_prefs_2026', JSON.stringify(newData));
-    } catch (e) {}
-
-    if (user && db) {
-      try {
-        const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'userPrefs', 'settings');
-        await setDoc(docRef, newData, { merge: true });
-      } catch (err) {}
-    }
-  };
-
+  // --- 本地自動儲存 ---
   const updatePrefs = (updates) => {
     const nextPrefs = { ...prefs, ...updates };
     setPrefs(nextPrefs);
-    savePreferences(nextPrefs);
+    try {
+      localStorage.setItem('reward_prefs_2026', JSON.stringify(nextPrefs));
+    } catch (e) {}
   };
 
   // --- 篩選與排序邏輯 ---
@@ -536,14 +457,6 @@ export default function App() {
       };
     }
   }, [prefs]);
-
-  if (!isReady) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <RefreshCw className="animate-spin text-amber-500" size={28} />
-      </div>
-    );
-  }
 
   return (
     <div className={`min-h-screen w-full transition-colors duration-500 ${theme.bg} ${theme.text} font-sans flex justify-center overflow-x-hidden touch-pan-y`}>
