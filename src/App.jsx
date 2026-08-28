@@ -11,7 +11,7 @@ import {
 
 let db = null;
 let auth = null;
-let appId = 'reward-engine-pro';
+let appId = 'reward-engine-2026';
 
 try {
   if (typeof __firebase_config !== 'undefined' && __firebase_config) {
@@ -26,7 +26,7 @@ try {
     appId = String(__app_id).replace(/[^a-zA-Z0-9_-]/g, '_');
   }
 } catch (e) {
-  console.warn("Firebase initialization skipped, running in local storage mode.");
+  console.warn("Firebase initialization skipped, running in safe local mode.");
 }
 
 const BANK_HIERARCHY = [
@@ -52,7 +52,7 @@ const INITIAL_CAMPAIGNS = [
     bonusRate: 15, 
     domesticRate: 1, 
     overseasRate: 5, 
-    startDate: '2025-01-01', 
+    startDate: '2026-07-01', 
     endDate: '2026-12-31', 
     mainTag: '點數回饋',
     image: 'https://www.ctbcbank.com/content/dam/minisite/long/creditcard/LINEPay/images/card_01.png', 
@@ -62,25 +62,25 @@ const INITIAL_CAMPAIGNS = [
     details: [
       { label: '國內一般消費', value: '1% LINE POINTS (無上限)' }, 
       { label: '國外實體消費', value: '2.8% LINE POINTS (無上限)' }, 
-      { label: '指定通路加碼', value: '最高 16% (需登錄/輸入代碼)' }
+      { label: '指定通路加碼', value: '最高 16% (需登錄/代碼)' }
     ],
     importantNotesList: [
       { 
         title: '脆響食：日系餐飲 10%', 
         highlight: '※ JCB 卡限定。壽司郎、藏壽司、摩斯漢堡。每月 5 號 10:00 登錄。', 
-        schedule: [{ month: '每月', time: '5號 10:00 起', limit: '限量登錄' }], 
+        schedule: [{ month: '2026每月', time: '5號 10:00 起', limit: '限量登錄' }], 
         footer: '回饋上限 100 點/月。' 
       },
       { 
         title: '脆好購：Uniqlo/GU 10%', 
         highlight: '※ JCB 卡限定。實體門市單筆滿 2,000 元享 10%。每月 5 號 10:00 登錄。', 
-        schedule: [{ month: '每月', time: '5號 10:00 起', limit: '限量登錄' }], 
+        schedule: [{ month: '2026每月', time: '5號 10:00 起', limit: '限量登錄' }], 
         footer: '回饋上限 200 點/月。' 
       },
       { 
         title: 'Hotels.com 16% 訂房', 
         highlight: '※ 需經指定連結並輸入「CTBCLP16」，名額有限。', 
-        schedule: [{ month: '每月', time: '需輸入優惠碼', limit: '400組' }], 
+        schedule: [{ month: '2026每月', time: '需輸入優惠碼', limit: '400組' }], 
         footer: '單筆上限 1,800 點。' 
       }
     ],
@@ -88,6 +88,52 @@ const INITIAL_CAMPAIGNS = [
       { title: '🏨 Hotels.com (16%)', content: '專屬網頁訂房並輸入優惠碼，享最高 16% LINE POINTS。', rate: '16%' }, 
       { title: '🌏 美日韓泰實體 (5%)', content: '海外實體商店消費加碼至 5% (含原2.8%+加碼2.2%)，需登錄。', rate: '5%' }, 
       { title: '🍱 日系時尚/餐飲 (10%)', content: 'Uniqlo, GU, 壽司郎, 藏壽司滿額享 10% (JCB 限定)。', rate: '10%' }
+    ]
+  },
+  { 
+    id: 'fubon_j', 
+    bank: 'FUBON 台北富邦', 
+    card: 'J 卡', 
+    name: '日韓旅遊神卡', 
+    category: '旅遊', 
+    totalRate: 10, 
+    baseRate: 1, 
+    bonusRate: 9, 
+    domesticRate: 1, 
+    overseasRate: 10, 
+    startDate: '2026-04-01', 
+    endDate: '2026-12-31', 
+    mainTag: '日韓 10%',
+    image: 'https://www.fubon.com/banking/images/credit_card/J_Card_omiyage_card_1.png', 
+    gradient: 'from-rose-50 via-white to-rose-100', 
+    textColor: 'text-rose-900', 
+    link: 'https://www.fubon.com/banking/Personal/credit_card/all_card/omiyage/omiyage.htm',
+    details: [
+      { label: '國內一般消費', value: '1% LINE POINTS' }, 
+      { label: '日韓泰實體消費', value: '3% (無上限)' }, 
+      { label: '實體活動加碼', value: '+3% (需登錄，季上限600元)' }, 
+      { label: '日本交通卡加碼', value: '+7% (需登錄，季上限200元)' }
+    ],
+    importantNotesList: [
+      {
+        title: '日韓泰實體加碼 6%',
+        highlight: '※ 日韓泰實體消費滿額享最高 6%（3%無上限+加碼3%）。每季僅需登錄一次。',
+        schedule: [
+          { month: '8月', time: '8/20 16:00 起', limit: '限量 20,000 名' },
+          { month: '9月', time: '9/20 16:00 起', limit: '限量 20,000 名' }
+        ],
+        footer: '每季回饋上限 600 元。'
+      },
+      {
+        title: '日本三大交通卡 10%',
+        highlight: '※ Apple Pay 綁定 J 卡儲值 Suica/PASMO/ICOCA 滿 NT$2,000 享 10%。',
+        schedule: [{ month: 'Q3', time: '每月 18 號 16:00', limit: '限量 30,000 名' }],
+        footer: '加碼上限 200 元/戶。'
+      }
+    ],
+    channels: [
+      { title: '🚅 日本交通卡 (10%)', content: 'Apple Pay 綁定儲值 Suica/PASMO/ICOCA 滿額享 10%。', rate: '10%' },
+      { title: '🇯🇵 日韓泰實體消費 (6%)', content: '當地實體店家消費，含藥妝、百貨、餐廳、BicCamera 等。', rate: '6%' }
     ]
   },
   { 
@@ -101,7 +147,7 @@ const INITIAL_CAMPAIGNS = [
     bonusRate: 1, 
     domesticRate: 1.22, 
     overseasRate: 2.22, 
-    startDate: '2025-01-01', 
+    startDate: '2026-01-01', 
     endDate: '2026-12-31', 
     mainTag: '無腦刷',
     image: 'https://www.hsbc.com.tw/content/dam/hsbc/tw/images/credit-cards/hsbc-cash-back-card-490x306.png', 
@@ -116,7 +162,7 @@ const INITIAL_CAMPAIGNS = [
     importantNotesList: [
       {
         title: '現金回饋自動折抵',
-        highlight: '※ 回饋終身有效，自動折抵帳單金額，無最低消費門檻。',
+        highlight: '※ 回饋終身有效，自動折抵帳單金額，無最低消費門檻與通路限制。',
         schedule: [{ month: '常態', time: '帳單自動折抵', limit: '無上限' }],
         footer: '海外不含歐盟及英國實體通路。'
       }
@@ -137,7 +183,7 @@ const INITIAL_CAMPAIGNS = [
     bonusRate: 5.5, 
     domesticRate: 6, 
     overseasRate: 6, 
-    startDate: '2025-07-01', 
+    startDate: '2026-07-01', 
     endDate: '2026-12-31', 
     mainTag: 'LINE Pay 6%',
     image: 'https://bank.sinopac.com/upload/sinopac/creditcard/DAWAY_Card.png', 
@@ -154,35 +200,6 @@ const INITIAL_CAMPAIGNS = [
       { title: '🥤 指定手搖飲 (10%)', content: '50嵐、清心、可不可、麻古茶坊等指定手搖加碼。', rate: '10%' }
     ]
   },
-  { 
-    id: 'fubon_j', 
-    bank: 'FUBON 台北富邦', 
-    card: 'J 卡', 
-    name: '日韓旅遊神卡', 
-    category: '旅遊', 
-    totalRate: 10, 
-    baseRate: 1, 
-    bonusRate: 9, 
-    domesticRate: 1, 
-    overseasRate: 10, 
-    startDate: '2025-10-01', 
-    endDate: '2026-12-31', 
-    mainTag: '日韓 10%',
-    image: 'https://www.fubon.com/banking/images/credit_card/J_Card_omiyage_card_1.png', 
-    gradient: 'from-rose-50 via-white to-rose-100', 
-    textColor: 'text-rose-900', 
-    link: 'https://www.fubon.com/banking/Personal/credit_card/all_card/omiyage/omiyage.htm',
-    details: [
-      { label: '國內一般消費', value: '1% LINE POINTS' }, 
-      { label: '日韓實體消費', value: '3% (無上限)' }, 
-      { label: '實體活動加碼', value: '+3% (需登錄，季上限600元)' }, 
-      { label: '交通卡加碼', value: '+7% (需登錄，季上限200元)' }
-    ],
-    channels: [
-      { title: '🚅 日本交通卡 (10%)', content: 'Apple Pay 綁定儲值 Suica/PASMO/ICOCA 滿額享 10%。', rate: '10%' },
-      { title: '🇯🇵 日本實體消費 (6%)', content: '日本當地實體店家消費，含藥妝、百貨、餐廳、BicCamera。', rate: '6%' }
-    ]
-  },
   {
     id: 'taishin_rose', 
     bank: 'TAISHIN 台新銀行', 
@@ -194,8 +211,8 @@ const INITIAL_CAMPAIGNS = [
     bonusRate: 3.5, 
     domesticRate: 3.8, 
     overseasRate: 3.8, 
-    startDate: '2025-01-01', 
-    endDate: '2026-12-31', 
+    startDate: '2026-07-01', 
+    endDate: '2027-03-31', 
     mainTag: '切換 3.8%',
     image: 'https://www.taishinbank.com.tw/TS/TS02/TS0201/TS020101/TS02010101/TS0201010102/TS020101010202/images/card_02.png', 
     gradient: 'from-rose-300 to-pink-500', 
@@ -203,11 +220,11 @@ const INITIAL_CAMPAIGNS = [
     link: 'https://www.taishinbank.com.tw/TSB/personal/credit/intro/overview/cg013/card0001/',
     details: [
       { label: '一般消費', value: '0.3% 台新 Point' }, 
-      { label: '指定切換權益', value: '3.8% (天天刷/大筆刷/好饗刷)' },
+      { label: '指定切換權益', value: '3.8% (天天刷/大筆刷/好饗刷/Chill刷)' },
       { label: '日韓歐美消費', value: '3.8% (免切換)' }
     ],
     channels: [
-      { title: '🔄 權益切換 (3.8%)', content: '天天刷(超商/量販)、大筆刷(百貨/網購)、好饗刷(餐飲/外送)。', rate: '3.8%' }
+      { title: '🔄 7+1大權益方案 (3.8%)', content: '天天刷(超商量販)、大筆刷(百貨網購)、好饗刷(餐飲外送)、Chill刷(手搖飲)。', rate: '3.8%' }
     ]
   },
   { 
@@ -221,7 +238,7 @@ const INITIAL_CAMPAIGNS = [
     bonusRate: 6, 
     domesticRate: 7, 
     overseasRate: 8, 
-    startDate: '2025-01-01', 
+    startDate: '2026-07-01', 
     endDate: '2026-12-31', 
     mainTag: '大戶 7%',
     image: 'https://dawho.tw/assets/images/card/credit-card-black.png', 
@@ -231,6 +248,7 @@ const INITIAL_CAMPAIGNS = [
     details: [
       { label: '國內一般消費', value: '1% (無上限)' }, 
       { label: '國外一般消費', value: '2% (無上限)' }, 
+      { label: '大戶任務加碼', value: '+1% (需大戶帳戶扣繳)' },
       { label: '七大指定通路', value: '+5% (月上限300元)' }
     ],
     channels: [
@@ -243,12 +261,12 @@ const INITIAL_CAMPAIGNS = [
     card: 'CUBE 卡', 
     name: '多重權益切換', 
     category: '旅遊', 
-    totalRate: 3.5, 
+    totalRate: 3.3, 
     baseRate: 0.3, 
-    bonusRate: 3.2, 
+    bonusRate: 3.0, 
     domesticRate: 3.3, 
-    overseasRate: 3.5, 
-    startDate: '2025-01-01', 
+    overseasRate: 3.3, 
+    startDate: '2026-01-01', 
     endDate: '2026-12-31', 
     mainTag: '多重權益',
     image: 'https://www.cathaybk.com.tw/cathaybk/-/media/C1ce1986-7786-4f24-862a-350734057863.png', 
@@ -257,12 +275,12 @@ const INITIAL_CAMPAIGNS = [
     link: 'https://www.cathaybk.com.tw/cathaybk/personal/product/credit-card/cards/cube/',
     details: [
       { label: '一般消費', value: '0.3% 小樹點' }, 
-      { label: '指定方案加碼', value: '3% (每日可切換方案)' }, 
-      { label: '日本賞專案', value: '3.5% (指定日系門市)' }
+      { label: '指定方案加碼', value: '3%~3.3% (每日可切換方案)' }, 
+      { label: '固定回饋方案', value: '國內1.2% / 海外2.5% (懶人免切換)' }
     ],
     channels: [
-      { title: '🇯🇵 日本賞 (3.5%)', content: '日本實體消費、JR東日本、唐吉訶德、迪士尼樂園。', rate: '3.5%' },
-      { title: '🛒 玩數位 (3%)', content: '蝦皮、momo、PChome、淘寶、App Store、Google Play。', rate: '3%' }
+      { title: '✈️ 趣旅行 (3.3%)', content: '海外實體消費、高鐵、Uber、各大航空公司、迪士尼樂園。', rate: '3.3%' },
+      { title: '🛒 玩數位 (3.3%)', content: '蝦皮、momo、PChome、淘寶、App Store、Google Play、Netflix。', rate: '3.3%' }
     ]
   },
   { 
@@ -276,8 +294,8 @@ const INITIAL_CAMPAIGNS = [
     bonusRate: 12, 
     domesticRate: 3, 
     overseasRate: 3, 
-    startDate: '2025-01-01', 
-    endDate: '2026-12-31', 
+    startDate: '2026-03-01', 
+    endDate: '2027-02-28', 
     mainTag: '網購 3%',
     image: 'https://www.esunbank.com.tw/bank/images/esunbank/credit_card/ubear_card.png', 
     gradient: 'from-zinc-900 to-black', 
@@ -291,6 +309,34 @@ const INITIAL_CAMPAIGNS = [
     channels: [
       { title: '🛒 網路購物 (3%)', content: '國內外網購、LINE Pay、街口支付、高鐵台鐵APP。', rate: '3%' },
       { title: '🎬 影音平台 (13%)', content: 'Disney+、Netflix、Spotify、PlayStation、Nintendo。', rate: '13%' }
+    ]
+  },
+  {
+    id: 'federal_jihe',
+    bank: 'FEDERAL 聯邦銀行',
+    card: '吉鶴卡',
+    name: '日本消費神卡',
+    category: '旅遊',
+    totalRate: 4,
+    baseRate: 1,
+    bonusRate: 3,
+    domesticRate: 1,
+    overseasRate: 4,
+    startDate: '2026-07-01',
+    endDate: '2026-12-31',
+    mainTag: '日本 4%',
+    image: 'https://card.ubot.com.tw/eCard/assets/images/creditcard/JIHO/card_01.png',
+    gradient: 'from-red-600 to-rose-700',
+    textColor: 'text-white',
+    link: 'https://card.ubot.com.tw/eCard/activity/2026JIHO/index.htm',
+    details: [
+      { label: '國內一般消費', value: '1% 無上限' },
+      { label: '日幣消費', value: '2.5% 無上限' },
+      { label: '日本 Apple Pay QUICPay', value: '+1.5% (最高 4%)' }
+    ],
+    channels: [
+      { title: '🇯🇵 日本 QUICPay (4%)', content: '日本當地使用 Apple Pay 綁定吉鶴卡並選擇 QUICPay 支付，享 4% 回饋。', rate: '4%' },
+      { title: '🛍️ 日系名店 (4%~)', content: 'UNIQLO, 唐吉訶德, 大創, 松本清, 日藥本舖加碼。', rate: '8%' }
     ]
   }
 ];
@@ -340,7 +386,7 @@ export default function App() {
   
   const [prefs, setPrefs] = useState(() => {
     try {
-      const saved = localStorage.getItem('reward_engine_prefs_v2');
+      const saved = localStorage.getItem('reward_engine_prefs_2026');
       if (saved) return JSON.parse(saved);
     } catch (e) {}
     return {
@@ -368,7 +414,7 @@ export default function App() {
       try {
         await signInAnonymously(auth);
       } catch (err) {
-        console.warn("Auth error, fallback to local state.");
+        console.warn("Auth fallback to local mode.");
         setIsReady(true);
       }
     };
@@ -409,7 +455,7 @@ export default function App() {
     const nextPrefs = { ...prefs, ...updates };
     setPrefs(nextPrefs);
     try {
-      localStorage.setItem('reward_engine_prefs_v2', JSON.stringify(nextPrefs));
+      localStorage.setItem('reward_engine_prefs_2026', JSON.stringify(nextPrefs));
     } catch (e) {}
 
     if (user && db) {
@@ -603,6 +649,10 @@ export default function App() {
       <header className={`sticky top-0 z-50 backdrop-blur-xl border-b border-black/5 p-4 ${theme.bg}`}>
         <div className="flex justify-between items-start mb-3">
           <div>
+            <div className="flex items-center gap-1.5 mb-1">
+              <span className={`text-[9px] font-bold tracking-widest uppercase ${theme.accent}`}>2026 EDITION</span>
+              <span className="text-[9px] opacity-40 font-mono">/ 2026.08.28</span>
+            </div>
             <h1 className={`text-3xl font-black tracking-tighter uppercase leading-[0.85] ${theme.font}`}>
               Reward<span className={`block text-2xl mt-1 ${theme.accent}`}>Engine.</span>
             </h1>
@@ -630,7 +680,7 @@ export default function App() {
           <Search className="absolute left-3 top-2.5 opacity-30" size={16}/>
           <input 
             type="text" 
-            placeholder="搜尋通路 (如 Uber、全聯、Hotels...)" 
+            placeholder="搜尋通路 (如 Hotels、Suica、Uber...)" 
             value={searchQuery} 
             onChange={(e) => setSearchQuery(e.target.value)} 
             className={`w-full pl-10 pr-4 py-2 text-xs bg-transparent border border-black/10 dark:border-white/10 ${theme.btn} focus:outline-none focus:border-[#D4AF37] transition-all`} 
@@ -671,7 +721,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* 核心內容區 */}
+      {}
       <main className="w-full px-4 py-6 flex-1">
         {viewMode === 'list' ? (
           <div className="grid gap-6">
@@ -687,7 +737,7 @@ export default function App() {
                     </div>
                   )}
                   
-                  <div className={`relative ${theme.uiStyle === 'nyc' ? 'border-t-2 border-black/10 dark:border-white/10 pt-4' : `p-5 ${theme.cardBg} ${theme.rounded} shadow-xl shadow-black/5`}`}>
+                  <div className={`relative ${prefs.uiStyle === 'nyc' ? 'border-t-2 border-black/10 dark:border-white/10 pt-4' : `p-5 ${theme.cardBg} ${theme.rounded} shadow-xl shadow-black/5`}`}>
                     <div className="flex flex-col gap-3">
                       <div className="flex gap-3 items-start">
                         {/* 登錄核取鈕 */}
@@ -728,6 +778,9 @@ export default function App() {
                             <span className={`border border-black/10 dark:border-white/10 px-1.5 py-0.5 ${theme.btn}`}>
                               {c.mainTag}
                             </span>
+                            <span className="flex items-center gap-1 text-[8px] opacity-70">
+                              <Clock size={10} /> {c.startDate}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -744,6 +797,11 @@ export default function App() {
                     {/* 展開之權益通路與注意事項 */}
                     {isExp && (
                       <div className="mt-4 pt-4 border-t border-dashed border-black/10 dark:border-white/10 space-y-4">
+                        <div className="flex items-center justify-between text-[10px] font-mono opacity-50 bg-black/5 dark:bg-white/5 px-2.5 py-1 rounded">
+                          <span>活動檔期: {c.startDate} ~ {c.endDate}</span>
+                          <span>2026 最新權益</span>
+                        </div>
+
                         {/* 結構摘要 */}
                         <ul className="space-y-1.5">
                           {c.details.map((d, i) => (
@@ -790,7 +848,7 @@ export default function App() {
                             onClick={(e) => e.stopPropagation()}
                             className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-[#D4AF37] hover:underline"
                           >
-                            銀行官方權益條款 <ExternalLink size={10} />
+                            銀行官方 2026 權益條款 <ExternalLink size={10} />
                           </a>
                         </div>
                       </div>
@@ -814,7 +872,7 @@ export default function App() {
               return (
                 <div key={title} className="text-center p-8 bg-black/5 dark:bg-white/5 rounded-[2rem] border border-black/5 dark:border-white/5 shadow-2xl">
                   <div className="text-[10px] font-bold opacity-40 tracking-[0.3em] mb-2 uppercase">
-                    {isDom ? 'Domestic Category Winner' : 'Overseas Category Winner'}
+                    {isDom ? '2026 Domestic Winner' : '2026 Overseas Winner'}
                   </div>
                   <h3 className={`text-2xl font-black mb-2 ${theme.font}`}>{title}</h3>
                   <div className="text-6xl font-serif italic mb-4 text-transparent bg-clip-text bg-gradient-to-br from-[#D4AF37] via-amber-200 to-amber-600">
@@ -841,15 +899,15 @@ export default function App() {
         )}
       </main>
 
-      {/* FOOTER 區域 */}
+      {}
       <footer className="py-12 border-t border-black/5 dark:border-white/5 text-center opacity-40">
-        <h2 className="text-xs font-black italic tracking-widest mb-3">REWARD ENGINE</h2>
+        <h2 className="text-xs font-black italic tracking-widest mb-3">REWARD ENGINE 2026</h2>
         <div className="text-[9px] font-mono leading-relaxed uppercase tracking-[0.2em]">
-          &copy; 2025 DESIGNED BY<br/>
+          &copy; 2026 DESIGNED BY<br/>
           <span className="text-[11px] font-bold text-black dark:text-white tracking-widest mt-1 block">
             TZU YIN WANG (SARAH)
           </span>
-          ALL RIGHTS RESERVED
+          ALL RIGHTS RESERVED &bull; LAST UPDATED 2026.08.28
         </div>
       </footer>
       </div>
